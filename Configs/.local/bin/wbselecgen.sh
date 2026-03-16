@@ -61,6 +61,7 @@ wallSelTui() {
         setConf "wallSet" "${wallSel}/$(fl_wallpaper -t "$img")" "${VYLE_STATE_HOME}/staterc"
         ln -sf "${colsDir}/${scRun}.cols" "${rasiDir}/wall.cols"
         ln -sf "${blurDir}/${scRun}.bpex" "${rasiDir}/wall.bpex"
+        ln -sf "${thumbDir}/${scRun}.sloc" "${rasiDir}/wall.thmb"
         cp "${blurred}" "/usr/share/sddm/themes/silent/backgrounds/default.jpg" 
         ln -sf "${cacheDir}/${thmExtn}/${scRun}.${thmExtn}" "${VYLE_CONFIG_HOME}/theme/${VYLE_RESERVED_THEME}/wall.set"
     } &

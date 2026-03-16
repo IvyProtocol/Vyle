@@ -20,7 +20,7 @@ srcf_rcall fl_wallpaper && [[ $? -ge 1 ]] && echo "[$0]: function {fl_wallpaper}
 
 # cols = For ${rasiDir}/current-wallpaper.png and other usage
 # bpex = For blur
-# sloc = For thumbnail of rofiselector
+# sloc = For thumbnail of rofiselector : thmb
 fn_wallcache() {
   local h_sum="${1:-}"
   local w_sum="${2:-}"

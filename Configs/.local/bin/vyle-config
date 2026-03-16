@@ -15,6 +15,7 @@ then
 fi
 
 export DBUS_SESSION_BUS_ADDRESS
+export HYPRLAND_INSTANCE_SIGNATURE
 
 if command -v vyle >/dev/null 2>&1; \
 then 
@@ -38,11 +39,21 @@ tomlSh="${VYLE_DATA_HOME}/tomlmd/tomlmainmd.sh"
 dummy_function() {
   STORE_CURSOR_SIZE="${CURSOR_SIZE}"
   STORE_CURSOR_THEME="${CURSOR_THEME}"
+  STORE_GTK_FONT_NAME="${GTK_FONT_NAME}"
+  STORE_GTK_FONT_SIZE="${GTK_FONT_SIZE}"
+  STORE_GTK_DOCUMENT_FONT="${GTK_DOCUMENT_FONT}"
+  STORE_GTK_DOCUMENT_FONT_SIZE="${GTK_DOCUMENT_FONT_SIZE}"
+  STORE_GTK_MONOSPACE_FONT="${GTK_MONOSPACE_FONT}"
+  STORE_GTK_MONOSPACE_FONT_SIZE="${GTK_MONOSPACE_FONT_SIZE}"
   STORE_NOTIFICATION_FONT="${notificationFont}"
   STORE_NOTIFICATION_FONT_SIZE=${notificationFontSize}
 }
 
 while true; do
+  inotifywait \
+    -q \
+    -e close_write \
+    "${VYLE_CONFIG_HOME}/vyle.toml"
   # Safe guard against unknown configuration request triggered from shell script. 
   # Acts as a security layer to not trigger the afterward if statement comparison.
   # Might seem unnecessary but trust me.. It is always better to do this.
@@ -120,16 +131,21 @@ while true; do
       fi
 
       # Compute STORE_CURSOR_SIZE and STORE_CURSOR_THEME.
-      if [[ \
+      if \
+        [[ \
           "${STORE_CURSOR_SIZE}" != "${CURSOR_SIZE}" \
-          || "${STORE_CURSOR_THEME}" != "${CURSOR_THEME}"
+          || "${STORE_CURSOR_THEME}" != "${CURSOR_THEME}" \
+          || "${STORE_GTK_FONT_NAME}" != "${GTK_FONT_NAME}" \
+          || "${STORE_GTK_FONT_SIZE}" != "${GTK_FONT_SIZE}" \
+          || "${STORE_GTK_DOCUMENT_FONT}" != "${GTK_DOCUMENT_FONT}" \
+          || "${STORE_GTK_DOCUMENT_FONT_SIZE}" != "${GTK_DOCUMENT_FONT_SIZE}" \
+          || "${STORE_GTK_MONOSPACE_FONT}" != "${GTK_MONOSPACE_FONT}" \
+          || "${STORE_GTK_MONOSPACE_FONT_SIZE}" != "${GTK_MONOSPACE_FONT_SIZE}" \
         ]]; \
       then
         
         hyprctl reload
       fi
-
-      # source "${VYLE_DATA_HOME}/staterc.conf"
 
       if [[ \
           -e \
@@ -150,7 +166,18 @@ while true; do
         "${VYLE_CONFIG_HOME}/ide.conf" \
         && ! -e "${VYLE_CONFIG_HOME}/vyle.toml" \
     ]]; \
-  then 
+  then
+    inotifywait \
+    -q \
+    -e close_write \
+    "${VYLE_CONFIG_HOME}/ide.conf"
+
+    [[ \
+      ! \
+      -e \
+      "${VYLE_DATA_HOME}/state.conf" \
+    ]] && cp "${VYLE_CONFIG_HOME}/ide.conf" "${VYLE_DATA_HOME}/state.conf"
+
     if \
       ! \
       cmp -s "${VYLE_DATA_HOME}/state.conf" \
@@ -203,9 +230,16 @@ while true; do
       fi
 
       # Compute STORE_CURSOR_SIZE and STORE_CURSOR_THEME
-      if [[ \
+      if \
+        [[ \
           "${STORE_CURSOR_SIZE}" != "${CURSOR_SIZE}" \
-          || "${STORE_CURSOR_THEME} != "${CURSOR_THEME} \
+          || "${STORE_CURSOR_THEME}" != "${CURSOR_THEME}" \
+          || "${STORE_GTK_FONT_NAME}" != "${GTK_FONT_NAME}" \
+          || "${STORE_GTK_FONT_SIZE}" != "${GTK_FONT_SIZE}" \
+          || "${STORE_GTK_DOCUMENT_FONT}" != "${GTK_DOCUMENT_FONT}" \
+          || "${STORE_GTK_DOCUMENT_FONT_SIZE}" != "${GTK_DOCUMENT_FONT_SIZE}" \
+          || "${STORE_GTK_MONOSPACE_FONT}" != "${GTK_MONOSPACE_FONT}" \
+          || "${STORE_GTK_MONOSPACE_FONT_SIZE}" != "${GTK_MONOSPACE_FONT_SIZE}" \
         ]]; \
       then
 
@@ -214,5 +248,4 @@ while true; do
 
     fi
   fi
-  sleep 1
 done

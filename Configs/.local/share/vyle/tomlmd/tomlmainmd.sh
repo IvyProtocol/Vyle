@@ -15,7 +15,7 @@ plLoader="ivy|wallbash"
 #// skipTemplate, specifies .ivy or .dcol template that should be excluded or skipped from procesing!
 #// This allows you to selectively exclude certain template that exists in  while still processing others.
 #// example:
-skipTemplate=${VYLE_CONFIGURATION_SKIPTEMPLATE[@]}
+skipTemplate=${VYLE_CONFIGURATION_SKIP_TEMPLATE[@]}
 
 #// nProcCount, lets wallbash use the maximum or limited CPU utilization to process templates!
 #// You can limit the core utilization by declaring the number of cores to be utilized.
@@ -24,6 +24,9 @@ nProcCount=$(nproc)
 
 # █░█░█ ▄▀█ █░░ █░░ █▀█ ▄▀█ █▀█ █▀▀ █▀█
 # ▀▄▀▄▀ █▀█ █▄▄ █▄▄ █▀▀ █▀█ █▀▀ ██▄ █▀▄
+
+# Chosen Backend! SWWW
+wallBackend="swww"
 
 #// set the transition FPS while changing wallpaper.
 wallFramerate=60
@@ -57,17 +60,17 @@ rofiLauncherStyle=1
 
 # wbselecgen.sh configuration
 rofiWallpaperFont="JetBrainsMono Nerd Font"
-rofiWallpaperScale=10
+rofiWallpaperScale=9
 rofiWallpaperColumn=
 
 # themeswitch.sh configuration.
 rofiThemeFont="JetBrainsMono Nerd Font"
-rofiThemeScale=10
+rofiThemeScale=9
 rofiThemeColumn=
-rofiThemeStyle=1
+rofiThemeStyle=2
 
 # style-launcher.sh configuration.
-rofiStyleScale=10
+rofiStyleScale=12
 
 # wallbashtoggle.sh configuration
 rofiWallbashFont="JetBrainsMono Nerd Font"
@@ -111,7 +114,7 @@ volumeNotifyMute=0
 # █▄░█ █▀█ ▀█▀ █ █▀▀ █ █▀▀ ▄▀█ ▀█▀ █ █▀█ █▄░█
 # █░▀█ █▄█ ░█░ █ █▀░ █ █▄▄ █▀█ ░█░ █ █▄█ █░▀█
 # dunstctl configuration
-notificationFont="JetBrainsMono Nerd Font"
+notificationFont="mononoki Nerd Font Bold"
 notificationFontSize=10
 
 # █░█ █▄█ █▀█ █▀█ █░░ ▄▀█ █▄░█ █▀▄
@@ -122,10 +125,22 @@ CONSOLE="kitty"
 EDITOR="vscodium"
 EXPLORER="dolphin"
 BROWSER="firefox"
-LOCKSCREEN="hyprlock"
-TASKMANAGER="gnome-system-monitor"
-CURSOR="Bibata-Modern-Ice"
+LOCK_SCREEN="hyprlock"
+TASK_MANAGER="gnome-system-monitor"
+CURSOR_THEME="Bibata-Modern-Ice"
 CURSOR_SIZE=20
+
+# █▀▀ ▀█▀ █▄▀
+# █▄█ ░█░ █░█
+# GTK Configuration
+GTK_FONT_NAME="CaskaydiaCove Nerd Font Mono Regular"
+GTK_FONT_ANTIALIASING="rgba"
+GTK_FONT_HINTING="slight"
+GTK_FONT_SIZE=10
+GTK_DOCUMENT_FONT="CaskaydiaCove Nerd Font Mono Semi-Bold"
+GTK_DOCUMENT_FONT_SIZE=10
+GTK_MONOSPACE_FONT="CaskaydiaCove Nerd Font Mono Semi-Bold"
+GTK_MONOSPACE_FONT_SIZE=10
 
 # █▀▀ ▀▄▀ ▀█▀ █▀█ ▄▀█
 # ██▄ █░█ ░█░ █▀▄ █▀█

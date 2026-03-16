@@ -3,8 +3,8 @@
 # Vyle configuration.
 [Vyle.Configuration]
 PlaceHolder = "ivy|wallbash" # Supported Placeholder of wallbash.
-SkipTemplate = [] # Templates to Skip when using wallbash.
-ProcCount = $(nproc) # Limit usage of wallbash cores. NOTE: Use "$(nproc)" if you want to maximize full usage.
+Skip_Template = [] # Templates to Skip when using wallbash.
+Core = $(nproc) # Limit usage of wallbash cores. NOTE: Use "$(nproc)" if you want to maximize full usage.
 
 # █░█░█ ▄▀█ █░░ █░░ █▀█ ▄▀█ █▀█ █▀▀ █▀█
 # ▀▄▀▄▀ █▀█ █▄▄ █▄▄ █▀▀ █▀█ █▀▀ ██▄ █▀▄
@@ -16,12 +16,12 @@ CustomPath = [] # List of paths to search for wallpapers.
 # wbselecgen.sh configuration.
 [Wallpaper.Swww]
 Framerate = 60 # Transition Framerate.
-TransitionDuration = 0.5 # Transition Duration.
-TransitionBezier = ".43,1.19,.1,.4" # Transition Bezier.
+Transition_Duration = 0.5 # Transition Duration.
+Transition_Bezier = ".43,1.19,.1,.4" # Transition Bezier.
 Animation = "grow" # Transition Animation.
-AnimationPrevious = "outer" # Transition AnimationPrevious.
-AnimationNext = "grow" # Transition AnimationNext.
-AnimationTheme = "grow" # Transition AnimationTheme.
+Animation_Previous = "outer" # Transition AnimationPrevious.
+Animation_Next = "grow" # Transition AnimationNext.
+Animation_Theme = "grow" # Transition AnimationTheme.
 
 # █▀█ █▀█ █▀▀ █
 # █▀▄ █▄█ █▀░ █
@@ -35,13 +35,13 @@ Style = 1
 [Rofi.Wallpaper]
 Font = "JetBrainsMono Nerd Font" # Font for wbselecgen.sh
 Scale = 10 # Scale for wbselecgen.sh
-ColumnCount = "" # Column for wbselecgen.sh
+Column = "" # Column for wbselecgen.sh
 
 # themeswitch.sh configuration.
 [Rofi.Theme]
 Font = "JetBrainsMono Nerd Font" # Font for themeswitch.sh
 Scale = 10 # Scale for themeswitch.sh
-ColumnCount = "" # Column for themeswitch.sh
+Column = "" # Column for themeswitch.sh
 Style = 1 # Style for themeswitch.sh
 
 # wallbashtoggle.sh configuraiton
@@ -51,7 +51,7 @@ Scale = 10 # Scale for wallbashtoggle.sh
 
 # style-launcher.sh configuration.
 [Rofi.Switch]
-Scale = 10 # Scale for style-launcher.sh
+Scale = 12 # Scale for style-launcher.sh
 
 # █░░ █▀█ █▀▀ █▀█ █░█ ▀█▀
 # █▄▄ █▄█ █▄█ █▄█ █▄█ ░█░
@@ -71,7 +71,7 @@ FetchIcon = "${XDG_CONFIG_HOME}/fastfetch/icons" # Fetches Directory for fastfet
 [Brightness.Configuration]
 FetchIcon = "${XDG_CONFIG_HOME}/dunst/icons/vol" # Fetches Directory for brightnesscontrol.sh
 Steps = 5 # Steps Taken for brightnesscontrol.sh
-NotifyMute = 0 # Mute: 0 = False; 1 = True
+Notify_Mute = 0 # Mute: 0 = False; 1 = True
 
 # █░█ █▀█ █░░ █░█ █▀▄▀█ █▀▀ █▀ ▀█▀ █░░ 
 # ▀▄▀ █▄█ █▄▄ █▄█ █░▀░█ ██▄ █▄ ░█░ █▄▄
@@ -79,15 +79,15 @@ NotifyMute = 0 # Mute: 0 = False; 1 = True
 [Volume.Configuration]
 FetchIcon = "${XDG_CONFIG_HOME:-$HOME/.config}/dunst/icons/vol" # Fetches Directory for voluemcontrol.sh
 Steps = 5 # Steps Taken for volumecontrol.sh
-StepsMute = 0 # Silent Popups from step-taken. Mute: 0 = False; 1 = True
-NotifyMute = 0 # Silent Popups of Mic/Speaker. Mute: 0 = False; 1 = True
+Steps_Mute = 0 # Silent Popups from step-taken. Mute: 0 = False; 1 = True
+Notify_Mute = 0 # Silent Popups of Mic/Speaker. Mute: 0 = False; 1 = True
 
 # █▄░█ █▀█ ▀█▀ █ █▀▀ █ █▀▀ ▄▀█ ▀█▀ █ █▀█ █▄░█
 # █░▀█ █▄█ ░█░ █ █▀░ █ █▄▄ █▀█ ░█░ █ █▄█ █░▀█
 # dunstctl configuration
 [Notification.Configuration]
-Font = "JetBrainsMono Nerd Font" # Font Configuration for Dunst. 
-FontSize = 10 # Font_Size for Dunst
+Font = "mononoki Nerd Font Bold" # Font Configuration for Dunst. 
+Font_Size = 10 # Font_Size for Dunst
 
 # █░█ █▄█ █▀█ █▀█ █░░ ▄▀█ █▄░█ █▀▄
 # █▀█ ░█░ █▀▀ █▀▄ █▄▄ █▀█ █░▀█ █▄▀
@@ -97,7 +97,21 @@ Terminal = "kitty" # Terminal
 Editor = "vscodium" # Editor
 Explorer = "dolphin" # Explorer
 Browser = "firefox" # Browser
-LockScreen = "hyprlock" # LockScreen
-TaskManager = "gnome-system-monitor" # TaskManager
+Lock_Screen = "hyprlock" # LockScreen
+Task_Manager = "gnome-system-monitor" # TaskManager
 Cursor = "Bibata-Modern-Ice" # Cursor Theme
-CursorSize = 20 # Cursor Size: Be sure to logout and relogin back!
+Cursor_Size = 20 # Cursor Size
+
+# █▀▀ ▀█▀ █▄▀
+# █▄█ ░█░ █░█
+# GTK Configuration
+[GTK.Configuration]
+Font = "CaskaydiaCove Nerd Font Mono Regular" # Font Name
+Font_Antialiasing = "rgba" # Font Antialiasing
+Font_Hinting = "slight" # Font Hinting
+Font_Size = 10 # Font Size
+Document_Font = "CaskaydiaCove Nerd Font Mono Semi-Bold" # Document Font
+Document_Font_Size = 10 # Document Font Size
+Monospace_Font = "CaskaydiaCove Nerd Font Mono Semi-Bold" # Monospace Font
+Monospace_Font_Size = 10 # Monospace Font Size
+

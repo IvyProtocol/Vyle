@@ -83,6 +83,7 @@ hyprland=(
   noto-fonts-cjk
   ttf-mononoki-nerd
   tela-circle-icon-theme-dracula
+  bibata-cursor-theme
 )
 
 extra=(

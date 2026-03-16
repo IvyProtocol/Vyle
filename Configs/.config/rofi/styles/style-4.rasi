@@ -1,9 +1,9 @@
 /**
  * ROFI Layout 
  *
- * Style 10: Vertical layout with a compact background section.
+ * Style 4: Header with a background image and a list extending to the right.
  * Attribute: rofilaunch,launcher
- * User: The HyDE Project [ CompactPanel ]
+ * User: The HyDE Project [ TopPanel ]
  * Copyright: https://github.com/prasanthrangan/hyprdots/
  */
 
@@ -22,63 +22,80 @@ configuration {
     icon-theme:                  "Tela-circle-dracula";
 }
 
-@theme "../theme.rasi"
+@theme "~/.config/rofi/theme.rasi"
 
 
 // Main //
 window {
-    height:                      40em;
-    width:                       25em;
+    height:                      30em;
+    width:                       46em;
     transparency:                "real";
     fullscreen:                  false;
     enabled:                     true;
     cursor:                      "default";
     spacing:                     0em;
     padding:                     0em;
-    border:                      2px;
     border-color:                @main-br;
     background-color:            @main-bg;
-    border-radius:               20px;
 }
 mainbox {
     enabled:                     true;
     spacing:                     0em;
-    padding:                     1em;
-    orientation:                 vertical;
-    children:                    [ "inputbar" , "listbox" ];
+    padding:                     0em;
+    orientation:                 horizontal;
+    children:                    [ "inputbar" , "mode-switcher" , "listbox" ];
     background-color:            transparent;
+    background-image:            url("~/.config/rofi/shared/wall.bpex", height);
 }
 
 
 // Inputs //
 inputbar {
     enabled:                     true;
-    spacing:                     0em;
-    padding:                     4em;
+    width:                       8em;
     children:                    [ "entry" ];
-    background-color:            @main-bg;
-    background-image:            url("~/.config/rofi/shared/wall.thmb", width);
-    border-radius:               1em 1em 0em 0em;
+    background-color:            transparent;
+    background-image:            url("~/.config/rofi/shared/wall.thmb", height);
 }
 entry {
     enabled:                     false;
 }
 
 
+// Modes //
+mode-switcher{
+    orientation:                 vertical;
+    enabled:                     true;
+    width:                       7em;
+    spacing:                     1em;
+    padding:                     3.4em 1em 3.4em 1em;
+    background-color:            transparent;
+}
+button {
+    cursor:                      pointer;
+    border-radius:               3em;
+    background-color:            @main-bg;
+    text-color:                  @main-fg;
+}
+button selected {
+    background-color:            @main-fg;
+    text-color:                  @main-bg;
+}
+
+
 // Lists //
 listbox {
     spacing:                     0em;
-    padding:                     0em;
-    children:                    [ "dummyt" , "listview" , "dummyb" ];
-    background-color:            @main-bg;
-    border-radius:               0em 0em 1em 1em;
+    padding:                     0.5em;
+    children:                    [ "dummy" , "listview" , "dummy" ];
+    background-color:            transparent;
 }
 listview {
-    enabled:                     true;
-    spacing:                     0.4em;
+    spacing:                     0em;
     padding:                     1em;
+    enabled:                     true;
     columns:                     1;
-    lines:                       10;
+    lines:                       7;
     cycle:                       true;
     dynamic:                     true;
     scrollbar:                   false;
@@ -90,17 +107,10 @@ listview {
     cursor:                      "default";
     background-color:            @main-bg;
     text-color:                  @main-fg;
+    border-radius:               1.5em;
 }
-dummyt {
-    spacing:                     0em;
-    padding:                     0em;
-    background-color:            @main-bg;
-}
-dummyb {
-    spacing:                     0em;
-    padding:                     0em;
-    background-color:            @main-bg;
-    border-radius:               0em 0em 1em 1em;
+dummy {
+    background-color:            transparent;
 }
 
 
@@ -108,10 +118,9 @@ dummyb {
 element {
     enabled:                     true;
     spacing:                     1em;
-    padding:                     0.2em 0.2em 0.2em 1.5em;
+    padding:                     0.4em;
     cursor:                      pointer;
     background-color:            transparent;
-    border-radius:               20px;
     text-color:                  @main-fg;
 }
 element selected.normal {
@@ -119,7 +128,7 @@ element selected.normal {
     text-color:                  @select-fg;
 }
 element-icon {
-    size:                        2em;
+    size:                        3em;
     cursor:                      inherit;
     background-color:            transparent;
     text-color:                  inherit;
