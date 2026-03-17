@@ -8,6 +8,6 @@ if ! pgrep -x "swww-daemon" >/dev/null; then
   swww-daemon &
 fi
 if [[ ! -e "$flag" ]]; then
-  "${scrDir}/wbselecgen.sh" -t -i "${VYLE_CONFIG_HOME}/theme/${VYLE_RESERVED_THEME}/wallpapers/$(fl_wallpaper -r)" -n --s -w --swww-n >/dev/null 2>&1
+  "${scrDir}/swwwallswitch.sh" -t -i "${VYLE_CONFIG_HOME}/theme/${VYLE_RESERVED_THEME}/wallpapers/$(fl_wallpaper -r)" -n --s -w --swww-n >/dev/null 2>&1
   touch "$flag"
 fi

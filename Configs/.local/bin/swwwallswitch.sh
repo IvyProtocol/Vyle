@@ -77,10 +77,10 @@ wallSelTui() {
     sleep 0.5
     case "${schIPC}" in
         dark|light) 
-            "${scrDir}/ivy-shell.sh" "${img}" --"${schIPC}"
+            "${scrDir}/wallbash.sh" "${img}" --"${schIPC}"
             ;;
         auto)
-            "${scrDir}/ivy-shell.sh" "${img}"
+            "${scrDir}/wallbash.sh" "${img}"
             ;;
         theme|*)
             if [[ "${enableWallIde}" -eq 3 && "${dcolMode}" == "theme" ]]; then
@@ -89,10 +89,10 @@ wallSelTui() {
                     cp "${dcolDir}/auto/ivy-${hashMech}.dcol" "${VYLE_CONFIG_HOME}/main/ivygen.dcol"
                     "${scrDir}/modules/ivyshell-theme.sh" && "${scrDir}/modules/ivyshell-helper.sh"
                 else
-                    "${scrDir}/ivy-shell.sh" "$img"
+                    "${scrDir}/wallbash.sh" "$img"
                 fi
             else
-                "${scrDir}/ivy-shell.sh" "$img" --"${dcolMode}"
+                "${scrDir}/wallbash.sh" "$img" --"${dcolMode}"
             fi
             ;;
     esac

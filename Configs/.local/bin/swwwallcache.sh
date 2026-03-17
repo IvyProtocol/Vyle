@@ -9,7 +9,7 @@ thmbDir="${VYLE_CACHE_HOME}/cache/thumb"
 blurDir="${VYLE_CACHE_HOME}/cache/blur"
 colsDir="${VYLE_CACHE_HOME}/cache/cols"
 quadDir="${VYLE_CACHE_HOME}/cache/quad"
-scrRun="${scrDir}/ivy-shell.sh"
+scrRun="${scrDir}/wallbash.sh"
 
 [[ -d "${thmbDir}" ]] || mkdir -p "${thmbDir}"
 [[ -d "${blurDir}" ]] || mkdir -p "${blurDir}"
