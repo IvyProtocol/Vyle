@@ -1,0 +1,130 @@
+/home/iris/.config/zen/tkuribbw.Default (release)/chrome/ZenBash/zenbashChrome.css|$RUN:$(scrDir)/../ZenBash.sh -r >/dev/null 2>&1 &
+
+@media {
+  :root {
+    --zen-colors-primary: #<ivy_pry2>95 !important;
+    --zen-primary-color: #<ivy_1xa5> !important;
+    --zen-colors-secondary: #<ivy_pry2>95 !important;
+    --zen-colors-tertiary: #<ivy_pry1>95 !important;
+    --zen-colors-border: #<ivy_1xa5> !important;
+    --toolbarbutton-icon-fill: #<ivy_1xa5> !important;
+    --lwt-text-color: #<ivy_txt1> !important;
+    --toolbar-field-color: #<ivy_txt1> !important;
+    --tab-selected-textcolor: rgb(<ivy_1xa6_rgb>) !important;
+    --toolbar-field-focus-color: #<ivy_txt1> !important;
+    --toolbar-color: #<ivy_txt1> !important;
+    --newtab-text-primary-color: #<ivy_txt1> !important;
+    --arrowpanel-color: #<ivy_txt1> !important;
+    --arrowpanel-background: #<ivy_pry1>95 !important;
+    --sidebar-text-color: #<ivy_txt1> !important;
+    --lwt-sidebar-text-color: #<ivy_txt1> !important;
+    --lwt-sidebar-background-color: #<ivy_pry1>95 !important;
+    --toolbar-bgcolor: #<ivy_pry2>95 !important;
+    --newtab-background-color: #<ivy_pry1>95 !important;
+    --zen-themed-toolbar-bg: #<ivy_pry1>95 !important;
+    --zen-main-browser-background: #<ivy_pry1>95 !important;
+    --toolbox-bgcolor-inactive: #<ivy_pry1>95 !important;
+  }
+
+  #permissions-granted-icon{
+    color: #<ivy_pry1>95 !important;
+  }
+
+  .sidebar-placesTree {
+    background-color: #<ivy_pry1>95 !important;
+  }
+
+  #zen-workspaces-button {
+    background-color: #<ivy_pry1>95 !important;
+  }
+
+  #TabsToolbar {
+    background-color: #<ivy_pry1>00 !important;
+  }
+
+  .urlbar-background {
+    background-color: #<ivy_pry2>95 !important;
+  }
+
+  .content-shortcuts {
+    background-color: #<ivy_pry1>95 !important;
+    border-color: #<ivy_1xa5> !important;
+  }
+
+  .urlbarView-url {
+    color: #<ivy_1xa5> !important;
+  }
+
+  #zenEditBookmarkPanelFaviconContainer {
+    background: #<ivy_pry1>95 !important;
+  }
+
+  #zen-media-controls-toolbar {
+    & #zen-media-progress-bar {
+      &::-moz-range-track {
+        background: #<ivy_pry2>95 !important;
+      }
+    }
+  }
+
+  toolbar .toolbarbutton-1 {
+    &:not([disabled]) {
+      &:is([open], [checked])
+        > :is(
+          .toolbarbutton-icon,
+          .toolbarbutton-text,
+          .toolbarbutton-badge-stack
+        ) {
+        fill: #<ivy_pry1>95;
+      }
+    }
+  }
+
+  .identity-color-blue {
+    --identity-tab-color: #<ivy_1xa5> !important;
+    --identity-icon-color: #<ivy_1xa5> !important;
+  }
+
+  .identity-color-turquoise {
+    --identity-tab-color: #94e2d5 !important;
+    --identity-icon-color: #94e2d5 !important;
+  }
+
+  .identity-color-green {
+    --identity-tab-color: #a6e3a1 !important;
+    --identity-icon-color: #a6e3a1 !important;
+  }
+
+  .identity-color-yellow {
+    --identity-tab-color: #f9e2af !important;
+    --identity-icon-color: #f9e2af !important;
+  }
+
+  .identity-color-orange {
+    --identity-tab-color: #fab387 !important;
+    --identity-icon-color: #fab387 !important;
+  }
+
+  .identity-color-red {
+    --identity-tab-color: #f38ba8 !important;
+    --identity-icon-color: #f38ba8 !important;
+  }
+
+  .identity-color-pink {
+    --identity-tab-color: #f5c2e7 !important;
+    --identity-icon-color: #f5c2e7 !important;
+  }
+
+  .identity-color-purple {
+    --identity-tab-color: #cba6f7 !important;
+    --identity-icon-color: #cba6f7 !important;
+  }
+
+  hbox#titlebar {
+    background-color: #<ivy_pry2>95 !important;
+  }
+
+  #zen-appcontent-navbar-container {
+    background-color: #<ivy_pry1>95 !important;
+  }
+}

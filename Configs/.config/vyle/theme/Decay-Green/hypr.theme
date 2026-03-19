@@ -1,4 +1,4 @@
-$(confDir)/hypr/themes/theme.conf|$RUN:hyprctl reload >/dev/null 2>&1
+$(confDir)/hypr/themes/theme.conf
 #  P̳r̳a̳s̳a̳n̳t̳h̳ R̳a̳n̳g̳a̳n̳
 
 # $GTK_THEME = Decay-Green

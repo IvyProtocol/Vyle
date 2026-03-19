@@ -57,14 +57,6 @@ wallbashFuzz=70
 wallbashRaw="$(mktemp --tmpdir="${TMPDIR:-/tmp}" wallbash.XXXXXX.mpc)"
 wallbashOut="${dcolDir}/${sortMode}/ivy-${wallbashHash}.dcol"
 
-if [[ -f "${wallbashOut}" ]]; then
-    echo -e " :: Theme Control - [$(basename "$0")] $colorProfile profile :: $sortMode :: Colors $wallbashColors :: Fuzzy $wallbashFuzz :: \"$wallbashOut\""
-    cp "${wallbashOut}" "${VYLE_CONFIG_HOME}/main/ivygen.dcol"
-    "${scrDir}/modules/ivyshell-theme.sh"
-    "${scrDir}/modules/ivyshell-helper.sh"
-    exit 0
-fi
-
 pryDarkBri=116
 pryDarkSat=110
 pryDarkHue=88
@@ -172,8 +164,4 @@ for ((i = 0; i < wallbashColors; i++)); do
         ((acnt++))
     done
 done
-
-if [[ -d "${VYLE_CONFIG_HOME}/main" ]]; then
-    cp "${wallbashOut}" "${VYLE_CONFIG_HOME}/main/ivygen.dcol"
-fi
 rm -f "$wallbashRaw"

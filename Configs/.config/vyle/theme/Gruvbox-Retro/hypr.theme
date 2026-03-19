@@ -1,4 +1,4 @@
-$(confDir)/hypr/themes/theme.conf|$RUN:hyprctl reload >/dev/null 2>&1 &
+$(confDir)/hypr/themes/theme.conf
 #  ___________      _________                        __
 #  \__    ___/      \_   ___ \_______ ___.__._______/  |_
 #   |    |  ______ /    \  \/\_  __ <   |  |\____ \   __\

@@ -101,9 +101,9 @@
         "format": "\udb80\udd8a{0}",
         "rotate": 0,
         "exec": "echo ; echo 󰆊 switch wallpaper",
-        "on-click-right": "$HOME/.local/bin/wbselecgen.sh -p",
-        "on-click-middle": "$HOME/.local/bin/wbselecgen.sh -r",
-        "on-click": "$HOME/.local/bin/wbselecgen.sh -n",
+        "on-click-right": "$HOME/.local/bin/swwwallswitch.sh -p",
+        "on-click-middle": "$HOME/.local/bin/swwwallswitch.sh -r",
+        "on-click": "$HOME/.local/bin/swwwallswitch.sh -n",
         "interval" : 86400, // once every day
         "tooltip": true
     },

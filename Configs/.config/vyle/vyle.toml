@@ -4,7 +4,7 @@
 [Vyle.Configuration]
 PlaceHolder = "ivy|wallbash" # Supported Placeholder of wallbash.
 Skip_Template = [] # Templates to Skip when using wallbash.
-Core = $(nproc) # Limit usage of wallbash cores. NOTE: Use "$(nproc)" if you want to maximize full usage.
+Core = 3 # Limit usage of wallbash cores. NOTE: Use "$(nproc)" if you want to maximize full usage.
 
 # █░█░█ ▄▀█ █░░ █░░ █▀█ ▄▀█ █▀█ █▀▀ █▀█
 # ▀▄▀▄▀ █▀█ █▄▄ █▄▄ █▀▀ █▀█ █▀▀ ██▄ █▀▄
@@ -16,7 +16,7 @@ CustomPath = [] # List of paths to search for wallpapers.
 # wbselecgen.sh configuration.
 [Wallpaper.Swww]
 Framerate = 60 # Transition Framerate.
-Transition_Duration = 0.5 # Transition Duration.
+Transition_Duration = 0.4 # Transition Duration.
 Transition_Bezier = ".43,1.19,.1,.4" # Transition Bezier.
 Animation = "grow" # Transition Animation.
 Animation_Previous = "outer" # Transition AnimationPrevious.
@@ -28,26 +28,26 @@ Animation_Theme = "grow" # Transition AnimationTheme.
 # rofilauncher.sh configuration.
 [Rofi.Launch]
 Font = "JetBrainsMono Nerd Font" # Font for rofilauncher.sh
-Scale = 10 # Scale for rofilauncher.sh
+Scale = 9 # Scale for rofilauncher.sh
 Style = 1
 
 # wbselecgen.sh configuration.
 [Rofi.Wallpaper]
 Font = "JetBrainsMono Nerd Font" # Font for wbselecgen.sh
-Scale = 10 # Scale for wbselecgen.sh
-Column = "" # Column for wbselecgen.sh
+Scale = 9 # Scale for wbselecgen.sh
+Column = 4 # Column for wbselecgen.sh
 
 # themeswitch.sh configuration.
 [Rofi.Theme]
 Font = "JetBrainsMono Nerd Font" # Font for themeswitch.sh
-Scale = 10 # Scale for themeswitch.sh
-Column = "" # Column for themeswitch.sh
-Style = 1 # Style for themeswitch.sh
+Scale = 9 # Scale for themeswitch.sh
+Column = 2 # Column for themeswitch.sh
+Style = 2 # Style for themeswitch.sh
 
 # wallbashtoggle.sh configuraiton
 [Rofi.Wallbash]
 Font = "JetBrainsMono Nerd Font" # Font for wallbashtoggle.sh
-Scale = 10 # Scale for wallbashtoggle.sh
+Scale = 9 # Scale for wallbashtoggle.sh
 
 # style-launcher.sh configuration.
 [Rofi.Switch]
@@ -57,7 +57,7 @@ Scale = 12 # Scale for style-launcher.sh
 # █▄▄ █▄█ █▄█ █▄█ █▄█ ░█░
 # logoutlaunch.sh configuration.
 [Wlogout]
-Style = 1 # Style for logoutlauncher.sh | Picks up style for wlogout!
+Style = 2 # Style for logoutlauncher.sh | Picks up style for wlogout!
 
 # █▀▀ ▄▀█ █▀ ▀█▀ █▀▀ █▀▀ ▀█▀ █▀▀ █░█
 # █▀░ █▀█ ▄█ ░█░ █▀░ ██▄ ░█░ █▄▄ █▀█
@@ -106,12 +106,12 @@ Cursor_Size = 20 # Cursor Size
 # █▄█ ░█░ █░█
 # GTK Configuration
 [GTK.Configuration]
-Font = "CaskaydiaCove Nerd Font Mono Regular" # Font Name
+Font = "CaskaydiaCove Nerd Font Mono" # Font Name
 Font_Antialiasing = "rgba" # Font Antialiasing
 Font_Hinting = "slight" # Font Hinting
-Font_Size = 10 # Font Size
-Document_Font = "CaskaydiaCove Nerd Font Mono Semi-Bold" # Document Font
+Font_Size = 10.5 # Font Size
+Document_Font = "JetBrainsMono Nerd Font" # Document Font
 Document_Font_Size = 10 # Document Font Size
-Monospace_Font = "CaskaydiaCove Nerd Font Mono Semi-Bold" # Monospace Font
+Monospace_Font = "CaskaydiaCove Nerd Font Mono" # Monospace Font
 Monospace_Font_Size = 10 # Monospace Font Size
 

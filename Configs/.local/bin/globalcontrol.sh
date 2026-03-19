@@ -421,6 +421,44 @@ ext_thumb() {
   ffmpeg -y -i "${x_arg}" -vf "thumbnail,scale=1000:-1" -frames:v 1 -update 1 "${x_arg_temp}" &>/dev/null
 }
 
+generate_theme() {
+    local suffix="$1"
+    local target="$2"
+    local src_suffix="$3"
+   
+    declare -A ivy
+    while IFS= read -r line || [[ -n $line ]]; do
+        line="${line#"${line%%[![:space:]]*}"}"
+        line="${line%"${line##*[![:space:]]}"}"
+        [[ -z $line || $line == \#* ]] && continue
+            [[ $line != dcol_* ]] && continue
+        key="${line%%=*}"
+        val="${line#*=}"
+        key="${key%"${key##*[![:space:]]}"}"
+        key="${key#"${key%%[![:space:]]*}"}"
+        
+        val="${val//\\/}"
+        val="${val//\"/}"
+        
+        ivy["$key"]="$val"
+    done < "${VYLE_DCOL_PATH}"
+    tmpfile="$(mktemp)"
+  {
+    echo
+    for block in {1..4}; do
+
+      echo "ivy_pry${block}${suffix}=${ivy[dcol_pry$((block))${src_suffix}]}"
+      echo "ivy_txt${block}${suffix}=${ivy[dcol_txt$((block))${src_suffix}]}"
+
+      for i in {1..9}; do
+        echo "ivy_$(((block)))xa${i}${suffix}=${ivy[dcol_$((block))xa${i}${src_suffix}]}"
+      done
+
+    done
+  } > "$tmpfile"
+  mv "${tmpfile}" "$target"
+}
+
 load_ivy_file() {
   local file="$1"
   while IFS= read -r line; do
@@ -511,6 +549,7 @@ FontRegex='^[[:alpha:] ,./+_$&*()!-]+$'
 [[ "${wallAnimationNext}" =~ ${FontRegex} ]] || wallAnimationNext="grow"
 [[ "${wallAnimationTheme}" =~ ${FontRegex} ]] || wallAnimationTheme="grow"
 [[ "${wallBackend}" =~ ${FontRegex} ]] || wallBackend="swww"
+[[ "${WallAddCustomPath}" =~ ${FontRegex} ]] || WallAddCustomPath="none"
 
 if [[ "${brightnessIconDir}" =~ ${FontRegex} ]]; then
     if [[ ! -d "${brightnessIconDir}" ]]; then 

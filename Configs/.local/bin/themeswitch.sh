@@ -3,6 +3,50 @@ set -eo pipefail
 
 [[ $VYLE_SHELL_INIT -ne 1 ]] && eval "$(vyle --init)"
 
+lockFile="${XDG_RUNTIME_DIR}/${0##*/}.lock"
+if [ -e "${lockFile}" ]; then
+    cat <<EOF
+Error: Another instance of ${0##*/} is running.
+If you are sure that no other instance of ${0##*/} running, then remove the lock file:
+    $lockFile
+EOF
+    notify-send -a "t2" -r 91190 -t 800 -i "${dunstDir}/icons/hyprdots.svg" "Vyle" "Another instance of ${0##*/} is running."
+    exit 0
+fi
+
+touch "${lockFile}"
+trap 'rm -f ${lockFile}' EXIT
+
+show_theme_status() {
+    cat <<EOF
+ :: Current theme: $VYLE_RESERVED_THEME
+ :: Cursor theme: $CURSOR_THEME
+ :: Cursor size: $CURSOR_SIZE
+ :: Terminal: $CONSOLE
+ :: Font: $GTK_FONT_NAME
+ :: Font size: $GTK_FONT_SIZE
+ :: Document font: $GTK_DOCUMENT_FONT
+ :: Document font size: $GTK_DOCUMENT_FONT_SIZE
+ :: Monospace font: $GTK_MONOSPACE_FONT
+ :: Monospace font size: $GTK_MONOSPACE_FONT_SIZE
+ ::
+ :: Selected theme: $thmChsh
+ :: Wallpaper: ${thmImg##*/}
+ :: Wallpaper Backend: $wallBackend
+ :: Framerate: ${wallFramerate}
+ :: Duration: ${wallTransDuration}
+ :: Bezier: ${wallTransitionBezier}
+ :: Animation: {
+ ::    Transition: ${wallAnimation}
+ ::    Transition Previous: ${wallAnimationPrevious}
+ ::    Transition Next: ${wallAnimationNext}
+ ::    Transition Theme: ${wallAnimationTheme}
+ :: }
+ :: Custom Paths: [${wallAddCustomPath}]
+ ::
+EOF
+}
+
 themeDir="${VYLE_CONFIG_HOME}/theme"
 rofiConf="${rasiDir}/selector.rasi"
 
@@ -10,9 +54,10 @@ themeSelTui() {
     thmChsh="${1}"
     thmImg="$(<"${themeDir}/${thmChsh}/wallpapers/.wallbash-main")"
     if [[ -n "${thmImg}" ]]; then
+        show_theme_status &
         if [[ "${VYLE_RESERVED_THEME}" != "${thmChsh}" ]]; then
             setConf "VYLE_RESERVED_THEME" "${thmChsh}" "${VYLE_STATE_HOME}/staterc" 
-        fi
+        fi & 
         if [[ "${wallDir}" != "${themeDir}/${thmChsh}/wallpapers" ]]; then
             echo " :: Theme Control - Theme '${thmChsh}' :: Wallpaper '${thmImg}' :: DcolMode '${enableWallIde}' --> '${XDG_CONFIG_HOME}'"
             notify -m 2 -i "theme_engine" -p "${thmChsh}" -s "${VYLE_CACHE_HOME}/cache/thumb/$(fl_wallpaper -t "${thmImg}" -f 1).sloc" -t 1100 -a "t1"
@@ -20,18 +65,18 @@ themeSelTui() {
         else
             echo -e " :: Theme Control - Skipped populating $thmChsh -> ${XDG_CONFIG_HOME}"
             exit 0
-        fi 
+        fi &
         if [[ "${enableWallIde}" -eq 3 ]]; then
             if [[ "${VYLE_THEME}" != "${thmChsh}" ]]; then
                 setConf "VYLE_THEME" "${thmChsh}" "${VYLE_STATE_HOME}/staterc"
-            fi
-            sed -Ei 's|^[[:space:]]*source[[:space:]]*=[[:space:]]*./themes/wallbash-ide.conf|#source = ./themes/wallbash-ide.conf|' "${XDG_CONFIG_HOME}/hypr/hyprland.conf" 
+            fi &
+            sed -Ei 's|^[[:space:]]*source[[:space:]]*=[[:space:]]*./themes/wallbash-ide.conf|#source = ./themes/wallbash-ide.conf|' "${XDG_CONFIG_HOME}/hypr/hyprland.conf"  
         else
             "${scrDir}/modules/ivyshell-helper.sh" "${themeDir}/${thmChsh}/hypr.theme"
              sed -Ei 's|^#[[:space:]]*source[[:space:]]*=[[:space:]]*./themes/wallbash-ide.conf|source = ./themes/wallbash-ide.conf|' "${XDG_CONFIG_HOME}/hypr/hyprland.conf" 
-        fi
+        fi 
         [[ ! -e "${scrDir}/swwwallswitch.sh" ]] && { notify -m 1 -p "Does swwwallswitch.sh exist?" -s "${dunstDir}/icons/hyprdots.svg" -u critical; return 1; }
-        "${scrDir}/swwwallswitch.sh" -t -i "${thmImg}" -w --swww-t -n 1 -r 1
+        "${scrDir}/swwwallswitch.sh" -t -i "${thmImg}" -w --swww-t -n 1 -r 1 
         echo -e " :: Theme Control - Populated successfully ${thmChsh} -> ${XDG_CONFIG_HOME}"
     fi
 }

@@ -1,7 +1,7 @@
 #|--/ /+-------------------------+--/ /|#
 #|-/ /-| IDE Configuration File |-/ /-|#
 #|/ /--+-------------------------+/ /--|#
-source "$VYLE_DATA_HOME/staterc.conf"
+source "${VYLE_DATA_HOME}/staterc.conf"
 
 #  █░█ █▄█ █░░ █▀▀ 
 #  ▀▄▀ ░█░ █▄▄ ██▄  
@@ -20,7 +20,7 @@ skipTemplate=${VYLE_CONFIGURATION_SKIP_TEMPLATE[@]}
 #// nProcCount, lets wallbash use the maximum or limited CPU utilization to process templates!
 #// You can limit the core utilization by declaring the number of cores to be utilized.
 #// Defaulted is '3', but $(nproc) can be used here. e.g., nProcCount=$(nproc).
-nProcCount=$(nproc)
+nProcCount=3
 
 # █░█░█ ▄▀█ █░░ █░░ █▀█ ▄▀█ █▀█ █▀▀ █▀█
 # ▀▄▀▄▀ █▀█ █▄▄ █▄▄ █▀▀ █▀█ █▀▀ ██▄ █▀▄
@@ -32,7 +32,7 @@ wallBackend="swww"
 wallFramerate=60
 
 #// set the transition duration for swww while changing wallpaper.
-wallTransDuration=0.5
+wallTransDuration=0.4
 
 #// set animation for swww while changing wallpaper.
 wallAnimation="grow"
@@ -54,19 +54,19 @@ WallAddCustomPath=("${WALLPAPER_CONFIGURATION_CUSTOMPATH[@]}")
 
 # rofiLauncher.sh configuration.
 rofiLauncherFont="JetBrainsMono Nerd Font"
-rofiLauncherScale=10
+rofiLauncherScale=9
 rofiLauncherStyle=1
 
 
 # wbselecgen.sh configuration
 rofiWallpaperFont="JetBrainsMono Nerd Font"
 rofiWallpaperScale=9
-rofiWallpaperColumn=
+rofiWallpaperColumn=4
 
 # themeswitch.sh configuration.
 rofiThemeFont="JetBrainsMono Nerd Font"
 rofiThemeScale=9
-rofiThemeColumn=
+rofiThemeColumn=2
 rofiThemeStyle=2
 
 # style-launcher.sh configuration.
@@ -74,20 +74,20 @@ rofiStyleScale=12
 
 # wallbashtoggle.sh configuration
 rofiWallbashFont="JetBrainsMono Nerd Font"
-rofiWallbashScale=10
+rofiWallbashScale=9
 
 # █░░ █▀█ █▀▀ █▀█ █░█ ▀█▀
 # █▄▄ █▄█ █▄█ █▄█ █▄█ ░█░
 
 #// wlogoutStyle sets the style for logout menu
 #// available styles - 1 (default) , 2
-wlogoutStyle=1
+wlogoutStyle=2
 
 # █▀▀ ▄▀█ █▀ ▀█▀ █▀▀ █▀▀ ▀█▀ █▀▀ █░█
 # █▀░ █▀█ ▄█ ░█░ █▀░ ██▄ ░█░ █▄▄ █▀█
 
 #// fetchIcon, sets the user directories scanned for finding fastfetch icons and randomizes. Default is to /home/iris/.config/fastfetch/icons!
-fetchIcon="$XDG_CONFIG_HOME/fastfetch/icons"
+fetchIcon="${XDG_CONFIG_HOME}/fastfetch/icons"
 
 # █▄▄ █▀█ █ █▀  █░█ ▀█▀ █▄░█ █▀▀ █▀ █▀ █▀ ▀█▀ █░░ 
 # █▄█ █▀▄ █ █▄█ █▀█ ░█░ █░▀█ ██▄ ▄█ ▄█ █▄ ░█░ █▄▄
@@ -96,7 +96,7 @@ fetchIcon="$XDG_CONFIG_HOME/fastfetch/icons"
 #// brightnessIconDir is string-type variable that needs directory for dunst to use icons.
 #// brightnessStep is integer-type variable that is determined through 0 (true) and 1 (False).
 #// brightnessNotify is integer-type, determined of 0 and 1.
-brightnessIconDir="$XDG_CONFIG_HOME/dunst/icons/vol"
+brightnessIconDir="${XDG_CONFIG_HOME}/dunst/icons/vol"
 brightnessStep=5
 brightnessNotify=0
 
@@ -106,7 +106,7 @@ brightnessNotify=0
 #// voluemcontrol.sh configuration, declarable according to user preference.
 #// volumeStep is an integer-type variable to determine the steps. For example, volumeStep is defaultly set to 5.
 #// volumeNotifyUpdateLevel & volumeNotifyMute, is an integer-type variable that suppress Notification-Popups determined through 0 (true) or {1 or greater (false)}.
-volumeIconDir="$XDG_CONFIG_HOME/dunst/icons/vol"
+volumeIconDir="${XDG_CONFIG_HOME}/dunst/icons/vol"
 volumeStep=5
 volumeNotifyUpdateLevel=0
 volumeNotifyMute=0
@@ -133,13 +133,13 @@ CURSOR_SIZE=20
 # █▀▀ ▀█▀ █▄▀
 # █▄█ ░█░ █░█
 # GTK Configuration
-GTK_FONT_NAME="CaskaydiaCove Nerd Font Mono Regular"
+GTK_FONT_NAME="CaskaydiaCove Nerd Font Mono"
 GTK_FONT_ANTIALIASING="rgba"
 GTK_FONT_HINTING="slight"
-GTK_FONT_SIZE=10
-GTK_DOCUMENT_FONT="CaskaydiaCove Nerd Font Mono Semi-Bold"
+GTK_FONT_SIZE=10.5
+GTK_DOCUMENT_FONT="JetBrainsMono Nerd Font"
 GTK_DOCUMENT_FONT_SIZE=10
-GTK_MONOSPACE_FONT="CaskaydiaCove Nerd Font Mono Semi-Bold"
+GTK_MONOSPACE_FONT="CaskaydiaCove Nerd Font Mono"
 GTK_MONOSPACE_FONT_SIZE=10
 
 # █▀▀ ▀▄▀ ▀█▀ █▀█ ▄▀█

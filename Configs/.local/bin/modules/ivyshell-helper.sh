@@ -18,7 +18,7 @@ targetDir="${2:-${XDG_CACHE_HOME:-$HOME/.cache}/wal/wal-dir/}"
 mkdir -p "$targetDir"
 confDir="${XDG_CONFIG_HOME}"
 cacheDir="${XDG_CACHE_HOME}"
-homDir="$HOME"
+homeDir="$HOME"
 
 inputPath="${@}"
 template_sources=()
@@ -56,7 +56,9 @@ fi
 [[ -f "$wbDir/theme.ivy" ]] && load_ivy_file "$wbDir/theme.ivy"
 [[ -f "$wbDir/theme-rgba.ivy" ]] && load_ivy_file "$wbDir/theme-rgba.ivy"
 
-if ! compgen -v | grep -Eq "^(${plLoader})_"; then
+export palette_vars_list=$(compgen -v | grep -E "^(${plLoader})_" | tr '\n' ' ')
+
+if [[ -z "${palette_vars_list}" ]]; then
     echo "ivygen-helper: no palette variables loaded, nothing to apply."
     exit 0
 fi
@@ -78,8 +80,7 @@ process_template() {
 
     # Read first line and trim spaces
     read -r raw_first_line < "$template_file"
-    local first_line
-    first_line="$(printf "%s" "$raw_first_line" | sed 's/[[:space:]]*$//')"
+    local first_line="${raw_first_line%"${raw_first_line##*[![:space:]]}"}"
 
     # Remove first line from template content
     local template_content
@@ -110,49 +111,52 @@ process_template() {
     [[ -n "$script" ]] && script="${script//\$(scrDir)/$scrDir}"
     [[ -n "$script" ]] && script="${script//\$(confDir)/$confDir}"
     [[ -n "$script" ]] && script="${script//\$(cacheDir)/$cacheDir}"
-    [[ -n "$script" ]] && script="${script//\$(homDir)/$homDir}"
+    [[ -n "$script" ]] && script="${script//\$(homeDir)/$homeDir}"
 
     # Replace placeholders
-    for var in $(compgen -v | grep -E "^(${plLoader})_" ); do
-        value="${!var}"       # original value
-        placeholder="<${var}>"
+    if [[ "$template_content" =~ \<(${plLoader})_.* ]]; then
+        for var in ${palette_vars_list}; do
+            value="${!var}"       # original value
+            placeholder="<${var}>"
 
-    # 1) Replace simple <wallbash_XXXX>
-        template_content="${template_content//${placeholder}/${value}}"
+        # 1) Replace simple <wallbash_XXXX>
+            template_content="${template_content//${placeholder}/${value}}"
 
-    # 2) Replace <wallbash_XXXX_rgba>
-        if [[ "$var" == *_rgba ]]; then
-            placeholder_rgba="<${var}>"
-            template_content="${template_content//${placeholder_rgba}/${value}}"
+        # 2) Replace <wallbash_XXXX_rgba>
+            if [[ "$var" == *_rgba ]]; then
+                placeholder_rgba="<${var}>"
+                template_content="${template_content//${placeholder_rgba}/${value}}"
 
-        # 3) Replace <wallbash_XXXX_rgba(X)>
-        # Use regex to find all occurrences with optional alpha
-            while [[ "$template_content" =~ \<${var}\(([0-9.]+)\)\> ]]; do
-                alpha="${BASH_REMATCH[1]}"
-                if [[ "$value" =~ rgba\(([0-9]+),([0-9]+),([0-9]+),([0-9.]+)\) ]]; then
-                    r="${BASH_REMATCH[1]}"
-                    g="${BASH_REMATCH[2]}"
-                    b="${BASH_REMATCH[3]}"
-                    template_content="${template_content//<${var}(${alpha})>/rgba($r,$g,$b,$alpha)}"
-                else
-                # Fallback: remove placeholder if badly formatted
-                    template_content="${template_content//<${var}(${alpha})>/$value}"
-                fi
-            done
-        fi
-    done
+            # 3) Replace <wallbash_XXXX_rgba(X)>
+            # Use regex to find all occurrences with optional alpha
+                while [[ "$template_content" =~ \<${var}\(([0-9.]+)\)\> ]]; do
+                    alpha="${BASH_REMATCH[1]}"
+                    if [[ "$value" =~ rgba\(([0-9]+),([0-9]+),([0-9]+),([0-9.]+)\) ]]; then
+                        r="${BASH_REMATCH[1]}"
+                        g="${BASH_REMATCH[2]}"
+                        b="${BASH_REMATCH[3]}"
+                        template_content="${template_content//<${var}(${alpha})>/rgba($r,$g,$b,$alpha)}"
+                    else
+                    # Fallback: remove placeholder if badly formatted
+                        template_content="${template_content//<${var}(${alpha})>/$value}"
+                    fi
+                done
+            fi
+        done
+    fi
 
 
     # -----------------------
     # Write template output
     # -----------------------
-    mkdir -p "$(dirname "$target")"
-    if [[ ! -f "$target" || "$(cat "$target")" != "$template_content" ]]; then
-        printf "%s" "$template_content" > "$target" 
+    target_dir="${target%/*}"
+    [[ -d "${target_dir}" ]] ||  mkdir -p "${target_dir}"
+    if [[ ! -f "${target}" ]] || ! printf "%s" "$template_content" | cmp -s - "$target"; then
+        printf "%s" "$template_content" > "$target"
         echo " :: Theme Control - Populating ${target} <- ${template_file}"
     else
         echo " :: Theme Control - Skipped changing ${target} <- ${template_file}"
-        exit 0
+        return 0
     fi
 
     # -----------------------
@@ -173,8 +177,8 @@ process_template() {
 }
 
 export -f process_template setConf notify tomlq
-export scrDir confDir cacheDir targetDir homDir shellDir plLoader thmDcolDir __clause skipTemplate nProcCount
-for var in $(compgen -v | grep -E "^(${plLoader})_"); do export "$var"; done
+export scrDir confDir cacheDir targetDir homeDir shellDir plLoader thmDcolDir __clause skipTemplate nProcCount
+for var in ${palette_vars_list}; do export "$var"; done
 
 # -----------------------
 # Run templates in parallel
@@ -184,6 +188,8 @@ if [[ -f "${template_sources[0]}" ]]; then
     process_template "${template_sources[0]}"
 else
     find "${template_sources[@]}" -type f \( -name '*.dcol' -o -name '*.ivy' -o -name '*.theme' \) "${__clause[@]}" -print0 \
-        | xargs -0 -n 1 -P "${nProcCount}" bash -c 'process_template "$@"' _
+        | sort -zVf \
+        | xargs -0 -n 1 -P "${nProcCount}" bash -c 'process_template "$1"' _
 fi
+
 

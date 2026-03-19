@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+$XDG_CONFIG_HOME/hypr/scripts/toggle-waybar.sh
+
 (
     pkill -SIGUSR1 nautilus || true
     pkill -SIGUSR1 file-roller || true

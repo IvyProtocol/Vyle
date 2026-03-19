@@ -1,4 +1,4 @@
-$(confDir)/hypr/themes/wallbash-ide.conf|$RUN:hyprctl reload >/dev/null 2>&1 &
+$(confDir)/hypr/themes/wallbash-ide.conf
 
 #//---ivy mode enabled---
 # Overriding the values below - DO NOT OVERWRITE --- # IF YOU DO, THEN EDIT $(confDir)/ivy-shell/shell/hypr.ivy-- #
