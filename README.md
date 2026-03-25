@@ -2,8 +2,6 @@
 
 ![banner](Source/assets/irgen.gif)
 
-### Ivy-Dotfiles
-
 A personal Hyprland-based desktop configuration with ivy-shell (Wallbash Fork from [HyDE](https://github.com/HyDE-Project/HyDE))
 
 </div>
@@ -33,8 +31,8 @@ Please reboot the system after the step has been taken and takes you to SDDM log
 ## Repository Layout
 
 ```text
-tree Iricalgen-dotfiles/                                                                         23:13 
-Iricalgen-dotfiles/ <-------- $(rpDir)
+tree VyLE                                                                         23:13 
+VyLE/ <-------- $(rpDir)
 ├── Configs <--- Main Configuration
 ├── LICENSE
 ├── README.md
