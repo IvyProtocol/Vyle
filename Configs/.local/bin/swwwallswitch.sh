@@ -4,18 +4,18 @@ set -eo pipefail
 scrDir=$(dirname "$(realpath "$0")")
 source "$scrDir/globalcontrol.sh"
 
-lockFile="${XDG_RUNTIME_DIR}/${0##*/}.lock"
-if [[ -e "${lockFile}" ]]; then
+lock_File="${XDG_RUNTIME_DIR}/${0##*/}.lock"
+if [[ -e "${lock_File}" ]]; then
     cat << EOF
 Error: Another instance of ${0##*/} is running. 
 If you are sure that no other instance is running. Remove the the lock file:
-    $lockFile
+    $lock_File
 EOF
     notify-send -a "t2" -r 91190 -t 800 -i "${dunstDir}/icons/hyprdots.svg" "Vyle" "Another instance of ${0##*/} is running."
     exit 0
 fi
-touch "${lockFile}"
-trap 'rm -f ${lockFile}' EXIT
+touch "${lock_File}"
+trap 'rm -f ${lock_File}' EXIT
 
 wallSel="${wallDir}"
 dcolDir="${VYLE_CACHE_HOME}/shell"
@@ -82,13 +82,21 @@ wallSelTui() {
         ln -sf "${thumbDir}/${scRun}.sloc" "${rasiDir}/wall.thmb"
         ln -sf "${cacheDir}/${thmExtn}/${scRun}.${thmExtn}" "${VYLE_CONFIG_HOME}/theme/${VYLE_RESERVED_THEME}/wall.set"
     } &
+    
+    VYLE_IMAGE_SOURCE="${img}"
     case $swi in
-        --swww-p) swww img "$img" -t "${wallAnimationPrevious}" --transition-bezier "${wallTransitionBezier}" --transition-duration "${wallTransDuration}" --transition-step "${wallTransitionStep}" --transition-fps "${wallFramerate}" --invert-y --transition-pos "$(hyprctl cursorpos | grep -E '^[0-9]' || echo "0,0")" ;;
-        --swww-n) swww img "$img" -t "${wallAnimationNext}" --transition-bezier "${wallTransitionBezier}" --transition-duration "${wallTransDuration}" --transition-step "${wallTransitionStep}" --transition-fps "${wallFramerate}" --invert-y --transition-pos "$(hyprctl cursorpos | grep -E '^[0-9]' || echo "0,0")" ;;
-        --swww-t) swww img "$img" -t "${wallAnimationTheme}" --transition-bezier "${wallTransitionBezier}" --transition-duration "${wallTransDuration}" --transition-step "${wallTransitionStep}" --transition-fps "${wallFramerate}" --invert-y --transition-pos "$(hyprctl cursorpos | grep -E '^[0-9]' || echo "0,0")" ;;
-        *)        swww img "$img" -t "${wallAnimation}" --transition-bezier "${wallTransitionBezier}" --transition-duration "${wallTransDuration}" --transition-step "${wallTransitionStep}" --transition-fps "${wallFramerate}" --invert-y  ;;
+        --swww-p) 
+            WALLPAPER_SET_FLAGS="-p"
+            ;;
+        --swww-t)
+            WALLPAPER_SET_FLAGS="-t"
+            ;;
+        --swww-n | *) 
+            WALLPAPER_SET_FLAGS="-n"
+            ;;
     esac  
-    sleep "${wallTransDuration}"
+    source "${scrDir}/wallpaper.hybrid.sh"
+    sleep 0.6
     case "${schIPC}" in
         dark|light|auto) 
             read -r hashMech <<< "$(md5sum "${img}" | awk '{print $1}')"

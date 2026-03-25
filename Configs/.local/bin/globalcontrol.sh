@@ -14,6 +14,8 @@ rasiDir="$XDG_CONFIG_HOME/rofi/shared"
 rofiStyleDir="$XDG_CONFIG_HOME/rofi/styles"
 rofiAssetDir="$rasiDir/assets"
 
+VYLE_SHELL_INIT=1
+
 set +e
 env_pkg() {
   local envPkg statsPkg defAur
@@ -457,6 +459,7 @@ generate_theme() {
     done
   } > "$tmpfile"
   mv "${tmpfile}" "$target"
+  rm -rf "${tmpfile}"
 }
 
 load_ivy_file() {
@@ -505,7 +508,6 @@ case "${enableWallIde}" in
 esac
 
 [[ "${wallFramerate}" =~ ^[0-9]+$ ]] || wallFramerate=144
-[[ "${wallAnimation}" =~ ^[0-9]+$ ]] || wallAnimation="any"
 [[ "${brightnessStep}" =~ ^[0-9]+$ ]] || brightnessStep=5
 [[ "${brightnessNotify}" =~ ^[0-9]+$ ]] || brightnessNotify=0
 [[ "${volumeStep}" =~ ^[0-9]+$ ]] || volumeStep=5
@@ -593,6 +595,7 @@ export \
     GTK_FONT_ANTIALIASING \
     GTK_DOCUMENT_FONT_SIZE \
     GTK_MONOSPACE_FONT_SIZE \
+    VYLE_SHELL_INIT \
     GTK_FONT_HINTING \
     GTK_DOCUMENT_FONT \
     GTK_MONOSPACE_FONT \

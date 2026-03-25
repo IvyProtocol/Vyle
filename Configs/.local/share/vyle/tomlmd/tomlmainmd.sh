@@ -20,13 +20,13 @@ skipTemplate=${VYLE_CONFIGURATION_SKIP_TEMPLATE[@]}
 #// nProcCount, lets wallbash use the maximum or limited CPU utilization to process templates!
 #// You can limit the core utilization by declaring the number of cores to be utilized.
 #// Defaulted is '3', but $(nproc) can be used here. e.g., nProcCount=$(nproc).
-nProcCount=3
+nProcCount=$(nproc)
 
 # █░█░█ ▄▀█ █░░ █░░ █▀█ ▄▀█ █▀█ █▀▀ █▀█
 # ▀▄▀▄▀ █▀█ █▄▄ █▄▄ █▀▀ █▀█ █▀▀ ██▄ █▀▄
 
 # Chosen Backend! SWWW
-wallBackend="swww"
+wallBackend="awww"
 
 #// set the transition FPS while changing wallpaper.
 wallFramerate=60
@@ -35,7 +35,6 @@ wallFramerate=60
 wallTransDuration=0.4
 
 #// set animation for swww while changing wallpaper.
-wallAnimation="grow"
 wallAnimationPrevious="outer"
 wallAnimationNext="grow"
 wallAnimationTheme="grow"
