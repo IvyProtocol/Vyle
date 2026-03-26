@@ -45,7 +45,7 @@ fi
 # -----------------------
 [[ "$EUID" -eq 0 ]] && echo "[$0] must not be run as root." >&2 && exit 1
 
- if ! find "$shellDir" "${thmDcolDir}" -type f \( -name '*.dcol' -o -name '*.ivy' -o -name '*.theme' \) -print -quit | grep -q .; then
+if ! find "$shellDir" "${thmDcolDir}" -type f \( -name '*.dcol' -o -name '*.ivy' -o -name '*.theme' \) -print -quit | grep -q .; then
     echo "ivygen-helper: no .dcol or .ivy templates found, nothing to apply."
     exit 0
 fi
@@ -56,7 +56,7 @@ fi
 [[ -f "$wbDir/theme.ivy" ]] && load_ivy_file "$wbDir/theme.ivy"
 [[ -f "$wbDir/theme-rgba.ivy" ]] && load_ivy_file "$wbDir/theme-rgba.ivy"
 
-export palette_vars_list=$(compgen -v | grep -E "^(${plLoader})_" | tr '\n' ' ')
+export palette_vars_list=$(compgen -v | grep -E "^(${plLoader})_")
 
 if [[ -z "${palette_vars_list}" ]]; then
     echo "ivygen-helper: no palette variables loaded, nothing to apply."
@@ -64,28 +64,37 @@ if [[ -z "${palette_vars_list}" ]]; then
 fi
 
 # -----------------------
-# Template processing function
+# Template processing engine - PERL
 # -----------------------
+export PERL_REPLACER='
+    my %env = %ENV;
+
+    # Subroutine to handle the replacement logic safely
+    sub r {
+        my ($rgba_var, $op, $std_var) = @_;
+        if ($std_var) {
+            return $env{$std_var} // $_[0];
+        }
+        if (defined $env{$rgba_var} && $env{$rgba_var} =~ /rgba\((\d+),(\d+),(\d+),[\d.]+\)/) {
+            return "rgba($1,$2,$3,$op)";
+        }
+        return $_[0];
+    }
+
+    while (<>) {
+        # Match <VAR> or <VAR_rgba(OP)> and pass captures to r()
+        s/(< (?:(\w+_rgba)\(([^)]+)\)|(\w+)) >)/r($2, $3, $4)/gex;
+        print;
+    }
+'
+
 process_template() {
-    set +u
     local template_file="$1"
-    
-    case "$template_file" in
-    *.dcol|*.ivy|*.theme) ;;
-    *)
-        echo "ivygen-helper: unsupported template type: $template_file" >&2
-        return 0
-        ;;
-    esac
+    [[ ! -f "$template_file" ]] && return 0
 
     # Read first line and trim spaces
     read -r raw_first_line < "$template_file"
     local first_line="${raw_first_line%"${raw_first_line##*[![:space:]]}"}"
-
-    # Remove first line from template content
-    local template_content
-    template_content=$(<"$template_file")
-    template_content="${template_content#*$'\n'}"
 
     # Determine target and optional script
     local target script=""
@@ -96,63 +105,29 @@ process_template() {
         target="$first_line"
     else
         rel="$(realpath --relative-to="$shellDir" "$template_file")"
-        case "$rel" in
-            *.dcol) target="$targetDir/$(rel%.dcol)" ;;
-            *.ivy)  target="$targetDir/$(rel%.ivy)" ;;
-            *.theme) target="$targetDir/$(rel%.theme)"
-        esac
+        target="$targetDir/${rel%.*}"
     fi
 
     # Expand special variables
     target="${target//\$(scrDir)/$scrDir}"
     target="${target//\$(confDir)/$confDir}"
     target="${target//\$(cacheDir)/$cacheDir}"
-    target="${target//\$(homDir)/$homDir}"
+    target="${target//\$(homDir)/$homeDir}"
     [[ -n "$script" ]] && script="${script//\$(scrDir)/$scrDir}"
     [[ -n "$script" ]] && script="${script//\$(confDir)/$confDir}"
     [[ -n "$script" ]] && script="${script//\$(cacheDir)/$cacheDir}"
     [[ -n "$script" ]] && script="${script//\$(homeDir)/$homeDir}"
 
-    # Replace placeholders
-    if [[ "$template_content" =~ \<(${plLoader})_.* ]]; then
-        for var in ${palette_vars_list}; do
-            value="${!var}"       # original value
-            placeholder="<${var}>"
-
-        # 1) Replace simple <wallbash_XXXX>
-            template_content="${template_content//${placeholder}/${value}}"
-
-        # 2) Replace <wallbash_XXXX_rgba>
-            if [[ "$var" == *_rgba ]]; then
-                placeholder_rgba="<${var}>"
-                template_content="${template_content//${placeholder_rgba}/${value}}"
-
-            # 3) Replace <wallbash_XXXX_rgba(X)>
-            # Use regex to find all occurrences with optional alpha
-                while [[ "$template_content" =~ \<${var}\(([0-9.]+)\)\> ]]; do
-                    alpha="${BASH_REMATCH[1]}"
-                    if [[ "$value" =~ rgba\(([0-9]+),([0-9]+),([0-9]+),([0-9.]+)\) ]]; then
-                        r="${BASH_REMATCH[1]}"
-                        g="${BASH_REMATCH[2]}"
-                        b="${BASH_REMATCH[3]}"
-                        template_content="${template_content//<${var}(${alpha})>/rgba($r,$g,$b,$alpha)}"
-                    else
-                    # Fallback: remove placeholder if badly formatted
-                        template_content="${template_content//<${var}(${alpha})>/$value}"
-                    fi
-                done
-            fi
-        done
-    fi
-
-
+    # Call perl to replace placeholders.
+    local template_write=$(tail -n +2 "$template_file" | perl -e "$PERL_REPLACER")
     # -----------------------
     # Write template output
     # -----------------------
+    
     target_dir="${target%/*}"
-    [[ -d "${target_dir}" ]] ||  mkdir -p "${target_dir}"
-    if [[ ! -f "${target}" ]] || ! printf "%s" "$template_content" | cmp -s - "$target"; then
-        printf "%s" "$template_content" > "$target"
+    [[ -d "${target_dir}" ]] || mkdir -p "${target_dir}"
+    if [[ ! -f "${target}" ]] || ! printf "%s" "$template_write" | cmp -s - "$target"; then
+        printf "%s" "${template_write}" > "$target"
         echo " :: Theme Control - Populating ${target} <- ${template_file}"
     else
         echo " :: Theme Control - Skipped changing ${target} <- ${template_file}"
@@ -169,8 +144,6 @@ process_template() {
         # Executable file
         elif [[ -x "$script" ]]; then
             "$script"
-        else
-            echo " :: Theme Control - Skipping non-executable script from ${template_file}"
         fi
     fi
     set -u
@@ -178,7 +151,6 @@ process_template() {
 
 export -f process_template setConf notify tomlq
 export scrDir confDir cacheDir targetDir homeDir shellDir plLoader thmDcolDir __clause skipTemplate nProcCount
-for var in ${palette_vars_list}; do export "$var"; done
 
 # -----------------------
 # Run templates in parallel
@@ -189,7 +161,5 @@ if [[ -f "${template_sources[0]}" ]]; then
 else
     find "${template_sources[@]}" -type f \( -name '*.dcol' -o -name '*.ivy' -o -name '*.theme' \) "${__clause[@]}" -print0 \
         | sort -zVf \
-        | xargs -0 -n 1 -P "${nProcCount}" bash -c 'process_template "$1"' _
+        | xargs -0 -n 5 -P "${nProcCount}" bash -c 'for f in "$@"; do process_template "$f"; done' _
 fi
-
-
