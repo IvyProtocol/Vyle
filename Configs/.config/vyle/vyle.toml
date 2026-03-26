@@ -27,26 +27,26 @@ Animation_Theme = "grow" # Transition AnimationTheme.
 # rofilauncher.sh configuration.
 [Rofi.Launch]
 Font = "JetBrainsMono Nerd Font" # Font for rofilauncher.sh
-Scale = 9 # Scale for rofilauncher.sh
+Scale = 10 # Scale for rofilauncher.sh
 Style = 1
 
 # wbselecgen.sh configuration.
 [Rofi.Wallpaper]
 Font = "JetBrainsMono Nerd Font" # Font for wbselecgen.sh
-Scale = 9 # Scale for wbselecgen.sh
-Column = 4 # Column for wbselecgen.sh
+Scale = 10 # Scale for wbselecgen.sh
+Column = 3 # Column for wbselecgen.sh
 
 # themeswitch.sh configuration.
 [Rofi.Theme]
 Font = "JetBrainsMono Nerd Font" # Font for themeswitch.sh
-Scale = 9 # Scale for themeswitch.sh
-Column = 2 # Column for themeswitch.sh
-Style = 2 # Style for themeswitch.sh
+Scale = 10 # Scale for themeswitch.sh
+Column = 1 # Column for themeswitch.sh
+Style = 1 # Style for themeswitch.sh
 
 # wallbashtoggle.sh configuraiton
 [Rofi.Wallbash]
 Font = "JetBrainsMono Nerd Font" # Font for wallbashtoggle.sh
-Scale = 9 # Scale for wallbashtoggle.sh
+Scale = 1- # Scale for wallbashtoggle.sh
 
 # style-launcher.sh configuration.
 [Rofi.Switch]
@@ -56,7 +56,7 @@ Scale = 12 # Scale for style-launcher.sh
 # █▄▄ █▄█ █▄█ █▄█ █▄█ ░█░
 # logoutlaunch.sh configuration.
 [Wlogout]
-Style = 2 # Style for logoutlauncher.sh | Picks up style for wlogout!
+Style = 1 # Style for logoutlauncher.sh | Picks up style for wlogout!
 
 # █▀▀ ▄▀█ █▀ ▀█▀ █▀▀ █▀▀ ▀█▀ █▀▀ █░█
 # █▀░ █▀█ ▄█ ░█░ █▀░ ██▄ ░█░ █▄▄ █▀█

@@ -122,7 +122,7 @@ process_template() {
     [[ -n "$script" ]] && script="${script//\$(themesDir)/$themesDir}"
 
     # Call perl to replace placeholders.
-    local template_write=$(tail -n +2 "$template_file" | perl -e "$PERL_REPLACER")
+    local template_write=$(perl -e 'scalar <>;' -e  "$PERL_REPLACER" "$template_file")
     # -----------------------
     # Write template output
     # -----------------------
@@ -147,6 +147,8 @@ process_template() {
         # Executable file
         elif [[ -x "$script" ]]; then
             "$script"
+        else
+            echo " :: Theme Control - Skipping non-executable script from ${template_file}"
         fi
     fi
     set -u
@@ -163,6 +165,63 @@ if [[ -f "${template_sources[0]}" ]]; then
     process_template "${template_sources[0]}"
 else
     find "${template_sources[@]}" -type f \( -name '*.dcol' -o -name '*.ivy' -o -name '*.theme' \) "${__clause[@]}" -print0 \
-        | sort -zVf \
-        | xargs -0 -n 5 -P "${nProcCount}" bash -c 'for f in "$@"; do process_template "$f"; done' _
+        | perl -e '
+    use POSIX ":sys_wait_h";
+
+    my $max = $ENV{nProcCount} || 4;
+    my %pids;
+    local $/ = "\0";
+
+    # 1. AUTO-SORT (Natural Sort): 
+    # This automatically handles 1, 2, 10... regardless of prefix/suffix.
+    my @files = sort {
+        my @a_parts = split(/(\d+)/, $a);
+        my @b_parts = split(/(\d+)/, $b);
+        my $res = 0;
+        for (my $i = 0; $i < @a_parts && $i < @b_parts; $i++) {
+            if ($a_parts[$i] =~ /^\d+$/ && $b_parts[$i] =~ /^\d+$/) {
+                $res = $a_parts[$i] <=> $b_parts[$i];
+            } else {
+                $res = lc($a_parts[$i]) cmp lc($b_parts[$i]);
+            }
+            last if $res;
+        }
+        $res || @a_parts <=> @b_parts;
+    } <STDIN>;
+
+    # 2. Parallel Dispatcher
+    foreach my $f (@files) {
+        chomp($f);
+        next unless $f;
+
+        # Keep pool at $max_workers
+        if (keys %pids >= $max) {
+            my $waited = wait();
+            delete $pids{$waited} if $waited > 0;
+        }
+
+        my $pid = fork();
+        die "Fork failed" unless defined $pid;
+
+        if ($pid == 0) {
+            # Execute your Bash function directly
+            exec("bash", "-c", "process_template \"$f\"");
+            exit(0);
+        } else {
+            $pids{$pid} = 1;
+        }
+
+        # Non-blocking reap to keep the process table clean
+        while ((my $zombie = waitpid(-1, WNOHANG)) > 0) {
+            delete $pids{$zombie};
+        }
+    }
+
+    # 3. Final Wait (The "No-Hang" version)
+    while (keys %pids) {
+        my $last_pid = wait();
+        last if $last_pid < 0;
+        delete $pids{$last_pid};
+    }
+'
 fi

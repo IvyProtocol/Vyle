@@ -1,4 +1,4 @@
-$(themesDir)/Wallbash-Gtk/gtk-2.0/gtkrc|$RUN:$(scrDir)/gtk.sh &
+$(themesDir)/Wallbash-Gtk/gtk-2.0/gtkrc
 # Oomox GTK Theme (Numix Fork)
 # Modified as template for ivy
 gtk-color-scheme =

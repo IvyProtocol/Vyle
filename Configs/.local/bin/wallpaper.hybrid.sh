@@ -77,6 +77,6 @@ ${wallBackend} img "${SELECTED_WALL}" \
   --transition-step "${wallTransitionStep}" \
   --transition-fps "${xframerate}" \
   --invert-y \
-  --transition-pos "${xpos}"  
+  --transition-pos "${xpos}" 
 
 

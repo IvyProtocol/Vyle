@@ -184,7 +184,7 @@ theme_control() {
 
 case "${1}" in
     -n | --next)
-        theme_control --n 
+        theme_control --n  
         ;;
     -p | --prev)
         theme_control --p
@@ -198,6 +198,6 @@ case "${1}" in
     * | --select)
         thmSelEnv
         ;;
-esac
+esac 
 
 

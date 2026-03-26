@@ -1,4 +1,4 @@
-$(confDir)/dunst/wallbash.conf|$RUN:$(scrDir)/../wallbashdunst.sh
+$(confDir)/dunst/wallbash.conf|$RUN:$(scrDir)/wallbashdunst.sh
 [urgency_low]
     background = "#<ivy_3xa5>80"
     foreground = "#<ivy_3xa9>E6"

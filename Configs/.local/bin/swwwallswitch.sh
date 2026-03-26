@@ -95,7 +95,7 @@ wallSelTui() {
             ;;
     esac  
     source "${scrDir}/wallpaper.hybrid.sh"
-    sleep 0.6
+    sleep 0.55
     
     read -r hashMech <<< "$(md5sum "${img}" | awk '{print $1}')"
     case "${schIPC}" in

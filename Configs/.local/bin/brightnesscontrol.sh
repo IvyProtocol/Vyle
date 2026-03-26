@@ -2,39 +2,69 @@
 scrDir="$(dirname "$(realpath "$0")")"
 source "${scrDir}/globalcontrol.sh"
 
-get_brightness() {
-    brightnessctl -m | cut -d, -f4 | tr -d '%'
+brightness_control() {
+    
+    export brightnessIconDir
+    export steps="$1"
+    perl -e '
+my $brightnessIconDir = $ENV{brightnessIconDir};
+my $steps = $ENV{steps};
+
+sub get_brightness {
+    chomp(my $brightness = qx(brightnessctl -m | cut -d, -f4 | tr -d '%'));
+    return $brightness;
 }
 
-send_notify() {
-    local brightness=$1
-    local angle=$(( (brightness + 2) / 5 * 5 ))
-    ico="${brightnessIconDir}/vol-${angle}.svg"
-    bar=$(seq -s "." $(($brightness / 15)) | sed 's/[0-9]//g' )
-    notify-send -a "t2" -r 91190 -t 800 -i "${ico}" "${brightness}${bar}" "$(hyprctl -j monitors | jq -r '.[] | select(.focused==true) | .description')" 
+sub send_notify {
+    my ($brightness) = @_;
+    my $angle = int(($brightness + 2.5) / 5 ) * 5;
+    my $ico = "${brightnessIconDir}/vol-${angle}.svg";
+    my $step = int($brightness / 15);
+    chomp(my $bar = qx(seq -s "." $step | sed "s/[0-9]//g"));
+
+    chomp(my $monitor = qx(
+        hyprctl -j monitors | jq -r ".[] | select(.focused==true) | .description"
+        ));
+
+    system(
+        "notify-send",
+        "-a", "t2",
+        "-r", "91190",
+        "-t", "800",
+        "-i", $ico,
+        "${brightness}${bar}",
+        "${monitor}"
+    );
 }
 
-chsh_brightctl() {
-    local delta current new 
-    delta=$1
-    current=$(get_brightness)
-    new=$((current + delta))
+sub change_brightness {
+    my ($delta) = @_;
+    my $current = get_brightness();
+    my $new = int($current + $delta);
 
-    (( new < 5 )) && new=5
-    (( new > 100 )) && new=100
+    $new = 5 if $new < 5;
+    $new = 100 if $new > 100;
 
-    brightnessctl set "${new}%"
-    [[ "${brightnessNotify}" -ge 1 ]] || send_notify "${new}"
+    system("brightnessctl", "set", "${new}%");
+    send_notify($new);
+}
+
+if (( $steps eq "--get" )) {
+    print get_brightness();
+} 
+else {
+    change_brightness($steps);
+}
+'
 }
 
 case "$1" in
     "--inc")
-        chsh_brightctl "${brightnessStep}"
+        brightness_control "${brightnessStep}"
         ;;
     "--dec")
-        chsh_brightctl "-${brightnessStep}"
+        brightness_control "-${brightnessStep}"
         ;;
-    *"|--get")
-        get_brightness
-        ;;
+    "--get")
+        brightness_control "--get"
 esac
