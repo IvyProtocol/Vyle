@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
-[[ $VYLE_SHELL_INIT -ne 1 ]] && eval "$(vyle --init)"
+scrDir="$(dirname "$(realpath "$0")")"
+source "${scrDir}/globalcontrol.sh"
 
 lockFile="${XDG_RUNTIME_DIR}/${0##*/}.lock"
 if [ -e "${lockFile}" ]; then
@@ -47,6 +48,23 @@ show_theme_status() {
 EOF
 }
 
+show_help_status() {
+    cat << EOF
+ :: Vyle-Project's Theme-Switcher
+ :: 
+ :: Usage: ${0##*/} [flags]
+ ::
+ :: Available Flags:
+ ::     -n | --next     Switch to the next theme.
+ ::     -p | --prev     Switch to the previous theme.
+ ::     -t | --tui      Requires an argument. 
+ ::                         Example: ${0##*/} -t Decay-Green
+ ::        | --select   Select wallpaper from rofi
+ ::     -h | --help     Help Menu
+ ::
+EOF
+}
+
 themeDir="${VYLE_CONFIG_HOME}/theme"
 rofiConf="${rasiDir}/selector.rasi"
 
@@ -59,7 +77,7 @@ themeSelTui() {
             setConf "VYLE_RESERVED_THEME" "${thmChsh}" "${VYLE_STATE_HOME}/staterc" 
         fi & 
         if [[ "${wallDir}" != "${themeDir}/${thmChsh}/wallpapers" ]]; then
-            echo " :: Theme Control - Theme '${thmChsh}' :: Wallpaper '${thmImg}' :: DcolMode '${enableWallIde}' --> '${XDG_CONFIG_HOME}'"
+            echo " :: Theme Control - Theme '${thmChsh}' :: Wallpaper '${thmImg}' :: DcolMode '${enableWallIde}' --> '${XDG_CONFIG_HOME}'" 
             notify -m 2 -i "theme_engine" -p "${thmChsh}" -s "${VYLE_CACHE_HOME}/cache/thumb/$(fl_wallpaper -t "${thmImg}" -f 1).sloc" -t 1100 -a "t1"
             setConf "wallDir" "${themeDir}/${thmChsh}/wallpapers" "${VYLE_STATE_HOME}/staterc"
         else
@@ -72,7 +90,7 @@ themeSelTui() {
             fi &
             sed -Ei 's|^[[:space:]]*source[[:space:]]*=[[:space:]]*./themes/wallbash-ide.conf|#source = ./themes/wallbash-ide.conf|' "${XDG_CONFIG_HOME}/hypr/hyprland.conf"  
         else
-            "${scrDir}/modules/ivyshell-helper.sh" "${themeDir}/${thmChsh}/hypr.theme"
+            "${scrDir}/tmq.write.sh" "${themeDir}/${thmChsh}/hypr.theme"
              sed -Ei 's|^#[[:space:]]*source[[:space:]]*=[[:space:]]*./themes/wallbash-ide.conf|source = ./themes/wallbash-ide.conf|' "${XDG_CONFIG_HOME}/hypr/hyprland.conf" 
         fi 
         [[ ! -e "${scrDir}/swwwallswitch.sh" ]] && { notify -m 1 -p "Does swwwallswitch.sh exist?" -s "${dunstDir}/icons/hyprdots.svg" -u critical; return 1; }
@@ -165,16 +183,19 @@ theme_control() {
 }
 
 case "${1}" in
-    -n)
+    -n | --next)
         theme_control --n 
         ;;
-    -p)
+    -p | --prev)
         theme_control --p
         ;;
-    -t)
+    -t | -tui)
         themeSelTui "$2"
         ;;
-    *)
+    -h | --help)
+        show_help_status 
+        ;;
+    * | --select)
         thmSelEnv
         ;;
 esac

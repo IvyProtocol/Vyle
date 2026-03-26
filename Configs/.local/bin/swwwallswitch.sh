@@ -64,7 +64,6 @@ wallSelTui() {
     {
         echo "${img}" > "${VYLE_CONFIG_HOME}/theme/${VYLE_RESERVED_THEME}/wallpapers/.wallbash-main"
         echo -e " :: Theme Control - ${0##*/} - Wallpaper Control - Applying ${img}"
-        echo -e " :: "
         [[ "${ntSend}" -eq 0 ]] && notify -m 2 -i "theme_engine" -p "${img##*/}" -s "${thumbDir}/$(fl_wallpaper -t "${img}" -f 1).sloc" -a "t1" -t 1600
 
         case "${rofiThemeStyle}" in
@@ -97,9 +96,10 @@ wallSelTui() {
     esac  
     source "${scrDir}/wallpaper.hybrid.sh"
     sleep 0.6
+    
+    read -r hashMech <<< "$(md5sum "${img}" | awk '{print $1}')"
     case "${schIPC}" in
         dark|light|auto) 
-            read -r hashMech <<< "$(md5sum "${img}" | awk '{print $1}')"
             if [[ -f "${dcolDir}/${dcolMode}/ivy-${hashMech}.dcol" ]]; then
                 VYLE_DCOL_PATH="${dcolDir}/${dcolMode}/ivy-${hashMech}.dcol"
             else
@@ -114,11 +114,10 @@ wallSelTui() {
             [[ -e "${VYLE_DCOL_PATH}" ]]
             generate_theem "" "${VYLE_CONFIG_HOME}/theme.ivy" ""
             generate_theme "_rgba" "${VYLE_CONFIG_HOME}/theme-rgba.ivy" "_rgba"
-            ionice -c 3 nice -n 19 "${scrDir}/modules/ivyshell-helper.sh"
+            ionice -c 3 nice -n 19 "${scrDir}/tmq.write.sh"
             ;;
         theme|*)
             if [[ "${enableWallIde}" -eq 3 && "${dcolMode}" == "theme" ]]; then
-                read -r hashMech <<< $(hashmap -v -t "${img}" | awk -F '"' '{print $2}')
                 if [[ -f "${dcolDir}/auto/ivy-${hashMech}.dcol" ]]; then
                     true
                 else
@@ -126,7 +125,6 @@ wallSelTui() {
                 fi
                 VYLE_DCOL_PATH="${dcolDir}/auto/ivy-${hashMech}.dcol"
             else
-                read -r hashMech <<< "$(md5sum "${img}" | awk '{print $1}')"
                 if [[ -f "${dcolDir}/${dcolMode}/ivy-${hashMech}.dcol" ]]; then
                     VYLE_DCOL_PATH="${dcolDir}/${dcolMode}/ivy-${hashMech}.dcol"
                 else
@@ -137,9 +135,9 @@ wallSelTui() {
             [[ -e "${VYLE_DCOL_PATH}" ]]
             generate_theme "" "${VYLE_CONFIG_HOME}/theme.ivy" ""
             generate_theme "_rgba" "${VYLE_CONFIG_HOME}/theme-rgba.ivy" "_rgba"
-            ionice -c 3 nice -n 19 "${scrDir}/modules/ivyshell-helper.sh"
+            ionice -c 3 nice -n 19 "${scrDir}/tmq.write.sh"
             ;;
-    esac 
+    esac
 }
 
 wallSelEnv() {

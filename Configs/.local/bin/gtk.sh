@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-$XDG_CONFIG_HOME/hypr/scripts/toggle-waybar.sh
+$XDG_CONFIG_HOME/hypr/scripts/toggle-waybar.sh &
 
 (
     pkill -SIGUSR1 nautilus || true
@@ -8,6 +8,6 @@ $XDG_CONFIG_HOME/hypr/scripts/toggle-waybar.sh
     pkill -SIGUSR1 gnome-disks || true
     nautilus --quit
     pkill -SIGUSR1 gnome-sound-recorder || true
-) &>/dev/null
+) &>/dev/null &
 
 

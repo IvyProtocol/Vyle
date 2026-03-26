@@ -18,7 +18,7 @@ apply_config() {
         setConf "VYLE_THEME|enableWallIde" "${VYLE_RESERVED_THEME}|3" "${VYLE_STATE_HOME}/staterc"
         [[ -f "${VYLE_CONFIG_HOME}/theme/${VYLE_RESERVED_THEME}/theme.dcol" ]] && cp "${VYLE_CONFIG_HOME}/theme/${VYLE_RESERVED_THEME}/theme.dcol" "${VYLE_CONFIG_HOME}/main/ivygen.dcol" 
         sed -i 's|^[[:space:]]*source[[:space:]]*=[[:space:]]*./themes/wallbash-ide.conf|#source = ./themes/wallbash-ide.conf|' "${XDG_CONFIG_HOME}/hypr/hyprland.conf"
-        ionice -c 3 nice -n 19 "${scrDir}/modules/ivyshell-helper.sh"
+        ionice -c 3 nice -n 19 "${scrDir}/tmq.write.sh"
         exit 0
     else
         [[ "${VYLE_THEME}" != "Wallbash-Ivy" ]] && setConf "VYLE_THEME" "Wallbash-Ivy" "${VYLE_STATE_HOME}/staterc" &
@@ -34,7 +34,7 @@ apply_config() {
         [[ -e "${VYLE_DCOL_PATH}" ]]
         generate_theme "" "${VYLE_CONFIG_HOME}/theme.ivy" ""
         generate_theme "_rgba" "${VYLE_CONFIG_HOME}/theme-rgba.ivy" "_rgba"
-        ionice -c 3 nice -n 19 "${scrDir}/modules/ivyshell-helper.sh"
+        ionice -c 3 nice -n 19 "${scrDir}/tmq.write.sh"
     fi
 
     if [[ -z "${wallSet}" && -x "${scrDir}/swwwallswitch.sh" ]]; then

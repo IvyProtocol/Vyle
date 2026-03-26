@@ -3,4 +3,4 @@
 SETUVAR --export EDITOR:nvim
 SETUVAR __fish_initialized:4300
 SETUVAR fish_greeting:
-SETUVAR fish_user_paths:/home/iris/\x2espicetify
+SETUVAR fish_user_paths:/home/iris/\x2elocal/bin

@@ -4,8 +4,8 @@ generate_help() {
   cat << EOF
 Vyle-Project's Wallpaper-Handler interface.
 Usage:
-  Correct way to use this script is to specify the image into $(basename "${BASH_SOURCE[0]}")
-  $(basename "${BASH_SOURCE[0]}") [source_img] [flags:optional]
+  Correct way to use this script is to specify the image into "${BASH_SOURCE[0]##*/}
+  ${BASH_SOURCE[0]##*/} [source_img] [flags:optional]
 
 Available Flags:
   next | -n   Set the next wallpaper
@@ -19,11 +19,11 @@ WALLPAPER_SET_FLAGS="${WALLPAPER_SET_FLAGS:-$2}"
 
 [ -z "${SELECTED_WALL}" ] && { generate_help; exit 1; }
 
-lockFile="${XDG_RUNTIME_DIR}/$(basename "${BASH_SOURCE[0]}").lock"
+lockFile="${XDG_RUNTIME_DIR}/${BASH_SOURCE[0]##*/}.lock"
 
 if [ -e "${lockFile}" ]; then
   cat << EOF
-Error: There may be another instance of $(basename "${BASH_SOURCE[0]}") is running.
+Error: There may be another instance of ${BASH_SOURCE[0]##*/} is running.
 If you are sure that no other instances is running, remove the lock file.
   $lockFile
 EOF
@@ -77,6 +77,6 @@ ${wallBackend} img "${SELECTED_WALL}" \
   --transition-step "${wallTransitionStep}" \
   --transition-fps "${xframerate}" \
   --invert-y \
-  --transition-pos "${xpos}"
+  --transition-pos "${xpos}"  
 
 

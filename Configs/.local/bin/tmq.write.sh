@@ -5,7 +5,7 @@ set -eo pipefail
 # Configuration
 # -----------------------
 scrDir="$(dirname "$(realpath "$0")")"
-source "${scrDir}/../globalcontrol.sh"
+source "${scrDir}/globalcontrol.sh"
 
 wbDir="${VYLE_CONFIG_HOME}"
 shellDir="${1:-${wbDir}/theme/${VYLE_THEME}}"
@@ -19,6 +19,7 @@ mkdir -p "$targetDir"
 confDir="${XDG_CONFIG_HOME}"
 cacheDir="${XDG_CACHE_HOME}"
 homeDir="$HOME"
+themesDir="$HOME/.themes"
 
 inputPath="${@}"
 template_sources=()
@@ -46,7 +47,7 @@ fi
 [[ "$EUID" -eq 0 ]] && echo "[$0] must not be run as root." >&2 && exit 1
 
 if ! find "$shellDir" "${thmDcolDir}" -type f \( -name '*.dcol' -o -name '*.ivy' -o -name '*.theme' \) -print -quit | grep -q .; then
-    echo "ivygen-helper: no .dcol or .ivy templates found, nothing to apply."
+    echo "${0##*/}: no .dcol or .ivy templates found, nothing to apply."
     exit 0
 fi
 
@@ -59,7 +60,7 @@ fi
 export palette_vars_list=$(compgen -v | grep -E "^(${plLoader})_")
 
 if [[ -z "${palette_vars_list}" ]]; then
-    echo "ivygen-helper: no palette variables loaded, nothing to apply."
+    echo "${0##*/} no palette variables loaded, nothing to apply."
     exit 0
 fi
 
@@ -113,10 +114,12 @@ process_template() {
     target="${target//\$(confDir)/$confDir}"
     target="${target//\$(cacheDir)/$cacheDir}"
     target="${target//\$(homDir)/$homeDir}"
+    target="${target//\$(themesDir)/$themesDir}"
     [[ -n "$script" ]] && script="${script//\$(scrDir)/$scrDir}"
     [[ -n "$script" ]] && script="${script//\$(confDir)/$confDir}"
     [[ -n "$script" ]] && script="${script//\$(cacheDir)/$cacheDir}"
     [[ -n "$script" ]] && script="${script//\$(homeDir)/$homeDir}"
+    [[ -n "$script" ]] && script="${script//\$(themesDir)/$themesDir}"
 
     # Call perl to replace placeholders.
     local template_write=$(tail -n +2 "$template_file" | perl -e "$PERL_REPLACER")
@@ -150,7 +153,7 @@ process_template() {
 }
 
 export -f process_template setConf notify tomlq
-export scrDir confDir cacheDir targetDir homeDir shellDir plLoader thmDcolDir __clause skipTemplate nProcCount
+export scrDir confDir cacheDir targetDir homeDir themesDir shellDir plLoader thmDcolDir __clause skipTemplate nProcCount
 
 # -----------------------
 # Run templates in parallel
