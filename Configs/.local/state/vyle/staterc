@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-wallSet="/home/iris/.config/vyle/theme/Catppuccin-Latte/wallpapers/abstract_blured.jpg"
-wallDir="/home/iris/.config/vyle/theme/Catppuccin-Latte/wallpapers"
+wallSet="${VYLE_CONFIG_HOME}theme/Catppuccin-Latte/wallpapers/abstract_blured.jpg"
+wallDir="${VYLE_CONFIG_HOME}/theme/Catppuccin-Latte/wallpapers"
 enableWallIde=0
 VYLE_THEME="Wallbash-Ivy"
 VYLE_RESERVED_THEME="Catppuccin-Latte"
