@@ -25,9 +25,7 @@ apply_config() {
         sed -i 's|^#[[:space:]]*source[[:space:]]*=[[:space:]]*./themes/wallbash-ide.conf|source = ./themes/wallbash-ide.conf|' "${XDG_CONFIG_HOME}/hypr/hyprland.conf"
         read -r hashMech <<< "$(md5sum "${wallSet}" | awk '{print $1}')"
 
-        if [[ -e "${VYLE_CACHE_HOME}/shell/${1}/ivy-${hashMech}.dcol" ]]; then
-            true
-        else
+        if [[ ! -e "${VYLE_CACHE_HOME}/shell/${1}/ivy-${hashMech}.dcol" ]]; then
             "${scrDir}/wallbash.sh" "${wallSet}" --"${1}"
         fi
         VYLE_DCOL_PATH="${VYLE_CACHE_HOME}/shell/${1}/ivy-${hashMech}.dcol"

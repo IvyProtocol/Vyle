@@ -75,7 +75,7 @@ wallSelTui() {
                 ;;
         esac
 
-        setConf "wallSet" "${wallSel}/${img##*/}" "${VYLE_STATE_HOME}/staterc"
+        setConf "wallSet" "\${VYLE_CONFIG_HOME}/theme/\${VYLE_RESERVED_THEME}/wallpapers/${img##*/}" "${VYLE_STATE_HOME}/staterc"
         ln -sf "${colsDir}/${scRun}.cols" "${rasiDir}/wall.cols"
         ln -sf "${blurDir}/${scRun}.bpex" "${rasiDir}/wall.bpex"
         ln -sf "${thumbDir}/${scRun}.sloc" "${rasiDir}/wall.thmb"

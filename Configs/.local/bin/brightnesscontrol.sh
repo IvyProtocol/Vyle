@@ -3,7 +3,6 @@ scrDir="$(dirname "$(realpath "$0")")"
 source "${scrDir}/globalcontrol.sh"
 
 brightness_control() {
-    
     export brightnessIconDir
     export steps="$1"
     perl -e '
@@ -54,8 +53,7 @@ if (( $steps eq "--get" )) {
 } 
 else {
     change_brightness($steps);
-}
-'
+}'
 }
 
 case "$1" in
