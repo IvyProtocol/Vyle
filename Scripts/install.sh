@@ -139,7 +139,6 @@ for conf in ${confcheck}; do
   fi
 done
 
-[[ -e "${sourceDir}/Sweet-cursors.tar.xz" ]] && tar -xvf "${sourceDir}/Sweet-cursors.tar.xz" -C "${homDir}/.icons" 
 if [[ ! -e "${confDir}/gtk-4.0/assets" || ! -e "${confDir}/gtk-4.0/gtk-dark.css" ]]; then
   sudo ln -sf /usr/share/themes/adw-gtk3/assets "${confDir}/gtk-4.0/assets"
   sudo ln -sf /usr/share/themes/adw-gtk3/gtk-4.0/gtk-dark.css "${confDir}/gtk-4.0/gtk-dark.css"
