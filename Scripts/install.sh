@@ -194,7 +194,7 @@ else
 fi
 
 [[ ! -e "${localDir}/swwwallcache.sh" ]] && { echo -e " :: swwwallcache.sh does not exist."; exit 1; }
-"${localDir}/swwwallcache.sh" -w "${confDir}/ivy-shell/theme/"
+"${localDir}/swwwallcache.sh" -w "${confDir}/vyle/theme/"
 xdg-user-dirs-update && sudo systemctl enable sddm 2>&1
 
 echo -e " :: The installation has been finished!"
