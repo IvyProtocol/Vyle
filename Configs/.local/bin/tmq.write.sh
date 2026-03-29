@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [[ -z $VYLE_SHELL_INIT ]]; then 
+if [[ -z $VYLE_SHELL_INIT ]]; then
   scrDir="$(dirname "$(realpath "$0")")"
   source "${scrDir}/globalcontrol.sh"
 fi
@@ -32,7 +32,7 @@ $LIB_DIR = $ENV{scrDir};
 $PLACELOADER = $ENV{plLoader};
 $NPROC = $ENV{nProcCount};
 
-$DCOL_PATH = $ARGV[0] ? $ARGV[0] : "$VYLE_CONFIG_HOME/theme/$VYLE_THEME";
+$DCOL_PATH = "$VYLE_CONFIG_HOME/theme/$VYLE_THEME";
 
 if ( $VYLE_THEME eq "Wallbash-Ivy" ) {
   $DCOL_PATH = "$VYLE_CONFIG_HOME/Wall-Dcol";
@@ -355,6 +355,7 @@ else
   {
     $last_pid = wait();
     delete $pids{$last_pid} if $last_pid > 0;
+    exit(0);
   }
 }
 ' "$@"
