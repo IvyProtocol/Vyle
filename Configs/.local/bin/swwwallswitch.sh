@@ -4,10 +4,7 @@ set -eo pipefail
 if [[ -z $VYLE_SHELL_INIT ]]; then
     scrDir=$(dirname "$(realpath "$0")")
     source "$scrDir/globalcontrol.sh"
-else
-    VYLE_RESERVED_THEME="$thmChsh"
 fi
-
 
 lock_File="${XDG_RUNTIME_DIR}/${BASH_SOURCE[0]##*/}.lock"
 if [[ -e "${lock_File}" ]]; then
