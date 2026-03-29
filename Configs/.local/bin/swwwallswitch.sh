@@ -1,13 +1,18 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
-scrDir=$(dirname "$(realpath "$0")")
-source "$scrDir/globalcontrol.sh"
+if [[ -z $VYLE_SHELL_INIT ]]; then
+    scrDir=$(dirname "$(realpath "$0")")
+    source "$scrDir/globalcontrol.sh"
+else
+    VYLE_RESERVED_THEME="$thmChsh"
+fi
 
-lock_File="${XDG_RUNTIME_DIR}/${0##*/}.lock"
+
+lock_File="${XDG_RUNTIME_DIR}/${BASH_SOURCE[0]##*/}.lock"
 if [[ -e "${lock_File}" ]]; then
     cat << EOF
-Error: Another instance of ${0##*/} is running. 
+Error: Another instance of ${BASH_SOURCE[0]##*/} is running. 
 If you are sure that no other instance is running. Remove the the lock file:
     $lock_File
 EOF
@@ -93,10 +98,7 @@ wallSelTui() {
         --swww-n | *) 
             WALLPAPER_SET_FLAGS="-n"
             ;;
-    esac  
-    source "${scrDir}/wallpaper.hybrid.sh"
-    sleep 0.55
-    
+    esac   
     read -r hashMech <<< "$(md5sum "${img}" | awk '{print $1}')"
     case "${schIPC}" in
         dark|light|auto) 
@@ -112,9 +114,6 @@ wallSelTui() {
                 VYLE_DCOL_PATH="${dcolDir}/${dcolMode}/ivy-${hashMech}.dcol"
             fi
             [[ -e "${VYLE_DCOL_PATH}" ]]
-            generate_theem "" "${VYLE_CONFIG_HOME}/theme.ivy" ""
-            generate_theme "_rgba" "${VYLE_CONFIG_HOME}/theme-rgba.ivy" "_rgba"
-            ionice -c 3 nice -n 19 "${scrDir}/tmq.write.sh"
             ;;
         theme|*)
             if [[ "${enableWallIde}" -eq 3 && "${dcolMode}" == "theme" ]]; then
@@ -133,11 +132,13 @@ wallSelTui() {
                 fi
             fi
             [[ -e "${VYLE_DCOL_PATH}" ]]
-            generate_theme "" "${VYLE_CONFIG_HOME}/theme.ivy" ""
-            generate_theme "_rgba" "${VYLE_CONFIG_HOME}/theme-rgba.ivy" "_rgba"
-            ionice -c 3 nice -n 19 "${scrDir}/tmq.write.sh"
             ;;
     esac
+    generate_theme "" "${VYLE_CONFIG_HOME}/theme.ivy" ""
+    generate_theme "_rgba" "${VYLE_CONFIG_HOME}/theme-rgba.ivy" "_rgba"
+    source "${scrDir}/tmq.write.sh"
+    source "${scrDir}/wallpaper.hybrid.sh"
+
 }
 
 wallSelEnv() {

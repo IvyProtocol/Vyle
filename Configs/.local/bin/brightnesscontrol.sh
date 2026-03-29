@@ -48,12 +48,8 @@ sub change_brightness {
     send_notify($new);
 }
 
-if (( $steps eq "--get" )) {
-    print get_brightness();
-} 
-else {
-    change_brightness($steps);
-}'
+($steps eq "--get") ? print get_brightness() : change_brightness($steps);
+'
 }
 
 case "$1" in
@@ -63,6 +59,6 @@ case "$1" in
     "--dec")
         brightness_control "-${brightnessStep}"
         ;;
-    "--get")
+    "--get"|*)
         brightness_control "--get"
 esac

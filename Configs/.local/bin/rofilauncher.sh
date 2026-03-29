@@ -36,6 +36,7 @@ export hypr_width
 export rofiLauncherFont
 export rofiLauncherScale
 export rofiMode
+export scrName="$0"
 
 perl -e '
 # Header Includes: basename(), find()
@@ -45,7 +46,7 @@ use File::Find;
 
 # Help Function.
 sub help_function {
-    my $script_name = basename($0);
+    my $script_name = basename($ENV{scrName});
     print("${script_name} [action]\n");
     print("-d : drun mode\n");
     print("-w : window mode\n");
@@ -66,9 +67,7 @@ my $hypr_width = $ENV{hypr_width};
 my $rofiMode = $ENV{rofiMode};
 
 # User can dispatch "help" argument to be guided.
-if ( $rofiMode eq "help" ) {
-    help_function();
-}
+( $rofiMode eq "help" ) && help_function();
 
 # Noteworthy is that you can assign variables with my, our, $ENV or empty.
 # It feels like bash so much.... Just some semi-color and that is all.

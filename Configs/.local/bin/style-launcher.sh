@@ -17,7 +17,7 @@ export -f tomlq
 export -f setConf
 export -f notify
 
-perl -e '
+perl -E '
 use File::Basename qw(basename);
 use File::Find;
 
@@ -81,17 +81,11 @@ if ( defined $RofiSel && $RofiSel ne "" ) {
 
   my $bash_cmd;
   if ($tomlSource == 1) {
-      $bash_cmd = qq(bash -c "source "${BIN_DIR}/globalcontrol.sh"; tomlq -i "${VYLE_CONFIG_HOME}/vyle.toml" "Rofi.Launch" "Style" "${UpdRofiSel}"");
+      $bash_cmd = qq(bash -c "tomlq -i "${VYLE_CONFIG_HOME}/vyle.toml" "Rofi.Launch" "Style" "${UpdRofiSel}"");
   } else {
-      $bash_cmd = qq(bash -c "source "${BIN_DIR}/globalcontrol.sh"; setConf "rofiLauncherStyle" "${UpdRofiSel}" "${VYLE_CONFIG_HOME}/ide.conf"");
+      $bash_cmd = qq(bash -c "setConf "rofiLauncherStyle" "${UpdRofiSel}" "${VYLE_CONFIG_HOME}/ide.conf"");
   }
   system($bash_cmd) == 0 or die "Failed to apply config";
-  system(
-    "notify-send", "-e", "-h", 
-    "string:x-canonical-private-synchronous:rofi_notif", "-a", 
-    "t1", "-t", "1200", "-i",
-    "${rofiAssetDir}/${RofiSel}", 
-    "Rofi style ${RofiSel} applied") == 0 or die "notify failed!";
 }
 '
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 $XDG_CONFIG_HOME/hypr/scripts/toggle-waybar.sh &
 
 (

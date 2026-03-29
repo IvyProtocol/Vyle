@@ -70,13 +70,13 @@ xduration="${wallTransDuration:-0.5}"
 xframerate="${wallFramerate:-60}"
 xpos="$(hyprctl cursorpos | grep -E '^[0-9]' || echo "0,0")"
 
-${wallBackend} img "${SELECTED_WALL}" \
+ionice -c 2 -n 19 ${wallBackend} img "${SELECTED_WALL}" \
   -t "${xtrans}" \
   --transition-bezier "${xbezier}" \
   --transition-duration "${xduration}" \
   --transition-step "${wallTransitionStep}" \
   --transition-fps "${xframerate}" \
   --invert-y \
-  --transition-pos "${xpos}" 
+  --transition-pos "${xpos}"  
 
 

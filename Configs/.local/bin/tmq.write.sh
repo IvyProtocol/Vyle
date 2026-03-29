@@ -1,227 +1,360 @@
 #!/usr/bin/env bash
-set -eo pipefail
+
+if [[ -z $VYLE_SHELL_INIT ]]; then 
+  scrDir="$(dirname "$(realpath "$0")")"
+  source "${scrDir}/globalcontrol.sh"
+fi
+
+export VYLE_CONFIG_HOME VYLE_THEME XDG_CACHE_HOME XDG_CONFIG_HOME skipTemplate scrDir plLoader nProcCount
+export SCRIPT_NAME=$0
+
+perl -e '
+
+use POSIX qw(WNOHANG);
+use File::Basename qw(basename dirname);
+use File::Find qw(find);
+use File::Path qw(make_path);
+use Digest::SHA qw(sha1_hex);
 
 # -----------------------
 # Configuration
 # -----------------------
-scrDir="$(dirname "$(realpath "$0")")"
-source "${scrDir}/globalcontrol.sh"
+my ($VYLE_CONFIG_HOME, $VYLE_THEME, $XDG_CONFIG_HOME, $XDG_CACHE_HOME, $LIB_DIR, $PLACELOADER, $NPROC,
+    $THEME_DCOL_DIR, $HOME_DIR, $THEMES_DIR, $INPUT_PATH, $SCRIPT_NAME, @SKIP_TEMPLATE, $DCOL_PATH);
+my (@template_source, @matches, @__clause, %dir_map);
+my ($first_line, $target, $script, $rel, $template_write, $target_dir, $raw_first_line, @first_line, $target_content, $target_mtime, $template_hash);
 
-wbDir="${VYLE_CONFIG_HOME}"
-shellDir="${1:-${wbDir}/theme/${VYLE_THEME}}"
+$VYLE_CONFIG_HOME = $ENV{VYLE_CONFIG_HOME};
+$VYLE_THEME = $ENV{VYLE_THEME};
+$XDG_CONFIG_HOME = $ENV{XDG_CONFIG_HOME};
+$XDG_CACHE_HOME = $ENV{XDG_CACHE_HOME};
+$LIB_DIR = $ENV{scrDir};
+$PLACELOADER = $ENV{plLoader};
+$NPROC = $ENV{nProcCount};
 
-if [[ "${VYLE_THEME}" == "Wallbash-Ivy" ]]; then
-    shellDir="${1:-${wbDir}/Wall-Dcol}"
-fi
-thmDcolDir="${wbDir}/Wall-Ways"
-targetDir="${2:-${XDG_CACHE_HOME:-$HOME/.cache}/wal/wal-dir/}"
-mkdir -p "$targetDir"
-confDir="${XDG_CONFIG_HOME}"
-cacheDir="${XDG_CACHE_HOME}"
-homeDir="$HOME"
-themesDir="$HOME/.themes"
+$DCOL_PATH = $ARGV[0] ? $ARGV[0] : "$VYLE_CONFIG_HOME/theme/$VYLE_THEME";
 
-inputPath="${@}"
-template_sources=()
+if ( $VYLE_THEME eq "Wallbash-Ivy" ) {
+  $DCOL_PATH = "$VYLE_CONFIG_HOME/Wall-Dcol";
+}
 
-if [[ -n "${inputPath}" && -f "${inputPath}" ]]; then
-    template_sources=("${inputPath}")
-elif [[ -n "${inputPath}" && -d "${inputPath}" ]]; then
-    template_sources=("${inputPath}" "${thmDcolDir}")
-else
-    template_sources=("${shellDir}" "${thmDcolDir}")
-fi
+$THEME_DCOL_DIR = "$VYLE_CONFIG_HOME/Wall-Ways";
+$HOME_DIR = "$ENV{HOME}";
+$THEMES_DIR = "$HOME_DIR/.themes";
 
-if [[ -n "${skipTemplate}" ]]; then
-    __clause=()
-    for indx in "${skipTemplate[@]}"; do
-        __clause+=( ! -name "${indx}" )
-    done
-fi
+$INPUT_PATH = $ARGV[0] // "";
+$SCRIPT_NAME = $ENV{SCRIPT_NAME};
+@SKIP_TEMPLATE = $ENV{skipTemplate} ? split /\s+/, $ENV{skipTemplate} : ();
 
-[[ -z "${plLoader}" ]] && plLoader="ivy"
+if 
+  ( $INPUT_PATH && -f $INPUT_PATH ) 
+{
+  @template_source= ( $INPUT_PATH );
+} 
+elsif 
+  ( $INPUT_PATH && -d $INPUT_PATH ) 
+{
+  @template_source = ( $INPUT_PATH, $THEME_DCOL_DIR );
+}
+else 
+{
+  @template_source = ( $DCOL_PATH, $THEME_DCOL_DIR );
+}
+
+if 
+  ( $> == 0 ) 
+{ 
+  $SCRIPT_NAME = basename($SCRIPT_NAME);
+  print( "[${SCRIPT_NAME}] must not be ran as root.\n" );
+  exit 1;
+}
 
 # -----------------------
 # Early Fallback Check
 # -----------------------
-[[ "$EUID" -eq 0 ]] && echo "[$0] must not be run as root." >&2 && exit 1
+my $found = 0;
 
-if ! find "$shellDir" "${thmDcolDir}" -type f \( -name '*.dcol' -o -name '*.ivy' -o -name '*.theme' \) -print -quit | grep -q .; then
-    echo "${0##*/}: no .dcol or .ivy templates found, nothing to apply."
-    exit 0
-fi
-
-# -----------------------
-# Load palette files
-# -----------------------
-[[ -f "$wbDir/theme.ivy" ]] && load_ivy_file "$wbDir/theme.ivy"
-[[ -f "$wbDir/theme-rgba.ivy" ]] && load_ivy_file "$wbDir/theme-rgba.ivy"
-
-export palette_vars_list=$(compgen -v | grep -E "^(${plLoader})_")
-
-if [[ -z "${palette_vars_list}" ]]; then
-    echo "${0##*/} no palette variables loaded, nothing to apply."
-    exit 0
-fi
-
-# -----------------------
-# Template processing engine - PERL
-# -----------------------
-export PERL_REPLACER='
-    my %env = %ENV;
-
-    # Subroutine to handle the replacement logic safely
-    sub r {
-        my ($rgba_var, $op, $std_var) = @_;
-        if ($std_var) {
-            return $env{$std_var} // $_[0];
+eval 
+{
+  find 
+  (
+    {
+      wanted => sub
+      {
+        if 
+          ( -f $_ && /\.(dcol|ivy|theme)$/ )
+        {
+          die "FOUND\n";
         }
-        if (defined $env{$rgba_var} && $env{$rgba_var} =~ /rgba\((\d+),(\d+),(\d+),[\d.]+\)/) {
-            return "rgba($1,$2,$3,$op)";
-        }
-        return $_[0];
+      },
+      no_chdir => 1,
+    },
+    ( $DCOL_PATH, $THEME_DCOL_DIR )
+  );
+};
+
+$found = 1 if $@ && $@ eq "FOUND\n";
+
+if 
+  ( ! $found ) 
+{
+  $SCRIPT_NAME = basename($SCRIPT_NAME);
+  print("${SCRIPT_NAME}: no .dcol or .ivy templates found, nothing to apply.");
+  exit 1;
+}
+
+# -----------------------
+# Load palettes
+# -----------------------
+sub load_varfs {
+  my ($file) = @_;
+
+  open my $fh, "<", $file or die "Cannot open $file or empty: $!";
+
+  while 
+    ( defined ( my $line = <$fh> ) ) 
+  {
+    chomp($line);
+
+    ( $line =~ /^\s*$/ || $line =~ /^\s*#/ ) && next;
+    if 
+      ( $line =~ /^[^=]+=[^=]*$/ ) 
+    {
+      my ($key, $value) = split /=/, $line, 2;
+      $value =~ s/^#//;
+      $ENV{$key} = $value;
     }
+  }
+  close $fh;
+}
 
-    while (<>) {
-        # Match <VAR> or <VAR_rgba(OP)> and pass captures to r()
-        s/(< (?:(\w+_rgba)\(([^)]+)\)|(\w+)) >)/r($2, $3, $4)/gex;
-        print;
+load_varfs("$VYLE_CONFIG_HOME/theme.ivy");
+load_varfs("$VYLE_CONFIG_HOME/theme-rgba.ivy");
+
+my $regex = qr/^($PLACELOADER)_/;
+
+# -----------------------
+# Template processing engine
+# -----------------------
+sub apply_env_replacements {
+  my @lines = @_;
+  my %env = %ENV;   # copy of environment variables
+  my $output = "";
+
+  sub r
+  {
+    my ($rgba_var, $op, $std_var) = @_;
+    if
+      ($std_var) 
+    {
+      return $env{$std_var} // "<$std_var>";
     }
-'
+    if 
+      ( defined $env{$rgba_var} && $env{$rgba_var} =~ /rgba\((\d+),(\d+),(\d+),[\d.]+\)/) 
+    {
+      return "rgba($1,$2,$3,$op)";
+    }
+    else 
+    {
+      return "<unknown>";
+    }
+  }
 
-process_template() {
-    local template_file="$1"
-    [[ ! -f "$template_file" ]] && return 0
+  foreach my $line (@lines) {
+    $line =~ s{<\s*(?:(\w+_rgba)\(\s*([^)]+?)\s*\)|(\w+))\s*>}{ r($1, $2, $3) }gex; 
+    $output .= $line;
+  }
+  return $output;
+}
 
-    # Read first line and trim spaces
-    read -r raw_first_line < "$template_file"
-    local first_line="${raw_first_line%"${raw_first_line##*[![:space:]]}"}"
+%dir_map = (
+  scrDir    => $LIB_DIR,
+  confDir   => $XDG_CONFIG_HOME,
+  cacheDir  => $XDG_CACHE_HOME,
+  homeDir   => $HOME_DIR,
+  themesDir => $THEMES_DIR
+);
 
-    # Determine target and optional script
-    local target script=""
-    if [[ "$first_line" == *"|"* ]]; then
-        target="${first_line%%|*}"
-        script="${first_line##*|}"
-    elif [[ -n "$first_line" ]]; then
-        target="$first_line"
-    else
-        rel="$(realpath --relative-to="$shellDir" "$template_file")"
-        target="$targetDir/${rel%.*}"
-    fi
+# -----------------------
+# Template processing engine
+# -----------------------
+sub process_template 
+{
+  my ($template_file) = @_;
 
-    # Expand special variables
-    target="${target//\$(scrDir)/$scrDir}"
-    target="${target//\$(confDir)/$confDir}"
-    target="${target//\$(cacheDir)/$cacheDir}"
-    target="${target//\$(homDir)/$homeDir}"
-    target="${target//\$(themesDir)/$themesDir}"
-    [[ -n "$script" ]] && script="${script//\$(scrDir)/$scrDir}"
-    [[ -n "$script" ]] && script="${script//\$(confDir)/$confDir}"
-    [[ -n "$script" ]] && script="${script//\$(cacheDir)/$cacheDir}"
-    [[ -n "$script" ]] && script="${script//\$(homeDir)/$homeDir}"
-    [[ -n "$script" ]] && script="${script//\$(themesDir)/$themesDir}"
+  ( ! -f $template_file ) && exit 0;
 
-    # Call perl to replace placeholders.
-    local template_write=$(perl -e 'scalar <>;' -e  "$PERL_REPLACER" "$template_file")
-    # -----------------------
-    # Write template output
-    # -----------------------
-    
-    target_dir="${target%/*}"
-    [[ -d "${target_dir}" ]] || mkdir -p "${target_dir}"
-    if [[ ! -f "${target}" ]] || ! printf "%s" "$template_write" | cmp -s - "$target"; then
-        printf "%s" "${template_write}" > "$target"
-        echo " :: Theme Control - Populating ${target} <- ${template_file}"
-    else
-        echo " :: Theme Control - Skipped changing ${target} <- ${template_file}"
-        return 0
-    fi
+  open my $fh, "<", $template_file or die "Cannot open $template_file or empty: $!";
+  @first_line = <$fh>;
+  close($fh);
+
+  my $raw_first_line = $first_line[0];
+  chomp($raw_first_line);
+
+  $raw_first_line =~ s/^\s+|\s+$//g;
+  $first_line = $raw_first_line;
+
+  if 
+    ( $first_line =~ /\|/ || ($first_line && $first_line !~ /^\s*</) )
+  {
+    ($target, $script) = ($first_line =~ /\|/) ? split(/\|/, $first_line, 2) : ($first_line, "");
+    shift @first_line;
+  }
+
+  $target =~ s{\$\((\w+)\)}{$dir_map{$1} // $&}ge;
+  $script =~ s{\$\((\w+)\)}{$dir_map{$1} // $&}ge if $script;
+  $template_write = apply_env_replacements(@first_line);
+
+  # -----------------------
+  # Write template output
+  # -----------------------
+  $target_dir = dirname($target);
+  ( -d $target_dir ) || make_path($target_dir) or die " :: Failed to create $target_dir !";
+  
+  $target_content = (-f $target) ? do { open my $fh, "<", $target; sha1_hex(<$fh>) } : "";
+  $template_hash = sha1_hex($template_write);
+
+  if 
+    ( ! -f $target || $template_hash ne $target_content )
+  {
+    open my $fh, ">", $target or die "Cannot write to $target: $!";
+    print $fh $template_write;
+    close $fh;
 
     # -----------------------
     # Execute optional script safely
     # -----------------------
-    if [[ -n "$script" ]]; then
-        # Inline commands prefixed with $RUN:
-        if [[ "$script" == \$RUN:* ]]; then
-            bash -c "${script#\$RUN:}"
-        # Executable file
-        elif [[ -x "$script" ]]; then
-            "$script"
-        else
-            echo " :: Theme Control - Skipping non-executable script from ${template_file}"
-        fi
-    fi
-    set -u
+    if 
+      ($script)
+    {
+      $script =~ s/^\s+|\s+$//g;
+      if 
+        ( $script eq "")
+      {
+      
+      }
+      if 
+        ( $script =~ /^\$RUN:/ )
+      {
+        $script =~ s/^\$RUN://;
+        system("$script") == 0 
+        or warn " :: Theme Control - Failed to execute ${script} from ${template_file} : $?";
+      }
+      elsif 
+        ( -x $script ) 
+      { 
+        system("$script") == 0 
+        or warn " :: Theme Control - Failed to execute ${script} from ${template_file}";
+      }
+      else 
+      {
+        print(" :: Theme Control - Skipped non-executable script from ${template_file}\n");
+      }
+    }
+    print(" :: Theme Control - Populating $target <- $template_file\n");
+  }
+  else
+  {
+    print(" :: Theme Control - Skipped changing $target <- $template_file\n");
+  }
+
+
 }
 
-export -f process_template setConf notify tomlq
-export scrDir confDir cacheDir targetDir homeDir themesDir shellDir plLoader thmDcolDir __clause skipTemplate nProcCount
+# Optional glob-to-regex helper
+sub glob_to_re {
+  my ($glob) = @_;
+  $glob =~ s/([\\.^$+(){}|\[\]])/\\$1/g;
+  $glob =~ s/\*/.*/g;
+  $glob =~ s/\?/.?/g;
+  return qr/\A$glob\z/;
+}
 
-# -----------------------
-# Run templates in parallel
-# -----------------------
+sub is_skipped {
+  my ($name) = @_;
+  for my $skip (@SKIP_TEMPLATE) {
+    return 1 if $name eq $skip;  # exact match
+    # if $skip contains a glob, use this:
+    # my $re = glob_to_re($skip);
+    # return 1 if $name =~ $re;
+  }
+  return 0;
+}
 
-if [[ -f "${template_sources[0]}" ]]; then
-    process_template "${template_sources[0]}"
-else
-    find "${template_sources[@]}" -type f \( -name '*.dcol' -o -name '*.ivy' -o -name '*.theme' \) "${__clause[@]}" -print0 \
-        | perl -e '
-    use POSIX ":sys_wait_h";
+if 
+  ( -f $template_source[0] )
+{
+  process_template("${template_source[0]}");
+}
+else 
+{
+  # -----------------------
+  # Run templates in parallel
+  # -----------------------
+  my (@files, @a_parts, $b_parts, @res, %pids, $waited, $zombie, $last_pid, $pid);
+  find 
+  (
+    sub
+    {
+      return unless -f $_;
+      return unless /\.(dcol|ivy|theme)$/;
+      return if is_skipped($_);
+      push @files, $File::Find::name;
+    },
+    @template_source
+  );
 
-    my $max = $ENV{nProcCount} || 4;
-    my %pids;
-    local $/ = "\0";
+  @files = sort {
+    @a_parts = split(/(\d+)/, $a);
+    @b_parts = split(/(\d+)/, $b);
+    $res = 0;
 
-    # 1. AUTO-SORT (Natural Sort): 
-    # This automatically handles 1, 2, 10... regardless of prefix/suffix.
-    my @files = sort {
-        my @a_parts = split(/(\d+)/, $a);
-        my @b_parts = split(/(\d+)/, $b);
-        my $res = 0;
-        for (my $i = 0; $i < @a_parts && $i < @b_parts; $i++) {
-            if ($a_parts[$i] =~ /^\d+$/ && $b_parts[$i] =~ /^\d+$/) {
-                $res = $a_parts[$i] <=> $b_parts[$i];
-            } else {
-                $res = lc($a_parts[$i]) cmp lc($b_parts[$i]);
-            }
-            last if $res;
-        }
-        $res || @a_parts <=> @b_parts;
-    } <STDIN>;
+    for 
+      ( my $i = 0; $i < @a_parts && $i < @b_parts; $i++ )
+    {
+      if 
+        ( $a_parts[$i] =~ /^\d+$/ && $b_parts[$i] =~ /^\d+$/ )
+      {
+        $res = $a_parts[$i] <=> $b_parts[$i];
+      }
+      else
+      {
+        $res = lc($a_parts[$i]) cmp lc($b_parts[$i]);
+      }
+      last if $res;
+    }
+    $res || @a_parts <=> @b_parts;
+  } @files;
 
-    # 2. Parallel Dispatcher
-    foreach my $f (@files) {
-        chomp($f);
-        next unless $f;
-
-        # Keep pool at $max_workers
-        if (keys %pids >= $max) {
-            my $waited = wait();
-            delete $pids{$waited} if $waited > 0;
-        }
-
-        my $pid = fork();
-        die "Fork failed" unless defined $pid;
-
-        if ($pid == 0) {
-            # Execute your Bash function directly
-            exec("bash", "-c", "process_template \"$f\"");
-            exit(0);
-        } else {
-            $pids{$pid} = 1;
-        }
-
-        # Non-blocking reap to keep the process table clean
-        while ((my $zombie = waitpid(-1, WNOHANG)) > 0) {
-            delete $pids{$zombie};
-        }
+  foreach my $f (@files) {
+    if 
+      ( keys %pids >= $NPROC )
+    {
+      $waited = wait();
+      delete $pids{$waited} if $waited > 0;
     }
 
-    # 3. Final Wait (The "No-Hang" version)
-    while (keys %pids) {
-        my $last_pid = wait();
-        last if $last_pid < 0;
-        delete $pids{$last_pid};
+    $pid = fork();
+    die "Fork failed" unless defined $pid;
+    if 
+      ( $pid == 0 )
+    {
+      process_template($f);
+      exit(0);
     }
-'
-fi
+    else
+    {
+      $pids{$pid} = 1;
+    }
+
+    while (($zombie = waitpid(-1, WNOHANG)) > 0) { delete $pids{$zombie}; }
+  }
+
+  while
+    ( keys %pids )
+  {
+    $last_pid = wait();
+    delete $pids{$last_pid} if $last_pid > 0;
+  }
+}
+' "$@"
