@@ -24,7 +24,6 @@ show_theme_status() {
  :: Duration: ${wallTransDuration}
  :: Bezier: ${wallTransitionBezier}
  :: Animation: {
- ::    Transition: ${wallAnimation}
  ::    Transition Previous: ${wallAnimationPrevious}
  ::    Transition Next: ${wallAnimationNext}
  ::    Transition Theme: ${wallAnimationTheme}
@@ -80,7 +79,7 @@ themeSelTui() {
              sed -Ei 's|^#[[:space:]]*source[[:space:]]*=[[:space:]]*./themes/wallbash-ide.conf|source = ./themes/wallbash-ide.conf|' "${XDG_CONFIG_HOME}/hypr/hyprland.conf" 
         fi
         [[ ! -e "${scrDir}/swwwallswitch.sh" ]] && { notify -m 1 -p "Does swwwallswitch.sh exist?" -s "${dunstDir}/icons/hyprdots.svg" -u critical; return 1; }
-        VYLE_THEME=$thmChsh VYLE_RESERVED_THEME=$thmChsh source "${scrDir}/swwwallswitch.sh" -t -i "${thmImg}" -w --swww-t -n 1 -r 1 
+        "${scrDir}/swwwallswitch.sh" -t -i "${thmImg}" -w --swww-t -n 1 -r 1 
         echo -e " :: Theme Control - Populated successfully ${thmChsh} -> ${XDG_CONFIG_HOME}" &
     fi
 }
@@ -185,5 +184,3 @@ case "${1}" in
         thmSelEnv
         ;;
 esac 
-
-
