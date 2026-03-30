@@ -7,7 +7,7 @@ fi
 export VYLE_CONFIG_HOME VYLE_THEME XDG_CACHE_HOME XDG_CONFIG_HOME skipTemplate scrDir plLoader nProcCount
 export SCRIPT_NAME=$0
 
-ionice -c 2 -n 9 perl -e '
+perl -e '
 
 use POSIX qw(WNOHANG);
 use File::Basename qw(basename dirname);
