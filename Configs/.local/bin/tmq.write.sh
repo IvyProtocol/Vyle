@@ -4,11 +4,10 @@ if [[ -z $VYLE_SHELL_INIT ]]; then
   scrDir="$(dirname "$(realpath "$0")")"
   source "${scrDir}/globalcontrol.sh"
 fi
-
 export VYLE_CONFIG_HOME VYLE_THEME XDG_CACHE_HOME XDG_CONFIG_HOME skipTemplate scrDir plLoader nProcCount
 export SCRIPT_NAME=$0
 
-perl -e '
+ionice -c 2 -n 9 perl -e '
 
 use POSIX qw(WNOHANG);
 use File::Basename qw(basename dirname);
@@ -21,8 +20,8 @@ use Digest::SHA qw(sha1_hex);
 # -----------------------
 my ($VYLE_CONFIG_HOME, $VYLE_THEME, $XDG_CONFIG_HOME, $XDG_CACHE_HOME, $LIB_DIR, $PLACELOADER, $NPROC,
     $THEME_DCOL_DIR, $HOME_DIR, $THEMES_DIR, $INPUT_PATH, $SCRIPT_NAME, @SKIP_TEMPLATE, $DCOL_PATH);
-my (@template_source, @matches, @__clause, %dir_map);
-my ($first_line, $target, $script, $rel, $template_write, $target_dir, $raw_first_line, @first_line, $target_content, $target_mtime, $template_hash);
+my (@template_source, %dir_map);
+my ($first_line, $target, $script, $rel, $template_write, $target_dir, $raw_first_line, @first_line, $target_content, $template_hash);
 
 $VYLE_CONFIG_HOME = $ENV{VYLE_CONFIG_HOME};
 $VYLE_THEME = $ENV{VYLE_THEME};
@@ -70,40 +69,6 @@ if
 }
 
 # -----------------------
-# Early Fallback Check
-# -----------------------
-my $found = 0;
-
-eval 
-{
-  find 
-  (
-    {
-      wanted => sub
-      {
-        if 
-          ( -f $_ && /\.(dcol|ivy|theme)$/ )
-        {
-          die "FOUND\n";
-        }
-      },
-      no_chdir => 1,
-    },
-    ( $DCOL_PATH, $THEME_DCOL_DIR )
-  );
-};
-
-$found = 1 if $@ && $@ eq "FOUND\n";
-
-if 
-  ( ! $found ) 
-{
-  $SCRIPT_NAME = basename($SCRIPT_NAME);
-  print("${SCRIPT_NAME}: no .dcol or .ivy templates found, nothing to apply.");
-  exit 1;
-}
-
-# -----------------------
 # Load palettes
 # -----------------------
 sub load_varfs {
@@ -131,37 +96,75 @@ sub load_varfs {
 load_varfs("$VYLE_CONFIG_HOME/theme.ivy");
 load_varfs("$VYLE_CONFIG_HOME/theme-rgba.ivy");
 
-my $regex = qr/^($PLACELOADER)_/;
+# -----------------------
+# Replacement function (dynamic fallback)
+# -----------------------
+sub r {
+  my ($rgba_var, $op, $std_var) = @_;
+  
+  # Static variable fallback
+  if 
+    ($std_var) 
+  {
+    return $ENV{$std_var} // "<$std_var>";
+  }
+    
+  # Dynamic rgba replacement
+  if 
+    (defined $ENV{$rgba_var} && $ENV{$rgba_var} =~ /rgba\((\d+),(\d+),(\d+),[\d.]+\)/) 
+  {
+    return "rgba($1,$2,$3,$op)";
+  }
+  
+  my $return = $std_var || $rgba_var || "unknown";
+  return "<$return>";
+}
 
 # -----------------------
-# Template processing engine
+# Replacement engine
 # -----------------------
 sub apply_env_replacements {
   my @lines = @_;
-  my %env = %ENV;   # copy of environment variables
   my $output = "";
 
-  sub r
-  {
-    my ($rgba_var, $op, $std_var) = @_;
-    if
-      ($std_var) 
-    {
-      return $env{$std_var} // "<$std_var>";
-    }
+  # -----------------------
+  # Precompute static ENV hash (fast path)
+  # -----------------------
+  my %replace = map { $_ => $ENV{$_} } grep { $_ !~ /_rgba$/ } keys %ENV;
+
+  # -----------------------
+  # Precompute RGBA base colors
+  # -----------------------
+  my %rgba_base;
+  for my $k (keys %ENV) {
     if 
-      ( defined $env{$rgba_var} && $env{$rgba_var} =~ /rgba\((\d+),(\d+),(\d+),[\d.]+\)/) 
+      ($k =~ /(.*)_rgba$/ && $ENV{$k} =~ /rgba\((\d+),(\d+),(\d+),[\d.]+\)/)
     {
-      return "rgba($1,$2,$3,$op)";
-    }
-    else 
-    {
-      return "<unknown>";
+      $rgba_base{$k} = [$1,$2,$3];
     }
   }
 
-  foreach my $line (@lines) {
-    $line =~ s{<\s*(?:(\w+_rgba)\(\s*([^)]+?)\s*\)|(\w+))\s*>}{ r($1, $2, $3) }gex; 
+  # -----------------------
+  # Single regex pass per line
+  # -----------------------
+  my $re = qr{<\s*(?:(\w+_rgba)\(\s*([^)]+)\s*\)|(\w+))\s*>}x;
+
+  foreach my $line (@lines) 
+  {
+    $line =~ s{$re} {
+      if 
+        ( defined $3 ) 
+      {
+        # Static variable
+        $replace{$3} // r($3, undef, $3);
+      } 
+      else 
+      {
+        # RGBA dynamic
+        my ($r,$g,$b) = @{ $rgba_base{$1} || [] };
+        defined $r ? "rgba($r,$g,$b,$2)" : r($1,$2);
+      }
+    }gex;
     $output .= $line;
   }
   return $output;
@@ -291,18 +294,32 @@ else
   # -----------------------
   # Run templates in parallel
   # -----------------------
-  my (@files, @a_parts, $b_parts, @res, %pids, $waited, $zombie, $last_pid, $pid);
+  my (@files, @a_parts, $b_parts, @res, %pids, $waited, $zombie, $last_pid, $pid, $found);
+  $found = 0;
   find 
   (
-    sub
     {
-      return unless -f $_;
-      return unless /\.(dcol|ivy|theme)$/;
-      return if is_skipped($_);
-      push @files, $File::Find::name;
+      wanted => sub 
+      {
+        return unless -f $_;
+        return unless /\.(dcol|ivy|theme)$/;
+        return if is_skipped($_);
+
+        $found = 1;
+        push @files, $File::Find::name;
+      },
+      no_chdir => 1,
     },
     @template_source
   );
+
+  if 
+    ( ! $found )
+  {
+    $SCRIPT_NAME = basename($SCRIPT_NAME);
+    print("${SCRIPT_NAME}: no .dcol or .ivy templates found, nothing to apply.");
+    exit 1;
+  }
 
   @files = sort {
     @a_parts = split(/(\d+)/, $a);
@@ -355,7 +372,6 @@ else
   {
     $last_pid = wait();
     delete $pids{$last_pid} if $last_pid > 0;
-    exit(0);
   }
 }
 ' "$@"
