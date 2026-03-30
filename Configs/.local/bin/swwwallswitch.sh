@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
-if [[ -z $VYLE_SHELL_INIT ]]; then
-    scrDir=$(dirname "$(realpath "$0")")
-    source "$scrDir/globalcontrol.sh"
-fi
+scrDir=$(dirname "$(realpath "$0")")
+source "$scrDir/globalcontrol.sh"
 
 lock_File="${XDG_RUNTIME_DIR}/${BASH_SOURCE[0]##*/}.lock"
 if [[ -e "${lock_File}" ]]; then
@@ -133,9 +131,8 @@ wallSelTui() {
     esac
     generate_theme "" "${VYLE_CONFIG_HOME}/theme.ivy" ""
     generate_theme "_rgba" "${VYLE_CONFIG_HOME}/theme-rgba.ivy" "_rgba"
-    source "${scrDir}/tmq.write.sh"
+    VYLE_THEME=$VYLE_THEME VYLE_CONFIG_HOME=$VYLE_CONFIG_HOME source "${scrDir}/tmq.write.sh"
     source "${scrDir}/wallpaper.hybrid.sh"
-
 }
 
 wallSelEnv() {
