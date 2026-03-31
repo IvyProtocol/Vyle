@@ -1,21 +1,16 @@
 $(confDir)/hypr/themes/wallbash-ide.conf
-
-#//---ivy mode enabled---
-# Overriding the values below - DO NOT OVERWRITE --- # IF YOU DO, THEN EDIT $(confDir)/ivy-shell/shell/hypr.ivy-- #
 general {
-    col.active_border = rgba(<ivy_pry4>ff) rgba(<ivy_4xa1>ff) 45deg
-    col.inactive_border = rgba(<ivy_pry1>ff) rgba(<ivy_pry2>ff) 45deg
+    col.active_border = rgba(<wallbash_pry4>ff) rgba(<wallbash_4xa1>ff) 45deg
+    col.inactive_border = rgba(<wallbash_pry1>ff) rgba(<wallbash_pry2>ff) 45deg
 }
 
 group {
-    col.border_active = rgba(<ivy_pry4>ff) rgba(<ivy_4xa1>ff) 45deg
-    col.border_inactive = rgba(<ivy_pry1>cc) rgba(<ivy_pry2>cc) 45deg
-    col.border_locked_active = rgba(<ivy_txt3>ff) rgba(<ivy_txt4>ff) 45deg
-    col.border_locked_inactive = rgba(<ivy_txt1>cc) rgba(<ivy_txt2>cc) 45deg
+    col.border_active = rgba(<wallbash_pry4>ff) rgba(<wallbash_4xa1>ff) 45deg
+    col.border_inactive = rgba(<wallbash_pry1>cc) rgba(<wallbash_pry2>cc) 45deg
+    col.border_locked_active = rgba(<wallbash_txt3>ff) rgba(<wallbash_txt4>ff) 45deg
+    col.border_locked_inactive = rgba(<wallbash_txt1>cc) rgba(<wallbash_txt2>cc) 45deg
 }
 
 decoration {
-    shadow:color = rgba(<ivy_pry1>cc)
+    shadow:color = rgba(<wallbash_pry1>cc)
 }
-
-#//---------------------------

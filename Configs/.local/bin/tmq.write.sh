@@ -4,11 +4,10 @@ if [[ -z $VYLE_SHELL_INIT ]]; then
   scrDir="$(dirname "$(realpath "$0")")"
   source "${scrDir}/globalcontrol.sh"
 fi
-export VYLE_CONFIG_HOME VYLE_THEME XDG_CACHE_HOME XDG_CONFIG_HOME skipTemplate scrDir plLoader nProcCount
+export VYLE_CONFIG_HOME VYLE_THEME XDG_CACHE_HOME XDG_CONFIG_HOME skipTemplate scrDir nProcCount
 export SCRIPT_NAME=$0
 
-perl -e '
-
+perl - "$@" << 'EOF'
 use POSIX qw(WNOHANG);
 use File::Basename qw(basename dirname);
 use File::Find qw(find);
@@ -18,9 +17,9 @@ use Digest::SHA qw(sha1_hex);
 # -----------------------
 # Configuration
 # -----------------------
-my ($VYLE_CONFIG_HOME, $VYLE_THEME, $XDG_CONFIG_HOME, $XDG_CACHE_HOME, $LIB_DIR, $PLACELOADER, $NPROC,
+my ($VYLE_CONFIG_HOME, $VYLE_THEME, $XDG_CONFIG_HOME, $XDG_CACHE_HOME, $LIB_DIR, $NPROC,
     $THEME_DCOL_DIR, $HOME_DIR, $THEMES_DIR, $INPUT_PATH, $SCRIPT_NAME, @SKIP_TEMPLATE, $DCOL_PATH);
-my (@template_source, %dir_map);
+my (@template_source, %dir_map, %REPLACE, %RGBA_BASE);
 my ($first_line, $target, $script, $rel, $template_write, $target_dir, $raw_first_line, @first_line, $target_content, $template_hash);
 
 $VYLE_CONFIG_HOME = $ENV{VYLE_CONFIG_HOME};
@@ -28,7 +27,6 @@ $VYLE_THEME = $ENV{VYLE_THEME};
 $XDG_CONFIG_HOME = $ENV{XDG_CONFIG_HOME};
 $XDG_CACHE_HOME = $ENV{XDG_CACHE_HOME};
 $LIB_DIR = $ENV{scrDir};
-$PLACELOADER = $ENV{plLoader};
 $NPROC = $ENV{nProcCount};
 
 $DCOL_PATH = "$VYLE_CONFIG_HOME/theme/$VYLE_THEME";
@@ -81,6 +79,7 @@ sub load_varfs {
   {
     chomp($line);
 
+    $line =~ s/^\s+|\s+$//g;
     ( $line =~ /^\s*$/ || $line =~ /^\s*#/ ) && next;
     if 
       ( $line =~ /^[^=]+=[^=]*$/ ) 
@@ -120,29 +119,24 @@ sub r {
   return "<$return>";
 }
 
-# -----------------------
-# Replacement engine
-# -----------------------
+sub build_env_cache {
+  %REPLACE = map { $_ => $ENV{$_} } grep { $_ !~ /_rgba$/ } keys %ENV;
+
+  for my $k (keys %ENV) 
+  {
+    if 
+      ($k =~ /(.*)_rgba$/ && $ENV{$k} =~ /rgba\((\d+),(\d+),(\d+),[\d.]+\)/) 
+    {
+      $RGBA_BASE{$k} = [$1,$2,$3];
+    }
+  }
+}
+
+build_env_cache();
+
 sub apply_env_replacements {
   my @lines = @_;
   my $output = "";
-
-  # -----------------------
-  # Precompute static ENV hash (fast path)
-  # -----------------------
-  my %replace = map { $_ => $ENV{$_} } grep { $_ !~ /_rgba$/ } keys %ENV;
-
-  # -----------------------
-  # Precompute RGBA base colors
-  # -----------------------
-  my %rgba_base;
-  for my $k (keys %ENV) {
-    if 
-      ($k =~ /(.*)_rgba$/ && $ENV{$k} =~ /rgba\((\d+),(\d+),(\d+),[\d.]+\)/)
-    {
-      $rgba_base{$k} = [$1,$2,$3];
-    }
-  }
 
   # -----------------------
   # Single regex pass per line
@@ -155,14 +149,17 @@ sub apply_env_replacements {
       if 
         ( defined $3 ) 
       {
-        # Static variable
-        $replace{$3} // r($3, undef, $3);
+        exists $REPLACE{$3} ? $REPLACE{$3} : r($3, undef, $3);
       } 
-      else 
+      elsif 
+        ( exists $RGBA_BASE{$1} )
       {
-        # RGBA dynamic
-        my ($r,$g,$b) = @{ $rgba_base{$1} || [] };
-        defined $r ? "rgba($r,$g,$b,$2)" : r($1,$2);
+        my ($r, $g, $b) = @{ $RGBA_BASE{$1} };
+        "rgba($r,$g,$b,$2)";
+      }
+      else
+      {
+        r($1, $2);
       }
     }gex;
     $output .= $line;
@@ -374,4 +371,4 @@ else
     delete $pids{$last_pid} if $last_pid > 0;
   }
 }
-' "$@"
+EOF

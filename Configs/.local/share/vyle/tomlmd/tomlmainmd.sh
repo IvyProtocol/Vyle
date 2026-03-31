@@ -80,7 +80,7 @@ rofiWallbashScale=9
 
 #// wlogoutStyle sets the style for logout menu
 #// available styles - 1 (default) , 2
-wlogoutStyle=2
+wlogoutStyle=1
 
 # █▀▀ ▄▀█ █▀ ▀█▀ █▀▀ █▀▀ ▀█▀ █▀▀ █░█
 # █▀░ █▀█ ▄█ ░█░ █▀░ ██▄ ░█░ █▄▄ █▀█

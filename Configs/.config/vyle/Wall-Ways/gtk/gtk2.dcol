@@ -1,8 +1,8 @@
 $(themesDir)/Wallbash-Gtk/gtk-2.0/gtkrc
 # Oomox GTK Theme (Numix Fork)
-# Modified as template for ivy
+# Modified as template for wallbash
 gtk-color-scheme =
-"base_color:#<ivy_pry1>\nbg_color:#<ivy_pry2>\ntooltip_bg_color:#<ivy_pry3>\nselected_bg_color:#<ivy_pry4>\ntext_color:#<ivy_txt1>\nfg_color:#<ivy_txt2>\ntooltip_fg_color:#<ivy_txt3>\nselected_fg_color:#<ivy_txt1>\nmenubar_bg_color:#<ivy_pry3>\nmenubar_fg_color:#<ivy_txt1>\ntoolbar_bg_color:#<ivy_pry4>\ntoolbar_fg_color:#<ivy_txt2>\nmenu_bg_color:#<ivy_pry2>\nmenu_fg_color:#<ivy_txt3>\npanel_bg_color:#<ivy_pry1>\npanel_fg_color:#<ivy_2xa1>\nlink_color:#<ivy_pry4>\nbtn_bg_color:#<ivy_pry3>\nbtn_fg_color:#<ivy_txt1>\ntitlebar_bg_color:#<ivy_pry4>\ntitlebar_fg_color:#<ivy_txt2>\nprimary_caret_color:#<ivy_txt3>\nsecondary_caret_color:#<ivy_txt4>\naccent_bg_color:#<ivy_pry3>\n"
+"base_color:#<wallbash_pry1>\nbg_color:#<wallbash_pry2>\ntooltip_bg_color:#<wallbash_pry3>\nselected_bg_color:#<wallbash_pry4>\ntext_color:#<wallbash_txt1>\nfg_color:#<wallbash_txt2>\ntooltip_fg_color:#<wallbash_txt3>\nselected_fg_color:#<wallbash_txt1>\nmenubar_bg_color:#<wallbash_pry3>\nmenubar_fg_color:#<wallbash_txt1>\ntoolbar_bg_color:#<wallbash_pry4>\ntoolbar_fg_color:#<wallbash_txt2>\nmenu_bg_color:#<wallbash_pry2>\nmenu_fg_color:#<wallbash_txt3>\npanel_bg_color:#<wallbash_pry1>\npanel_fg_color:#<wallbash_2xa1>\nlink_color:#<wallbash_pry4>\nbtn_bg_color:#<wallbash_pry3>\nbtn_fg_color:#<wallbash_txt1>\ntitlebar_bg_color:#<wallbash_pry4>\ntitlebar_fg_color:#<wallbash_txt2>\nprimary_caret_color:#<wallbash_txt3>\nsecondary_caret_color:#<wallbash_txt4>\naccent_bg_color:#<wallbash_pry3>\n"
 # Default Style
 
 style "murrine-default" {

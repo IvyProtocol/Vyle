@@ -18,8 +18,4 @@ if pgrep -f "xdg-desktop-portal-gtk" > /dev/null; then
 fi
     /usr/lib/xdg-desktop-portal-gtk >/dev/null 2>&1 &
 
-if pgrep -f "xdg-desktop-portal-hyprland" > /dev/null; then
-    pkill -f "xdg-desktop-portal-hyprland"
-fi
-    /usr/lib/xdg-desktop-portal-hyprland >/dev/null 2>&1 &
 

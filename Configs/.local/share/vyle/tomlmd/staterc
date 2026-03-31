@@ -1,4 +1,3 @@
-export VYLE_CONFIGURATION_PLACEHOLDER="ivy|wallbash" # Supported Placeholder of wallbash.
 export VYLE_CONFIGURATION_SKIP_TEMPLATE=( )
 export VYLE_CONFIGURATION_CORE=3
 export WALLPAPER_CONFIGURATION_BACKEND="awww" # Current-Backend Set.

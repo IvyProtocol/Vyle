@@ -7,6 +7,4 @@ if status is-interactive
 	alias zimg="kitty +kitten icat"
 	set EDITOR nvim
 end
-
-fish_add_path /home/iris/.spicetify
 set fish_user_paths ~/.local/bin

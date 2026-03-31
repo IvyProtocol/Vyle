@@ -61,7 +61,7 @@ case "${WALLPAPER_SET_FLAGS}" in
 esac
 
 if ! ${wallBackend} query &>/dev/null; then
-  ${wallBackend}-daemon & disown
+  ${wallBackend}-daemon --format xrgb & disown
   ${wallBackend} query && ${wallBackend} restore
 fi
 
@@ -70,7 +70,7 @@ xduration="${wallTransDuration:-0.5}"
 xframerate="${wallFramerate:-60}"
 xpos="$(hyprctl cursorpos | grep -E '^[0-9]' || echo "0,0")"
 
-ionice -c 2 -n 19 ${wallBackend} img "${SELECTED_WALL}" \
+${wallBackend} img "${SELECTED_WALL}" \
   -t "${xtrans}" \
   --transition-bezier "${xbezier}" \
   --transition-duration "${xduration}" \

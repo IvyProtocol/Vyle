@@ -2,7 +2,6 @@
 #  ▀▄▀ ░█░ █▄▄ ██▄  
 # Vyle configuration.
 [Vyle.Configuration]
-PlaceHolder = "ivy|wallbash" # Supported Placeholder of wallbash.
 Skip_Template = [] # Templates to Skip when using wallbash.
 Core = 3 # Limit usage of wallbash cores. NOTE: Use "$(nproc)" if you want to maximize full usage.
 

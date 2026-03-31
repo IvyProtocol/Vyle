@@ -11,7 +11,7 @@ Error: Another instance of ${BASH_SOURCE[0]##*/} is running.
 If you are sure that no other instance is running. Remove the the lock file:
     $lock_File
 EOF
-    notify-send -a "t2" -r 91190 -t 800 -i "${dunstDir}/icons/hyprdots.svg" "Vyle" "Another instance of ${0##*/} is running."
+    notify-send -a "t2" -r 91190 -t 800 -i "${dunstDir}/icons/hyprdots.svg" "Vyle" "Another instance of ${BASH_SOURCE[0]##*/} is running."
     exit 0
 fi
 touch "${lock_File}"
@@ -25,8 +25,8 @@ colsDir="${cacheDir}/cols"
 thumbDir="${cacheDir}/thumb"
 rofiConf="${rasiDir}/selector.rasi"
 
-[[ -d "${blurDir}" ]] || mkdir -p "${blurDir}"
 [[ -d "${cacheDir}" ]] || mkdir -p "${cacheDir}"
+[[ -d "${blurDir}" ]] || mkdir -p "${blurDir}"
 [[ -d "${colsDir}" ]] || mkdir -p "${colsDir}"
 [[ -d "${thumbDir}" ]] || mkdir -p "${thumbDir}"
 
@@ -51,9 +51,8 @@ wallSelTui() {
     done
     shift $((OPTIND - 1))
     if [[ -z "${img}" || ! -f "${img}" ]]; then
-        img="${wallSet##*/}"
-        img="${wallDir}/${img}"
-        
+        img="${wallSet}"
+       echo "$img" 
         if [[ ! -f "${img}" ]]; then
             notify -m 1 -p "Invalid wallpaper?" -u critical -t 900 -a "t1"
             exit 1
@@ -97,34 +96,27 @@ wallSelTui() {
     read -r hashMech <<< "$(md5sum "${img}" | awk '{print $1}')"
     case "${schIPC}" in
         dark|light|auto) 
-            if [[ -f "${dcolDir}/${dcolMode}/ivy-${hashMech}.dcol" ]]; then
-                VYLE_DCOL_PATH="${dcolDir}/${dcolMode}/ivy-${hashMech}.dcol"
-            else
+            if [[ ! -f "${dcolDir}/${dcolMode}/ivy-${hashMech}.dcol" ]]; then
                 if [[ "${schIPC}" == "auto" ]]; then
                     ionice -c 3 nice -n 19 "${scrDir}/wallbash.sh" "${img}"
-
                 else
                     ionice -c 3 nice -n 19 "${scrDir}/wallbash.sh" "${img}" --${schIPC}
                 fi
-                VYLE_DCOL_PATH="${dcolDir}/${dcolMode}/ivy-${hashMech}.dcol"
             fi
+            VYLE_DCOL_PATH="${dcolDir}/${dcolMode}/ivy-${hashMech}.dcol"
             [[ -e "${VYLE_DCOL_PATH}" ]]
             ;;
         theme|*)
             if [[ "${enableWallIde}" -eq 3 && "${dcolMode}" == "theme" ]]; then
-                if [[ -f "${dcolDir}/auto/ivy-${hashMech}.dcol" ]]; then
-                    true
-                else
+                if [[ ! -f "${dcolDir}/auto/ivy-${hashMech}.dcol" ]]; then
                     ionice -c 3 nice -n 19 "${scrDir}/wallbash.sh" "$img"
                 fi
                 VYLE_DCOL_PATH="${dcolDir}/auto/ivy-${hashMech}.dcol"
             else
-                if [[ -f "${dcolDir}/${dcolMode}/ivy-${hashMech}.dcol" ]]; then
-                    VYLE_DCOL_PATH="${dcolDir}/${dcolMode}/ivy-${hashMech}.dcol"
-                else
+                if [[ ! -f "${dcolDir}/${dcolMode}/ivy-${hashMech}.dcol" ]]; then
                     ionice -c 3 nice -n 19 "${scrDir}/wallbash.sh" "$img"
-                    VYLE_DCOL_PATH="${dcolDir}/${dcolMode}/ivy-${hashMech}.dcol"
                 fi
+                VYLE_DCOL_PATH="${dcolDir}/${dcolMode}/ivy-${hashMech}.dcol"
             fi
             [[ -e "${VYLE_DCOL_PATH}" ]]
             ;;

@@ -1,14 +1,14 @@
 $(confDir)/dunst/wallbash.conf|$RUN:$(scrDir)/wallbashdunst.sh
 [urgency_low]
-    background = "#<ivy_3xa5>80"
-    foreground = "#<ivy_3xa9>E6"
-    frame_color = "#<ivy_3xa5>03"
+    background = "#<wallbash_3xa5>80"
+    foreground = "#<wallbash_3xa9>E6"
+    frame_color = "#<wallbash_3xa5>03"
     icon = "$HOME/.config/dunst/icons/hyprdots.svg"
     timeout = 5
 
 [urgency_normal]
-    background = "#<ivy_2xa2>80"
-    foreground = "#<ivy_2xa9>E6"
-    frame_color = "#<ivy_2xa2>03"
+    background = "#<wallbash_2xa2>80"
+    foreground = "#<wallbash_2xa9>E6"
+    frame_color = "#<wallbash_2xa2>03"
     icon = "$HOME/.config/dunst/icons/hyprdots.svg"
     timeout = 5

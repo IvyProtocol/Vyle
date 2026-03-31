@@ -2,7 +2,6 @@
 #  ▀▄▀ ░█░ █▄▄ ██▄  
 # Vyle configuration.
 [Vyle.Configuration]
-PlaceHolder = "ivy|wallbash" # Supported Placeholder of wallbash.
 Skip_Template = [] # Templates to Skip when using wallbash.
 Core = $(nproc) # Limit usage of wallbash cores. NOTE: Use "$(nproc)" if you want to maximize full usage.
 
@@ -27,26 +26,26 @@ Animation_Theme = "grow" # Transition AnimationTheme.
 # rofilauncher.sh configuration.
 [Rofi.Launch]
 Font = "JetBrainsMono Nerd Font" # Font for rofilauncher.sh
-Scale = 10 # Scale for rofilauncher.sh
+Scale = 9 # Scale for rofilauncher.sh
 Style = 1
 
 # wbselecgen.sh configuration.
 [Rofi.Wallpaper]
 Font = "JetBrainsMono Nerd Font" # Font for wbselecgen.sh
 Scale = 10 # Scale for wbselecgen.sh
-Column = 3 # Column for wbselecgen.sh
+Column = "" # Column for wbselecgen.sh
 
 # themeswitch.sh configuration.
 [Rofi.Theme]
 Font = "JetBrainsMono Nerd Font" # Font for themeswitch.sh
 Scale = 10 # Scale for themeswitch.sh
-Column = 1 # Column for themeswitch.sh
+Column = "" # Column for themeswitch.sh
 Style = 1 # Style for themeswitch.sh
 
 # wallbashtoggle.sh configuraiton
 [Rofi.Wallbash]
 Font = "JetBrainsMono Nerd Font" # Font for wallbashtoggle.sh
-Scale = 1- # Scale for wallbashtoggle.sh
+Scale = 10 # Scale for wallbashtoggle.sh
 
 # style-launcher.sh configuration.
 [Rofi.Switch]
@@ -99,7 +98,7 @@ Browser = "firefox" # Browser
 Lock_Screen = "hyprlock" # LockScreen
 Task_Manager = "gnome-system-monitor" # TaskManager
 Cursor = "Bibata-Modern-Ice" # Cursor Theme
-Cursor_Size = 20 # Cursor Size
+Cursor_Size = 18 # Cursor Size
 
 # █▀▀ ▀█▀ █▄▀
 # █▄█ ░█░ █░█
