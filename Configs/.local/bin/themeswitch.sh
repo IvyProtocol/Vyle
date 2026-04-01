@@ -141,7 +141,6 @@ thmSelEnv() {
     }
     choice=$(menu | rofi -dmenu -i -p "ThemeControl" -theme-str "${r_scale}" -theme-str "${r_override}" -config "${rofiConf}" -select "${VYLE_RESERVED_THEME}")
     [[ -z "$choice" ]] && exit 0
-    sleep 0.7
     themeSelTui "$choice"
 }
 
