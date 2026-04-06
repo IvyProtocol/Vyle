@@ -446,6 +446,7 @@ generate_theme() {
     done < "${VYLE_DCOL_PATH}"
     tmpfile="$(mktemp)"
   {
+      echo "wallbash_mode=${ivy[dcol_mode]}"
     for block in {1..4}; do
       echo "wallbash_pry${block}${suffix}=${ivy[dcol_pry$((block))${src_suffix}]}"
       echo "wallbash_txt${block}${suffix}=${ivy[dcol_txt$((block))${src_suffix}]}"

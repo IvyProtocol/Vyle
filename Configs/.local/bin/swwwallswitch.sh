@@ -125,6 +125,7 @@ wallSelTui() {
     generate_theme "_rgba" "${VYLE_CONFIG_HOME}/theme-rgba.ivy" "_rgba"
     VYLE_THEME=$VYLE_THEME VYLE_CONFIG_HOME=$VYLE_CONFIG_HOME source "${scrDir}/tmq.write.sh"
     source "${scrDir}/wallpaper.hybrid.sh"
+
 }
 
 wallSelEnv() {

@@ -24,6 +24,7 @@ apply_config() {
     else
         [[ "${VYLE_THEME}" != "Wallbash-Ivy" ]] && setConf "VYLE_THEME" "Wallbash-Ivy" "${VYLE_STATE_HOME}/staterc" &
         sed -i 's|^#[[:space:]]*source[[:space:]]*=[[:space:]]*./themes/wallbash-ide.conf|source = ./themes/wallbash-ide.conf|' "${XDG_CONFIG_HOME}/hypr/hyprland.conf"
+        echo "$wallSet"
         read -r hashMech <<< "$(md5sum "${wallSet}" | awk '{print $1}')"
 
         if [[ ! -e "${VYLE_CACHE_HOME}/shell/${1}/ivy-${hashMech}.dcol" ]]; then
@@ -31,9 +32,13 @@ apply_config() {
         fi
         VYLE_DCOL_PATH="${VYLE_CACHE_HOME}/shell/${1}/ivy-${hashMech}.dcol"
         [[ -e "${VYLE_DCOL_PATH}" ]]
+
+        echo "$VYLE_DCOL_PATH"
         generate_theme "" "${VYLE_CONFIG_HOME}/theme.ivy" ""
         generate_theme "_rgba" "${VYLE_CONFIG_HOME}/theme-rgba.ivy" "_rgba"
         VYLE_THEME="Wallbash-Ivy"
+        VYLE_RESERVED_THEME=$VYLE_RESERVED_THEME
+        VYLE_CONFIG_HOME=$VYLE_CONFIG_HOME
         source "${scrDir}/tmq.write.sh"
     fi
 

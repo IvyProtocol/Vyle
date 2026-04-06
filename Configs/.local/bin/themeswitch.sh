@@ -4,6 +4,20 @@ set -eo pipefail
 scrDir="$(dirname "$(realpath "$0")")"
 source "${scrDir}/globalcontrol.sh"
 
+lockFile="${XDG_RUNTIME_DIR}/${0##*/}.lock"
+if [ -e "${lockFile}" ]; then
+    cat <<EOF
+Error: Another instance of ${0##*/} is running.
+If you are sure that no other instance of ${0##*/} running, then remove the lock file:
+    $lockFile
+EOF
+    notify-send -a "t2" -r 91190 -t 800 -i "${dunstDir}/icons/hyprdots.svg" "Vyle" "Another instance of ${0##*/} is running."
+    exit 0
+fi
+
+touch "${lockFile}"
+trap 'rm -f ${lockFile}' EXIT
+
 show_theme_status() {
     cat <<EOF
  :: Current theme: $VYLE_RESERVED_THEME
@@ -60,7 +74,7 @@ themeSelTui() {
         show_theme_status &
         if [[ "${VYLE_RESERVED_THEME}" != "${thmChsh}" ]]; then
             setConf "VYLE_RESERVED_THEME" "${thmChsh}" "${VYLE_STATE_HOME}/staterc" 
-        fi & 
+        fi  
         if [[ "${wallDir}" != "${themeDir}/${thmChsh}/wallpapers" ]]; then
             echo " :: Theme Control - Theme '${thmChsh}' :: Wallpaper '${thmImg}' :: DcolMode '${enableWallIde}' --> '${XDG_CONFIG_HOME}'" 
             notify -m 2 -i "theme_engine" -p "${thmChsh}" -s "${VYLE_CACHE_HOME}/cache/thumb/$(fl_wallpaper -t "${thmImg}" -f 1).sloc" -t 1100 -a "t1"
@@ -68,11 +82,11 @@ themeSelTui() {
         else
             echo -e " :: Theme Control - Skipped populating $thmChsh -> ${XDG_CONFIG_HOME}"
             exit 0
-        fi &
+        fi
         if [[ "${enableWallIde}" -eq 3 ]]; then
             if [[ "${VYLE_THEME}" != "${thmChsh}" ]]; then
                 setConf "VYLE_THEME" "${thmChsh}" "${VYLE_STATE_HOME}/staterc"
-            fi &
+            fi 
             sed -Ei 's|^[[:space:]]*source[[:space:]]*=[[:space:]]*./themes/wallbash-ide.conf|#source = ./themes/wallbash-ide.conf|' "${XDG_CONFIG_HOME}/hypr/hyprland.conf"
         else
             "${scrDir}/tmq.write.sh" "${themeDir}/${thmChsh}/hypr.theme"

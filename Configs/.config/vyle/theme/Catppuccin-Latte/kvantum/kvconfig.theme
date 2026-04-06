@@ -1,4 +1,4 @@
-$(confDir)/Kvantum/ivy/ivy.kvconfig
+$(confDir)/Kvantum/wallbash/wallbash.kvconfig
 [%General]
 author=elkrien based on Arc Dark style
 comment=Catppuccin-Latte-Rosewater

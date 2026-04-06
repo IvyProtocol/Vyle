@@ -35,4 +35,5 @@ decoration {
         xray = false
     }
 }
+layerrule = blur on, ignore_alpha 0, match:namespace waybar
 

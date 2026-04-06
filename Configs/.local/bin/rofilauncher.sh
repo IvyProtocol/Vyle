@@ -8,24 +8,22 @@
 scrDir="$(dirname "$(realpath "$0")")"
 source "${scrDir}/globalcontrol.sh"
 
-# Case Statement:
-case "${1}" in
-    -d|--drun)
-        rofiMode="drun"
-        ;;
-    -w|--window)
-        rofiMode="window" 
-        ;;
-    -f|--filebrowser)
-        rofiMode="filebrowser"
-        ;;
-    -h|--help)
-        rofiMode="help"
-        ;;
-    *)
-        rofiMode="drun"
-        ;;
-esac
+STORE_HELP_FUNCTION="$(
+cat <<EOF
+Usage: ${0##*/} -[action]
+
+Actions:
+    -d      drun mode
+    -w      window mode
+    -f      filebrowser mode
+
+Examples:
+    ${0##*/} -d // drun mode.
+    ${0##*/} -w // window mode
+    ${0##*/} -f // filebrowser mode
+
+EOF
+)"
 
 # Export necessary variables defined from globalcontrol.sh in our environment.
 # In preparation of Perl's interface deployment.
@@ -35,47 +33,63 @@ export hypr_border
 export hypr_width
 export rofiLauncherFont
 export rofiLauncherScale
-export rofiMode
-export scrName="$0"
+export STORE_HELP_FUNCTION
 
-perl -e '
+perl - "$@" << 'EOF'
 # Header Includes: basename(), find()
 
-use File::Basename qw(basename);
-use File::Find;
+# User can dispatch "help" argument to be guided.
+# User can trigger any argument except for those that are invalid.
+my ($rofiMode) = $ARGV[0];
 
-# Help Function.
-sub help_function {
-    my $script_name = basename($ENV{scrName});
-    print("${script_name} [action]\n");
-    print("-d : drun mode\n");
-    print("-w : window mode\n");
-    print("-f : filebrowser mode\n");
-    exit(0);
+if 
+    (( $rofiMode eq "-d" || $rofiMode eq "--drun" ))
+{
+    $rofiMode = "drun";
+}
+elsif
+    (( $rofiMode eq "-w" || $rofiMode eq "--window" ))
+{
+    $rofiMode = "window";
+}
+elsif 
+    (( $rofiMode eq "-f" || $rofiMode eq "--filebrowser" ))
+{
+    $rofiMode = "filebrowser";
+}
+elsif 
+    (( $rofiMode eq "-h" || $rofiMode eq "--help"))
+{
+    print("$ENV{STORE_HELP_FUNCTION}\n");
+    exit 0;
+}
+else
+{
+    $rofiMode = "drun";
 }
 
+use File::Find qw(find);
+use File::Basename qw(basename);
 # We will reassign our environment variable into Perl.
 # The above exported variables will be picked within $ENV to be accessed.
 # NOTE: Bash and Perl are seperate scripting language that are related to each other.
 
-my $XDG_CONFIG_HOME = $ENV{XDG_CONFIG_HOME};
-my $rofiLauncherStyle = $ENV{rofiLauncherStyle};
-my $rofiLauncherFont = $ENV{rofiLauncherFont};
-my $rofiLauncherScale = $ENV{rofiLauncherScale};
-my $hypr_border = $ENV{hypr_border};
-my $hypr_width = $ENV{hypr_width};
-my $rofiMode = $ENV{rofiMode};
-
-# User can dispatch "help" argument to be guided.
-( $rofiMode eq "help" ) && help_function();
+my ($XDG_CONFIG_HOME);
+my ($rofiLauncherFont, $rofiLauncherStyle, $rofiLauncherScale, $hypr_border, $hypr_width, $rofiStyleDir,
+    $rofiStyleLaunch, $wind_border, $elem_border, $r_override, $r_scale, $is_override, $i_override,
+    $base_rofiStyleLaunch);
+$XDG_CONFIG_HOME = $ENV{XDG_CONFIG_HOME};
+$rofiLauncherStyle = $ENV{rofiLauncherStyle};
+$rofiLauncherFont = $ENV{rofiLauncherFont};
+$rofiLauncherScale = $ENV{rofiLauncherScale};
+$hypr_border = $ENV{hypr_border};
+$hypr_width = $ENV{hypr_width};
 
 # Noteworthy is that you can assign variables with my, our, $ENV or empty.
-# It feels like bash so much.... Just some semi-color and that is all.
-
 # Assign related path to rofi to access the styles.
 
-my $rofiStyleDir = "${XDG_CONFIG_HOME}/rofi/styles";
-my $rofiStyleLaunch = "${rofiStyleDir}/style-${rofiLauncherStyle}.rasi";
+$rofiStyleDir = "${XDG_CONFIG_HOME}/rofi/styles";
+$rofiStyleLaunch = "${rofiStyleDir}/style-${rofiLauncherStyle}.rasi";
 
 # If value for rofiStyleLaunch does not exist in the filepath of rofiStyleDir.
 # Enlist the first order from rofiStyleDir and append to rofiStyleLaunch.
@@ -106,21 +120,21 @@ print(" :: Rofi-Launch - Preparing to read ${rofiStyleLaunch} - Deploying... \n"
 # Define Variables: Calculate the variables needed for Rofi.
 # ELEMENT_BORDER, BORDER_RADIUS, FONT, FONT_SCALE
 
-my $wind_border = int( $hypr_border * 3 );
-my $elem_border = ($hypr_border == 0) ? 10 : int($hypr_border * 2);
-my $r_override = "window {border: ${hypr_width}px; border-radius: ${wind_border}px;} element {border-radius: ${elem_border}px;}";
-my $r_scale = "configuration {font: \"${rofiLauncherFont} ${rofiLauncherScale}\";}";
+$wind_border = int( $hypr_border * 3 );
+$elem_border = ($hypr_border == 0) ? 10 : int($hypr_border * 2);
+$r_override = "window {border: ${hypr_width}px; border-radius: ${wind_border}px;} element {border-radius: ${elem_border}px;}";
+$r_scale = "configuration {font: \"${rofiLauncherFont} ${rofiLauncherScale}\";}";
 
 # Consume $is_override to retrieve icon-theme
-chomp(my $is_override = qx(gsettings get org.gnome.desktop.interface icon-theme));
+chomp($is_override = qx(gsettings get org.gnome.desktop.interface icon-theme));
 
 # Using Perl's' native sed to remove extra quotation.
 $is_override =~ s/''//g;
 
 # Appending $is_override to $i_override.
-my $i_override = "configuration {icon-theme: \"${is_override}\";}";
+$i_override = "configuration {icon-theme: \"${is_override}\";}";
 
-my $base_rofiStyleLaunch = basename($rofiStyleLaunch);
+$base_rofiStyleLaunch = basename($rofiStyleLaunch);
 
 print(" :: Rofi-Launch :: Profile - $base_rofiStyleLaunch :: Element-Border - ${elem_border} :: Border-Radius - ${wind_border} :: Icon-Theme - ${is_override} \n");
 
@@ -132,4 +146,4 @@ system(
     "-theme-str", "${i_override}",
     "-config", "${rofiStyleLaunch}"
     );
-'
+EOF
