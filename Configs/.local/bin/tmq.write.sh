@@ -8,14 +8,11 @@ export VYLE_CONFIG_HOME VYLE_THEME XDG_CACHE_HOME XDG_CONFIG_HOME skipTemplate s
 export SCRIPT_NAME=$0
 
 perl - "$@" << 'EOF'
-use POSIX          qw(WNOHANG);
-use File::Basename qw(basename dirname);
 use File::Find     qw(find);
-use File::Path     qw(make_path);
 
 my ($VYLE_CONFIG_HOME, $VYLE_THEME, $XDG_CONFIG_HOME, $XDG_CACHE_HOME,
     $LIB_DIR, $NPROC, $SCRIPT_NAME, $INPUT_PATH,
-    $DCOL_PATH, $THEME_DCOL_DIR, $HOME_DIR, $THEMES_DIR, $PLACEHOLDER_RE, $DIR_VAR_RE);
+    $DCOL_PATH, $THEME_DCOL_DIR, $HOME_DIR, $THEMES_DIR, $PLACEHOLDER_RE, $DIR_VAR_RE, $PRECHECK_RE);
 my (%dir_map, %REPLACE, %RGBA_BASE, %SKIP_SET, %made_dirs, @template_source, @files, %pids);
 my ($raw, $nl, $header, $body, $target, $script, $target_dir, $existing, $found, $n, $workers, $chunk, $res);
 
@@ -26,6 +23,8 @@ $XDG_CACHE_HOME   = $ENV{XDG_CACHE_HOME};
 $LIB_DIR          = $ENV{scrDir};
 $NPROC            = $ENV{nProcCount} || 1;
 $SCRIPT_NAME      = $ENV{SCRIPT_NAME};
+$SCRIPT_NAME =~ s{/[^/]+$}{};
+
 $INPUT_PATH       = $ARGV[0] // '';
 
 $DCOL_PATH = ($VYLE_THEME eq 'Wallbash-Ivy')
@@ -44,7 +43,7 @@ $THEMES_DIR     = "$HOME_DIR/.themes";
 if 
   ( $> == 0 ) 
 {
-  printf "[%s] must not be ran as root.\n", basename($SCRIPT_NAME);
+  printf("[%s] must not be ran as root.\n", $SCRIPT_NAME);
   exit 1;
 }
 
@@ -145,13 +144,20 @@ sub process_template {
 
   $target =~ s{$DIR_VAR_RE}{$dir_map{$1} // $&}ge;
   $script =~ s{$DIR_VAR_RE}{$dir_map{$1} // $&}ge if $script;
-  $body =~ s{$PLACEHOLDER_RE} { defined $3 ? (exists $REPLACE{$3} ? $REPLACE{$3} : "<$3>") : exists $RGBA_BASE{$1} ? "$RGBA_BASE{$1}$2)" : "<$1>" }ge;
+  
+  if 
+    ( $body =~ /[<>()]/ )
+  {
+    $body =~ s{$PLACEHOLDER_RE} { defined $3 ? (exists $REPLACE{$3} ? $REPLACE{$3} : "<$3>") : exists $RGBA_BASE{$1} ? "$RGBA_BASE{$1}$2)" : "<$1>" }ge;
+  }
 
-  $target_dir = dirname($target);
+  $target_dir = $target;
+  $target_dir =~ s{/[^/]+$}{};
+
   unless 
     ($made_dirs{$target_dir}++)
   {
-    make_path($target_dir) unless -d $target_dir;
+    mkdir $target_dir unless -d $target_dir;
   }
 
   $existing = "";
@@ -216,8 +222,7 @@ find(
 );
 
 unless ($found) {
-  printf "%s: no .dcol or .ivy templates found, nothing to apply.\n",
-    basename($SCRIPT_NAME);
+  printf("%s: no .dcol or .ivy templates found, nothing to apply.\n", $SCRIPT_NAME);
   exit 1;
 }
 
