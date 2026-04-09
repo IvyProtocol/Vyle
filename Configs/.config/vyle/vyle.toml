@@ -20,7 +20,7 @@ Transition_Bezier = ".43,1.19,.1,.4" # Transition Bezier.
 Animation_Previous = "outer" # Transition AnimationPrevious.
 Animation_Next = "grow" # Transition AnimationNext.
 Animation_Theme = "grow" # Transition AnimationTheme.
-
+Args = []
 # █▀█ █▀█ █▀▀ █
 # █▀▄ █▄█ █▀░ █
 # rofilauncher.sh configuration.
@@ -33,19 +33,19 @@ Style = 1
 [Rofi.Wallpaper]
 Font = "JetBrainsMono Nerd Font" # Font for wbselecgen.sh
 Scale = 10 # Scale for wbselecgen.sh
-Column = "" # Column for wbselecgen.sh
+Column = 3 # Column for wbselecgen.sh
 
 # themeswitch.sh configuration.
 [Rofi.Theme]
 Font = "JetBrainsMono Nerd Font" # Font for themeswitch.sh
-Scale = 10 # Scale for themeswitch.sh
-Column = "" # Column for themeswitch.sh
+Scale = 6 # Scale for themeswitch.sh
+Column = 3 # Column for themeswitch.sh
 Style = 1 # Style for themeswitch.sh
 
 # wallbashtoggle.sh configuraiton
 [Rofi.Wallbash]
 Font = "JetBrainsMono Nerd Font" # Font for wallbashtoggle.sh
-Scale = 10 # Scale for wallbashtoggle.sh
+Scale = 9 # Scale for wallbashtoggle.sh
 
 # style-launcher.sh configuration.
 [Rofi.Switch]
@@ -84,7 +84,7 @@ Notify_Mute = 0 # Silent Popups of Mic/Speaker. Mute: 0 = False; 1 = True
 # █░▀█ █▄█ ░█░ █ █▀░ █ █▄▄ █▀█ ░█░ █ █▄█ █░▀█
 # dunstctl configuration
 [Notification.Configuration]
-Font = "mononoki Nerd Font Bold" # Font Configuration for Dunst. 
+Font = "Mononoki Nerd Font Bold" # Font Configuration for Dunst. 
 Font_Size = 10 # Font_Size for Dunst
 
 # █░█ █▄█ █▀█ █▀█ █░░ ▄▀█ █▄░█ █▀▄

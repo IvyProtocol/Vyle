@@ -2,4 +2,4 @@
 theme=wallbash
 
 [Applications]
-wallbash=dolphin
+Default=dolphin

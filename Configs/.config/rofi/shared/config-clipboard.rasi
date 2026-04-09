@@ -42,7 +42,7 @@ wallbox {
     expand:                      false;
     orientation:                 horizontal;
     background-color:            transparent;
-    background-image:            url("~/.config/rofi/shared/current-wallpaper.png", width);
+    background-image:            url("~/.config/rofi/shared/wall.cols", width);
     border-radius:               1em 1em 0em 0em;
     children:                    [ "wallframe" , "inputbar" ];
 }

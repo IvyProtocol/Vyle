@@ -3,7 +3,7 @@ $(cacheDir)/wal/colors.json|$RUN:pywalfox update &
     "wallpaper": "/home/Kroni4/.cache/rofi-wallpapers/rain_girl_door.jpg",
     "alpha": "100",
     "colors": {
-      "color0": "#<ivy_pry1>",
+      "color0": "#<wallbash_pry1>",
       "color1": "",
       "color2": "",
       "color3": "",
@@ -13,12 +13,12 @@ $(cacheDir)/wal/colors.json|$RUN:pywalfox update &
       "color7": "",
       "color8": "",
       "color9": "",
-      "color10": "#<ivy_2xa8>",
+      "color10": "#<wallbash_2xa8>",
       "color11": "",
       "color12": "",
-      "color13": "#<ivy_2xa7>",
+      "color13": "#<wallbash_2xa7>",
       "color14": "",
-      "color15": "#<ivy_4xa8>"
+      "color15": "#<wallbash_4xa8>"
     }
   }
 

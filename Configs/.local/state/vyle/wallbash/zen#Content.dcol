@@ -5,12 +5,12 @@
   /* Common variables affecting all pages */
   @-moz-document url-prefix("about:") {
     :root {
-      --in-content-page-color: #<ivy_txt1> !important;
-      --color-accent-primary: #<ivy_1xa5> !important;
-      --color-accent-primary-hover: rgb(<ivy_pry2>) !important;
-      --color-accent-primary-active: rgb(<ivy_2xa2>) !important;
-      --background-color: #<ivy_1xa5> !important;
-      --in-content-page-background: #<ivy_pry1>95 !important;
+      --in-content-page-color: #<wallbash_txt1> !important;
+      --color-accent-primary: #<wallbash_1xa5> !important;
+      --color-accent-primary-hover: rgb(<wallbash_pry2>) !important;
+      --color-accent-primary-active: rgb(<wallbash_2xa2>) !important;
+      --background-color: #<wallbash_1xa5> !important;
+      --in-content-page-background: #<wallbash_pry1>95 !important;
     }
 
   }
@@ -19,16 +19,16 @@
   @-moz-document url("about:newtab"), url("about:home") {
 
     :root {
-      --newtab-background-color: #<ivy_pry1>00 !important;
-      --newtab-background-color-secondary: #<ivy_pry2> !important;
-      --newtab-element-hover-color: #<ivy_pry2> !important;
-      --newtab-text-primary-color: #<ivy_txt1> !important;
-      --newtab-wordmark-color: #<ivy_txt1> !important;
-      --newtab-primary-action-background: #<ivy_1xa5> !important;
+      --newtab-background-color: #<wallbash_pry1>00 !important;
+      --newtab-background-color-secondary: #<wallbash_pry2> !important;
+      --newtab-element-hover-color: #<wallbash_pry2> !important;
+      --newtab-text-primary-color: #<wallbash_txt1> !important;
+      --newtab-wordmark-color: #<wallbash_txt1> !important;
+      --newtab-primary-action-background: #<wallbash_1xa5> !important;
     }
 
     .icon {
-      color: #<ivy_1xa5> !important;
+      color: #<wallbash_1xa5> !important;
     }
 
     .search-wrapper .logo-and-wordmark .logo {
@@ -48,11 +48,11 @@
     }
 
     .card-outer:is(:hover, :focus, .active):not(.placeholder) .card-title {
-      color: #<ivy_1xa5> !important;
+      color: #<wallbash_1xa5> !important;
     }
 
     .top-site-outer .search-topsite {
-      background-color: #<ivy_1xa5> !important;
+      background-color: #<wallbash_1xa5> !important;
     }
 
     .compact-cards .card-outer .card-context .card-context-icon.icon-download {
@@ -63,27 +63,27 @@
   /* Variables and styles specific to about:preferences */
   @-moz-document url-prefix("about:preferences") {
     :root {
-      --zen-colors-tertiary: #<ivy_pry1>95 !important;
-      --in-content-text-color: #<ivy_txt1> !important;
-      --link-color: #<ivy_1xa5> !important;
-      --link-color-hover: rgb(<ivy_1xa7>) !important;
-      --zen-colors-primary: #<ivy_pry2> !important;
-      --in-content-box-background: #<ivy_pry2> !important;
-      --zen-primary-color: #<ivy_1xa5> !important;
+      --zen-colors-tertiary: #<wallbash_pry1>95 !important;
+      --in-content-text-color: #<wallbash_txt1> !important;
+      --link-color: #<wallbash_1xa5> !important;
+      --link-color-hover: rgb(<wallbash_1xa7>) !important;
+      --zen-colors-primary: #<wallbash_pry2> !important;
+      --in-content-box-background: #<wallbash_pry2> !important;
+      --zen-primary-color: #<wallbash_1xa5> !important;
     }
 
     groupbox , moz-card{
-      background: #<ivy_pry1>95 !important;
+      background: #<wallbash_pry1>95 !important;
     }
 
     button,
     groupbox menulist {
-      background: #<ivy_pry2> !important;
-      color: #<ivy_txt1> !important;
+      background: #<wallbash_pry2> !important;
+      color: #<wallbash_txt1> !important;
     }
 
     .main-content {
-      background-color: #<ivy_pry1>95 !important;
+      background-color: #<wallbash_pry1>95 !important;
     }
 
     .identity-color-blue {
@@ -130,29 +130,29 @@
   /* Variables and styles specific to about:addons */
   @-moz-document url-prefix("about:addons") {
     :root {
-      --zen-dark-color-mix-base: #<ivy_pry1>95 !important;
-      --background-color-box: #<ivy_pry1>95 !important;
+      --zen-dark-color-mix-base: #<wallbash_pry1>95 !important;
+      --background-color-box: #<wallbash_pry1>95 !important;
     }
   }
 
   /* Variables and styles specific to about:protections */
   @-moz-document url-prefix("about:protections") {
     :root {
-      --zen-primary-color: #<ivy_pry1>95 !important;
+      --zen-primary-color: #<wallbash_pry1>95 !important;
       --social-color: #cba6f7 !important;
       --coockie-color: #89dceb !important;
       --fingerprinter-color: #f9e2af !important;
       --cryptominer-color: #b4befe !important;
       --tracker-color: #a6e3a1 !important;
-      --in-content-primary-button-background-hover: rgb(<ivy_pry2>) !important;
-      --in-content-primary-button-text-color-hover: #<ivy_txt1> !important;
-      --in-content-primary-button-background: #<ivy_pry2> !important;
-      --in-content-primary-button-text-color: #<ivy_txt1> !important;
+      --in-content-primary-button-background-hover: rgb(<wallbash_pry2>) !important;
+      --in-content-primary-button-text-color-hover: #<wallbash_txt1> !important;
+      --in-content-primary-button-background: #<wallbash_pry2> !important;
+      --in-content-primary-button-text-color: #<wallbash_txt1> !important;
     }
 
 
     .card {
-      background-color: #<ivy_pry2> !important;
+      background-color: #<wallbash_pry2> !important;
     }
   }
 }

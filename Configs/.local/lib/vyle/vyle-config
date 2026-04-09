@@ -1,0 +1,146 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC2154
+# shellcheck disable=SC1091
+
+if [[ 
+  -z "${DBUS_SESSION_BUS_ADDRESS}" ]] \
+  ; then
+
+  DBUS_SESSION_BUS_ADDRESS=$(
+    grep -z DBUS_SESSION_BUS_ADDRESS \
+      /proc/$(pgrep -u $USER gnome-session\startplasma\|whatever)/environ |
+      sed -e 's/DBUS_SESSION_BUS_ADDRESS=//'
+  )
+fi
+
+if [[ 
+  -z "${HYPRLAND_INSTANCE_SIGNATURE}" ]] \
+  ; then
+
+  HYPRLAND_INSTANCE_SIGNATURE=$(echo $HYPRLAND_INSTANCE_SIGNATURE)
+fi
+
+export DBUS_SESSION_BUS_ADDRESS
+export HYPRLAND_INSTANCE_SIGNATURE
+
+if command -v vyle >/dev/null 2>&1; then
+  eval "$(vyle --init)"
+else
+  if [[ 
+    -e "$HOME/.local/lib/vyle/globalcontrol.sh" ]] \
+    ; then
+    source "$HOME/.local/lib/vyle/globalcontrol.sh"
+  else
+    notify-send -r 91190 -u critical -t 1200 "ERROR" "Could not source globalcontrol.sh!"
+    exit 1
+  fi
+fi
+
+tomlrc="${VYLE_DATA_HOME}/tomlmd/tomlrc.conf"
+staterc="${VYLE_DATA_HOME}/tomlmd/staterc"
+tomlSh="${VYLE_DATA_HOME}/tomlmd/tomlmainmd.sh"
+
+dummy_function() {
+  STORE_CURSOR_SIZE="${CURSOR_SIZE}"
+  STORE_CURSOR_THEME="${CURSOR_THEME}"
+  STORE_GTK_FONT_NAME="${GTK_FONT_NAME}"
+  STORE_GTK_FONT_SIZE="${GTK_FONT_SIZE}"
+  STORE_GTK_DOCUMENT_FONT="${GTK_DOCUMENT_FONT}"
+  STORE_GTK_DOCUMENT_FONT_SIZE="${GTK_DOCUMENT_FONT_SIZE}"
+  STORE_GTK_MONOSPACE_FONT="${GTK_MONOSPACE_FONT}"
+  STORE_GTK_MONOSPACE_FONT_SIZE="${GTK_MONOSPACE_FONT_SIZE}"
+  STORE_NOTIFICATION_FONT="${notificationFont}"
+  STORE_NOTIFICATION_FONT_SIZE=${notificationFontSize}
+}
+
+while true; do
+  inotifywait \
+    -q \
+    -e close_write \
+    "${VYLE_CONFIG_HOME}/vyle.toml"
+  # Safe guard against unknown configuration request triggered from shell script.
+  # Acts as a security layer to not trigger the afterward if statement comparison.
+  # Might seem unnecessary but trust me.. It is always better to do this.
+  if [[ 
+    -e "${VYLE_CONFIG_HOME}/vyle.toml" ]] \
+    ; then
+
+    if
+      ! cmp -s "${VYLE_DATA_HOME}/state.toml" \
+        "${VYLE_CONFIG_HOME}/vyle.toml"
+    then
+
+      # To compare changes with ${VYLE_DATA_HOME}/tomlmd/staterc before writing to ${VYLE_DATA_HOME}
+      cp "${VYLE_DATA_HOME}/staterc.conf" "${staterc}"
+
+      # Run tomlq // export the environment and write it on ${VYLE_DATA_HOME}/staterc.conf
+      tomlq -e
+
+      # Source the new staterc.conf. We will compare the changes with ${VYLE_DATA_HOME}/tomlmd/staterc.
+      source "${VYLE_DATA_HOME}/staterc.conf"
+
+      # Update tomlSh if staterc.conf changed.
+      if [[ 
+        -e "${tomlrc}" ]] \
+        ; then
+        # normalize both: remove trailing spaces and blank lines.
+        # Always better to do this if the safeguard leaks.
+        # Makes comparison much more comprehensive and accurate.
+
+        if
+          ! diff -q <(sed 's/[[:space:]]*$//;/^$/d' "${staterc}") \
+            <(sed 's/[[:space:]]*$//;/^$/d' "${VYLE_DATA_HOME}/staterc.conf") >/dev/null
+        then
+
+          # Files differ, run envubst and notify.
+          envsubst <"${tomlrc}" >"${tomlSh}"
+          (notify-send \
+            -r 91190 \
+            -t 2200 \
+            -u normal \
+            -i "${XDG_CONFIG_HOME}/dunst/icons/hyprdots.svg" \
+            "Vyle-Project" \
+            "Configuration has been reloaded." >&2)
+        fi
+      fi
+
+      dummy_function
+      source "${tomlSh}"
+      # Copy vyle.toml to state.toml to ensure consistent comparison for above if statement.
+      # If not done, then it will always reload changes even if the file has not been edited.
+      cp "${VYLE_CONFIG_HOME}/vyle.toml" "${VYLE_DATA_HOME}/state.toml"
+
+      # Compute STORE_NOTIFICATION_FONT_SIZE and STORE_NOTIFICATION_FONT.
+      # The purpose of this is to not make unnecessary shell script running.
+      # Unnecessary run of wallbashdunst.sh can delay responsive of the system.
+
+      # We are sourcing ${VYLE_DATA_HOME}/tomlmd/tomlmainmd.sh
+      # Purpose: To ensure we reload our variable that have been exported by vyle --init.
+
+      if [[ 
+        "${STORE_NOTIFICATION_FONT}" != "${notificationFont}" ||
+        "${STORE_NOTIFICATION_FONT_SIZE}" != "${notificationFontSize}" ]] \
+        ; then
+
+        "${scrDir}/wallbashdunst.sh"
+      fi
+
+      # Compute STORE_CURSOR_SIZE and STORE_CURSOR_THEME.
+      if
+        [[ 
+          "${STORE_CURSOR_SIZE}" != "${CURSOR_SIZE}" ||
+          "${STORE_CURSOR_THEME}" != "${CURSOR_THEME}" ||
+          "${STORE_GTK_FONT_NAME}" != "${GTK_FONT_NAME}" ||
+          "${STORE_GTK_FONT_SIZE}" != "${GTK_FONT_SIZE}" ||
+          "${STORE_GTK_DOCUMENT_FONT}" != "${GTK_DOCUMENT_FONT}" ||
+          "${STORE_GTK_DOCUMENT_FONT_SIZE}" != "${GTK_DOCUMENT_FONT_SIZE}" ||
+          "${STORE_GTK_MONOSPACE_FONT}" != "${GTK_MONOSPACE_FONT}" ||
+          "${STORE_GTK_MONOSPACE_FONT_SIZE}" != "${GTK_MONOSPACE_FONT_SIZE}" ]] \
+          ;
+      then
+
+        hyprctl reload
+      fi
+    fi
+  fi
+done

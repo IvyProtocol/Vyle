@@ -3,14 +3,8 @@
 #|/ /--+-------------------------+/ /--|#
 source "${VYLE_DATA_HOME}/staterc.conf"
 
-#  █░█ █▄█ █░░ █▀▀ 
-#  ▀▄▀ ░█░ █▄▄ ██▄  
-
-#// plLoader, sets custom placeholder for wallbash/ivy to work with .dcol and .ivy files.
-#// Usage, add plLoader="example|example1|example2" as your custom placeholder.
-#// Now you can use your own custom placeholder only by declaring it on your .dcol or .ivy.
-#// Warning! This may not work for others if placeholder is different from the intended
-plLoader="ivy|wallbash"
+#  █░█ █▄█ █░░ █▀▀
+#  ▀▄▀ ░█░ █▄▄ ██▄
 
 #// skipTemplate, specifies .ivy or .dcol template that should be excluded or skipped from procesing!
 #// This allows you to selectively exclude certain template that exists in  while still processing others.
@@ -56,17 +50,16 @@ rofiLauncherFont="JetBrainsMono Nerd Font"
 rofiLauncherScale=9
 rofiLauncherStyle=1
 
-
 # wbselecgen.sh configuration
 rofiWallpaperFont="JetBrainsMono Nerd Font"
-rofiWallpaperScale=9
-rofiWallpaperColumn=4
+rofiWallpaperScale=10
+rofiWallpaperColumn=3
 
 # themeswitch.sh configuration.
 rofiThemeFont="JetBrainsMono Nerd Font"
-rofiThemeScale=9
-rofiThemeColumn=2
-rofiThemeStyle=2
+rofiThemeScale=6
+rofiThemeColumn=3
+rofiThemeStyle=1
 
 # style-launcher.sh configuration.
 rofiStyleScale=12
@@ -88,7 +81,7 @@ wlogoutStyle=1
 #// fetchIcon, sets the user directories scanned for finding fastfetch icons and randomizes. Default is to /home/iris/.config/fastfetch/icons!
 fetchIcon="${XDG_CONFIG_HOME}/fastfetch/icons"
 
-# █▄▄ █▀█ █ █▀  █░█ ▀█▀ █▄░█ █▀▀ █▀ █▀ █▀ ▀█▀ █░░ 
+# █▄▄ █▀█ █ █▀  █░█ ▀█▀ █▄░█ █▀▀ █▀ █▀ █▀ ▀█▀ █░░
 # █▄█ █▀▄ █ █▄█ █▀█ ░█░ █░▀█ ██▄ ▄█ ▄█ █▄ ░█░ █▄▄
 
 #// brightnesscontrol.sh configuration, declarable according to user preference.
@@ -99,7 +92,7 @@ brightnessIconDir="${XDG_CONFIG_HOME}/dunst/icons/vol"
 brightnessStep=5
 brightnessNotify=0
 
-# █░█ █▀█ █░░ █░█ █▀▄▀█ █▀▀ █▀ ▀█▀ █░░ 
+# █░█ █▀█ █░░ █░█ █▀▄▀█ █▀▀ █▀ ▀█▀ █░░
 # ▀▄▀ █▄█ █▄▄ █▄█ █░▀░█ ██▄ █▄ ░█░ █▄▄
 
 #// voluemcontrol.sh configuration, declarable according to user preference.
@@ -113,7 +106,7 @@ volumeNotifyMute=0
 # █▄░█ █▀█ ▀█▀ █ █▀▀ █ █▀▀ ▄▀█ ▀█▀ █ █▀█ █▄░█
 # █░▀█ █▄█ ░█░ █ █▀░ █ █▄▄ █▀█ ░█░ █ █▄█ █░▀█
 # dunstctl configuration
-notificationFont="mononoki Nerd Font Bold"
+notificationFont="Mononoki Nerd Font Bold"
 notificationFontSize=10
 
 # █░█ █▄█ █▀█ █▀█ █░░ ▄▀█ █▄░█ █▀▄

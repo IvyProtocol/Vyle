@@ -52,7 +52,7 @@
         "format": "{}",
         "rotate": 0,
         "exec": "echo ; echo  logout",
-        "on-click": "$HOME/.local/bin/logoutlaunch.sh",
+        "on-click": "logoutlaunch.sh",
         "interval" : 86400, // once every day
         "tooltip": true
     },
@@ -61,7 +61,7 @@
         "format": "{}",
         "rotate": 0,
         "exec": "echo ; echo 󰅇 clipboard history",
-        "on-click": "sleep 0.1 && $HOME/.local/bin/wl-clipmanager.sh &",
+        "on-click": "sleep 0.1 && wl-clipmanager.sh &",
         "interval" : 86400, // once every day
         "tooltip": true
     },
@@ -70,8 +70,8 @@
         "format": "{}", //    //
         "rotate": 0,
         "exec": "echo ; echo  switch bar //  switch config",
-        "on-click": "$HOME/.local/bin/WaybarStyle.sh &",
-        "on-click-right": "$HOME/.local/bin/WaybarLayout.sh &",
+        "on-click": "WaybarStyle.sh &",
+        "on-click-right": "WaybarLayout.sh &",
         "interval" : 86400,
         "tooltip": true
     },
@@ -80,9 +80,9 @@
         "format": "\udb80\udd8a {0}",
         "rotate": 0,
         "exec": "echo ; echo 󰆊 switch wallpaper",
-        "on-click-right": "$HOME/.local/bin/swwwallswitch.sh -p",
-        "on-click-middle": "$HOME/.local/bin/swwwallswitch.sh -r",
-        "on-click": "$HOME/.local/bin/swwwallswitch.sh -n",
+        "on-click-right": "swwwallswitch.sh -p",
+        "on-click-middle": "swwwallswitch.sh -r",
+        "on-click": "swwwallswitch.sh -n",
         "interval" : 86400, // once every day
         "tooltip": true
     },
@@ -91,9 +91,9 @@
         "format": "{}",
         "rotate": 0,
         "exec": "echo ; echo 󰟡 switch theme",
-        "on-click": "$HOME/.local/bin/themeswitch.sh -n",
-        "on-click-right": "$HOME/.local/bin/themeswitch.sh -p",
-        "on-click-middle": "sleep 0.1 && $HOME/.local/bin/themeswitch.sh",
+        "on-click": "themeswitch.sh -n",
+        "on-click-right": "themeswitch.sh -p",
+        "on-click-middle": "sleep 0.1 && themeswitch.sh",
         "interval" : 86400, // once every day
         "tooltip": true
     },
@@ -184,12 +184,12 @@
     },
 
     "custom/battery": {
-        "exec": "$HOME/.config/hypr/scripts/battery.sh &",
+        "exec": "battery.sh &",
         "interval": 2,
         "format": "{}",
         "return-type": "json",
         "tooltip": true,
-        "on-click": "$HOME/.config/hypr/scripts/battery.sh toggle &"
+        "on-click": "battery.sh toggle &"
     },
 
     "backlight": {
@@ -197,8 +197,8 @@
         "rotate": 0,
         "format": "{icon} {percent}%",
         "format-icons": ["", "", "", "", "", "", "", "", ""],
-        "on-scroll-up": "$HOME/.local/bin/brightnesscontrol.sh --inc",
-        "on-scroll-down": "$HOME/.local/bin/brightnesscontrol.sh --dec"
+        "on-scroll-up": "brightnesscontrol.sh --inc",
+        "on-scroll-down": "brightnesscontrol.sh --dec"
     },
 
     "network": {
@@ -219,9 +219,9 @@
         "rotate": 0,
         "format-muted": "󰖁",
         "on-click": "pavucontrol -t 3",
-        "on-click-middle": "$HOME/.local/bin/volumecontrol.sh -o m",
-        "on-scroll-up": "$HOME/.local/bin/volumecontrol.sh -o i",
-        "on-scroll-down": "$HOME/.local/bin/volumecontrol.sh -o d",
+        "on-click-middle": "volumecontrol.sh -o m",
+        "on-scroll-up": "volumecontrol.sh -o i",
+        "on-scroll-down": "volumecontrol.sh -o d",
         "tooltip-format": "{icon} {desc} // {volume}%",
         "scroll-step": 5,
         "format-icons": {
@@ -241,9 +241,9 @@
         "format-source": "",
         "format-source-muted": "\uf131",
         "on-click": "pavucontrol -t 4",
-        "on-scroll-up": "$HOME/.local/bin/volumecontrol.sh -i i",
-        "on-scroll-down": "$HOME/.local/bin/volumecontrol.sh -i d",
-        "on-click-middle": "$HOME/.local/bin/volumecontrol.sh -i m",
+        "on-scroll-up": "volumecontrol.sh -i i",
+        "on-scroll-down": "volumecontrol.sh -i d",
+        "on-click-middle": "volumecontrol.sh -i m",
         "tooltip-format": "{format_source} {source_desc} // {source_volume}%",
         "scroll-step": 5
     },

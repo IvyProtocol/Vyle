@@ -1,0 +1,11 @@
+$(confDir)/rofi/theme.rasi|$RUN:killall -SIGUSR1 rofi >/dev/null 2>&1 &
+* {
+    main-bg:            #000000e6;
+    main-fg:            #ffffffff;
+    main-br:            #ffa6c2ff;
+    main-ex:            #f5e0dcff;
+    select-bg:          #fada16ff;
+    select-fg:          #000000ff;
+    separatorcolor:     transparent;
+    border-color:       transparent;
+}
