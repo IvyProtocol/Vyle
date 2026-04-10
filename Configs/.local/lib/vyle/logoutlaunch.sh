@@ -22,7 +22,7 @@ export wlogoutStyle="${1:-${wlogoutStyle}}"
 export mon_scale
 export dcolMode
 export mon_res
-export enableWallIde
+export WALLBASH_MODE
 export hypr_border
 
 perl -- "$@" <<'EOF'
@@ -32,8 +32,8 @@ use File::Temp qw(tempfile);
 # If you are dummy, we are only doing this because perl and bash are seperate scripting language.
 # With $ENV, we can pick up our exported variable from above.
 
-my ($XDG_CONFIG_HOME, $VYLE_CONFIG_HOME, $VYLE_RESERVED_THEME, $INIT);
-my ($wlogoutStyle, $mon_scale, $dcolMode, $mon_res, $hypr_border, $enableWallIde, $wLayout, $wlTmplt, $wlColms, $y_mon, $colorScheme, $wlTmplt);
+my ($XDG_CONFIG_HOME, $VYLE_CONFIG_HOME, $VYLE_RESERVED_THEME, $INIT, $WALLBASH_MODE);
+my ($wlogoutStyle, $mon_scale, $dcolMode, $mon_res, $hypr_border, $wLayout, $wlTmplt, $wlColms, $y_mon, $colorScheme, $wlTmplt);
 
 $XDG_CONFIG_HOME = $ENV{XDG_CONFIG_HOME};
 $VYLE_CONFIG_HOME = $ENV{VYLE_CONFIG_HOME};
@@ -43,7 +43,7 @@ $mon_scale = $ENV{mon_scale};
 $dcolMode = $ENV{dcolMode};
 $mon_res = $ENV{mon_res};
 $hypr_border = $ENV{hypr_border};
-$enableWallIde = $ENV{enableWallIde};
+$WALBASH_MODE = $ENV{WALLBASH_MODE};
 
 # Noteworthy is that you can assign variables with my, our, $ENV or empty. 
 # It feels like bash so much. Just some semi-colon, that is all.
@@ -98,10 +98,10 @@ sub extract_scheme
   return;
 }
 
-# Validate if $enableWallIde is equal to 3 = theme
+# Validate if $WALLBASH_MODE is equal to 3 = theme
 # Retrieves theme settings from the selected theme folder.
 if 
-  (( $enableWallIde == 3 )) 
+  (( $WALLBASH_MODE == 3 )) 
 {
 
   $colorScheme = extract_scheme("$VYLE_CONFIG_HOME/theme/$VYLE_RESERVED_THEME/hypr.theme");

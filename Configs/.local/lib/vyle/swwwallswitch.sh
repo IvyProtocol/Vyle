@@ -65,7 +65,7 @@ Wall_Switch() {
   $ntSend && notify -m 2 -i "theme_engine" -p "${VYLE_IMAGE_SOURCE##*/}" -s "${thumbDir}/${VYLE_SOURCE_NO_EXTN}.thmb" -a "t1" -t 1600
   SWWW_TRANSITION
 
-  if [[ "${enableWallIde}" -eq 3 && "${dcolMode}" == "theme" ]]; then
+  if [[ "${WALLBASH_MODE}" -eq 3 && "${dcolMode}" == "theme" ]]; then
     if [[ ! -f "${dcolDir}/auto/${hashMech}.dcol" ]]; then
       ionice -c 3 nice -n 19 "${scrDir}/wallbash.sh" "$VYLE_IMAGE_SOURCE"
     fi

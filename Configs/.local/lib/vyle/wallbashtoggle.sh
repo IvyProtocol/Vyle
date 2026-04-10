@@ -11,11 +11,11 @@ apply_config() {
   [[ $1 == "light" ]] && wallIde=2
   [[ $1 == "theme" ]] && wallIde=3
 
-  [[ -n "${enableWallIde}" ]] && setConf "enableWallIde" "${wallIde}" "${VYLE_STATE_HOME}/staterc" || setConf "enableWallIde" "0" "${VYLE_STATE_HOME}/staterc"
+  [[ -n "${WALLBASH_MODE}" ]] && setConf "WALLBASH_MODE" "${wallIde}" "${VYLE_STATE_HOME}/staterc" || setConf "WALLBASH_MODE" "0" "${VYLE_STATE_HOME}/staterc"
   notify -m 2 -i "theme_engine" -p "Theme Mode: $1" -s "${dunstDir}/icons/hyprdots.svg" -t 900 -a "t1"
   [[ ! -e "${scrDir}/wallbash.sh" ]] && exit 1
   if [[ "${wallIde}" -eq 3 ]]; then
-    setConf "VYLE_THEME|enableWallIde" "${VYLE_RESERVED_THEME}|3" "${VYLE_STATE_HOME}/staterc"
+    setConf "VYLE_THEME|WALLBASH_MODE" "${VYLE_RESERVED_THEME}|3" "${VYLE_STATE_HOME}/staterc"
     sed -i 's|^[[:space:]]*source[[:space:]]*=[[:space:]]* \$XDG_CONFIG_HOME/hypr/themes/wallbash.conf|#source = \$XDG_CONFIG_HOME/hypr/themes/wallbash.conf|' "${VYLE_DATA_HOME}/hypr/dynamic.conf"
     VYLE_THEME=$VYLE_RESERVED_THEME
 
@@ -59,7 +59,7 @@ rofi_wallbash() {
   choice=$(parallel echo {} ::: "${wallbashModes[@]}" |
     rofi -i -dmenu -theme-str "${r_scale}" \
       -theme-str "${r_override}" -config "$rasiPath" \
-      -select "${wallbashModes[$(($enableWallIde + 1))]}")
+      -select "${wallbashModes[$(($WALLBASH_MODE + 1))]}")
 
   [[ -z "$choice" ]] && {
     echo "No option selected. Exiting."

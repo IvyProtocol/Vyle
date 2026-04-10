@@ -459,7 +459,7 @@ load_ivy_file() {
 source "${VYLE_DATA_HOME}/tomlmd/tomlmainmd.sh"
 source "${VYLE_STATE_HOME}/staterc"
 
-case "${enableWallIde}" in
+case "${WALLBASH_MODE}" in
 1)
   dcolMode="dark"
   ;;
@@ -470,7 +470,7 @@ case "${enableWallIde}" in
   dcolMode="theme"
   ;;
 0 | *)
-  enableWallIde=0
+  WALLBASH_MODE=0
   dcolMode="auto"
   ;;
 esac
@@ -577,7 +577,8 @@ export \
   CONSOLE \
   EXPLORER \
   EDITOR \
-  BROWSER
+  BROWSER \
+  WALLBASH_MODE
 
 #export -f \
 #    setConf \

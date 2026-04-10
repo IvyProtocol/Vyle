@@ -75,7 +75,7 @@ themeSelTui() {
       setConf "VYLE_RESERVED_THEME" "${thmChsh}" "${VYLE_STATE_HOME}/staterc"
     fi
     if [[ "${wallDir}" != "${themeDir}/${thmChsh}/wallpapers" ]]; then
-      echo " :: Theme Control - Theme '${thmChsh}' :: Wallpaper '${thmImg}' :: DcolMode '${enableWallIde}' --> '${XDG_CONFIG_HOME}'"
+      echo " :: Theme Control - Theme '${thmChsh}' :: Wallpaper '${thmImg}' :: DcolMode '${WALLBASH_MODE}' --> '${XDG_CONFIG_HOME}'"
       THEME_IMAGE_NO_EXTN="${thmImg##*/}"
       THEME_IMAGE_NO_EXTN="${THEME_IMAGE_NO_EXTN%.*}"
       notify -m 2 -i "theme_engine" -p "${thmChsh}" -s "${VYLE_CACHE_HOME}/thmb/${THEME_IMAGE_NO_EXTN}.thmb" -t 1100 -a "t1"
@@ -84,7 +84,7 @@ themeSelTui() {
       echo -e " :: Theme Control - Skipped populating $thmChsh -> ${XDG_CONFIG_HOME}"
       exit 0
     fi
-    if [[ "${enableWallIde}" -eq 3 ]]; then
+    if [[ "${WALLBASH_MODE}" -eq 3 ]]; then
       if [[ "${VYLE_THEME}" != "${thmChsh}" ]]; then
         setConf "VYLE_THEME" "${thmChsh}" "${VYLE_STATE_HOME}/staterc"
       fi
