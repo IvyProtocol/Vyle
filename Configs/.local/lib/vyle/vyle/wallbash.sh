@@ -55,7 +55,7 @@ done
 wallbashColors=4
 wallbashFuzz=70
 wallbashRaw="$(mktemp --tmpdir="${TMPDIR:-/tmp}" wallbash.XXXXXX.mpc)"
-wallbashOut="${dcolDir}/${sortMode}/ivy-${wallbashHash}.dcol"
+wallbashOut="${dcolDir}/${sortMode}/${wallbashHash}.dcol"
 
 pryDarkBri=116
 pryDarkSat=110

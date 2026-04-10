@@ -51,7 +51,7 @@ Wall_Switch() {
   done
   shift $((OPTIND - 1))
   if [[ -z "${VYLE_IMAGE_SOURCE}" || ! -f "${VYLE_IMAGE_SOURCE}" ]]; then
-    VYLE_IMAGE_SOURCE="${wallSet}"
+    VYLE_IMAGE_SOURCE="${VYLE_CURRENT_IMAGE}"
     if [[ ! -f "${img}" ]]; then
       notify -m 1 -p "Invalid wallpaper?" -u critical -t 900 -a "t1"
       exit 1
@@ -66,15 +66,15 @@ Wall_Switch() {
   SWWW_TRANSITION
 
   if [[ "${enableWallIde}" -eq 3 && "${dcolMode}" == "theme" ]]; then
-    if [[ ! -f "${dcolDir}/auto/ivy-${hashMech}.dcol" ]]; then
+    if [[ ! -f "${dcolDir}/auto/${hashMech}.dcol" ]]; then
       ionice -c 3 nice -n 19 "${scrDir}/wallbash.sh" "$VYLE_IMAGE_SOURCE"
     fi
-    VYLE_DCOL_PATH="${dcolDir}/auto/ivy-${hashMech}.dcol"
+    VYLE_DCOL_PATH="${dcolDir}/auto/${hashMech}.dcol"
   else
-    if [[ ! -f "${dcolDir}/${dcolMode}/ivy-${hashMech}.dcol" ]]; then
+    if [[ ! -f "${dcolDir}/${dcolMode}/${hashMech}.dcol" ]]; then
       ionice -c 3 nice -n 19 "${scrDir}/wallbash.sh" "$VYLE_IMAGE_SOURCE"
     fi
-    VYLE_DCOL_PATH="${dcolDir}/${dcolMode}/ivy-${hashMech}.dcol"
+    VYLE_DCOL_PATH="${dcolDir}/${dcolMode}/${hashMech}.dcol"
   fi
   [[ -e "${VYLE_DCOL_PATH}" ]] || {
     echo -e "ERROR! DCOL_PATH NOT FOUND!"
@@ -83,7 +83,7 @@ Wall_Switch() {
   generate_theme "" "${VYLE_CONFIG_HOME}/theme.ivy" ""
   generate_theme "_rgba" "${VYLE_CONFIG_HOME}/theme-rgba.ivy" "_rgba"
   VYLE_THEME=$VYLE_THEME VYLE_CONFIG_HOME=$VYLE_CONFIG_HOME source "${scrDir}/tmq.write.sh"
-  "${scrDir}/wallpaper.${wallBackend}.sh" "$VYLE_IMAGE_SOURCE" "$WALLPAPER_SET_FLAGS"
+  "${scrDir}/wallpaper.${wallBackend}.sh" "$VYLE_IMAGE_SOURCE" "$WALLPAPER_SET_FLAGS" &
 
 }
 

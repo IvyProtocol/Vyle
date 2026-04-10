@@ -1,4 +1,4 @@
-/home/iris/.config/zen/tkuribbw.Default (release)/chrome/ZenBash/zenbashChrome.css|$RUN:$(scrDir)/../ZenBash.sh -r >/dev/null 2>&1 &
+$(confDir)/zen/tkuribbw.Default (release)/chrome/ZenBash/zenbashChrome.css|$RUN:$(scrDir)/../ZenBash.sh -r >/dev/null 2>&1 &
 
 @media {
   :root {

@@ -3,4 +3,4 @@ enableWallIde=1
 VYLE_RESERVED_THEME="Catppuccin-Latte"
 VYLE_THEME="Wallbash-Ivy"
 wallDir="${VYLE_CONFIG_HOME}/theme/${VYLE_RESERVED_THEME}/wallpapers"
-wallSet="${wallDir}/abstract_blured.jpg"
+VYLE_CURRENT_IMAGE="${wallDir}/abstract_blured.jpg"

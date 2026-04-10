@@ -142,7 +142,7 @@ thmSelEnv() {
   mapfile -t themes < <(LC_ALL=C find "${themeDir}" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort -Vf)
   choice=$(
     for indx in "${themes[@]}"; do
-      wallSet="${themeDir}/${indx}/wall.set"
+      VYLE_CURRENT_IMAGE="${themeDir}/${indx}/wall.set"
       if [ ! -e "${themeDir}/${indx}/wallpapers/.wallbash-main" ]; then
         thmWall="$(find "${themeDir}/${indx}/wallpapers" -type f ! -name '.*' | sort -V | head -n 1 | tee -a "${themeDir}/${indx}/wallpapers/.wallbash-main")"
       else
@@ -152,14 +152,14 @@ thmSelEnv() {
       thmWall="${thmWall##*/}"
       thmWall="${thmWall%.*}.${thmExtn}"
 
-      relpath="$(readlink -f "${wallSet}" 2>/dev/null || true)"
+      relpath="$(readlink -f "${VYLE_CURRENT_IMAGE}" 2>/dev/null || true)"
       stripPath="${relpath##*.}"
 
-      if [[ ! -L "${wallSet}" || -L "${wallSet}" && ! -e "${wallSet}" || "${stripPath}" != "${thmExtn}" || -z "${relpath}" ]]; then
-        echo -e " :: fixing symlink - ${thumbDir}/${thmWall} -> ${wallSet}" >&2
-        ln -fs "${thumbDir}/${thmWall}" "${wallSet}"
+      if [[ ! -L "${VYLE_CURRENT_IMAGE}" || -L "${VYLE_CURRENT_IMAGE}" && ! -e "${VYLE_CURRENT_IMAGE}" || "${stripPath}" != "${thmExtn}" || -z "${relpath}" ]]; then
+        echo -e " :: fixing symlink - ${thumbDir}/${thmWall} -> ${VYLE_CURRENT_IMAGE}" >&2
+        ln -fs "${thumbDir}/${thmWall}" "${VYLE_CURRENT_IMAGE}"
       fi
-      printf "%s\x00icon\x1f%s\n" "${indx}" "${wallSet}"
+      printf "%s\x00icon\x1f%s\n" "${indx}" "${VYLE_CURRENT_IMAGE}"
     done | rofi -dmenu -i -p "ThemeControl" -theme-str "${r_scale}" -theme-str "${r_override}" -config "${rofiConf}" -select "${VYLE_RESERVED_THEME}"
   )
 

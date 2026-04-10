@@ -24,16 +24,14 @@ apply_config() {
   else
     [[ "${VYLE_THEME}" != "Wallbash-Ivy" ]] && setConf "VYLE_THEME" "Wallbash-Ivy" "${VYLE_STATE_HOME}/staterc" &
     sed -i 's|^#[[:space:]]*source[[:space:]]*=[[:space:]]* \$XDG_CONFIG_HOME/hypr/themes/wallbash.conf|source = \$XDG_CONFIG_HOME/hypr/themes/wallbash.conf|' "${VYLE_DATA_HOME}/hypr/dynamic.conf"
-    echo "$wallSet"
-    read -r hashMech <<<"$(md5sum "${wallSet}" | awk '{print $1}')"
+    read -r hashMech <<<"$(md5sum "${VYLE_CURRENT_IMAGE}" | awk '{print $1}')"
 
-    if [[ ! -e "${VYLE_CACHE_HOME}/shell/${1}/ivy-${hashMech}.dcol" ]]; then
-      "${scrDir}/wallbash.sh" "${wallSet}" --"${1}"
+    if [[ ! -e "${VYLE_CACHE_HOME}/shell/${1}/${hashMech}.dcol" ]]; then
+      "${scrDir}/wallbash.sh" "${VYLE_CURRENT_IMAGE}" --"${1}"
     fi
-    VYLE_DCOL_PATH="${VYLE_CACHE_HOME}/shell/${1}/ivy-${hashMech}.dcol"
+    VYLE_DCOL_PATH="${VYLE_CACHE_HOME}/shell/${1}/${hashMech}.dcol"
     [[ -e "${VYLE_DCOL_PATH}" ]]
 
-    echo "$VYLE_DCOL_PATH"
     generate_theme "" "${VYLE_CONFIG_HOME}/theme.ivy" ""
     generate_theme "_rgba" "${VYLE_CONFIG_HOME}/theme-rgba.ivy" "_rgba"
     VYLE_THEME="Wallbash-Ivy"
@@ -42,7 +40,7 @@ apply_config() {
     source "${scrDir}/tmq.write.sh"
   fi
 
-  if [[ -z "${wallSet}" && -x "${scrDir}/swwwallswitch.sh" ]]; then
+  if [[ -z "${VYLE_CURRENT_IMAGE}" && -x "${scrDir}/swwwallswitch.sh" ]]; then
     rnSel=$(find "${wallDir}" -maxpath 1 -type f | shuf -n 1)
     "${scrDir}/swwwallswitch.sh" -i "${rnSel}"
   fi

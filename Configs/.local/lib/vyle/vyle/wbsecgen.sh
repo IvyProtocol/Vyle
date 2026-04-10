@@ -8,7 +8,8 @@ export XDG_RUNTIME_DIR VYLE_CACHE_HOME VYLE_CONFIG_HOME VYLE_RESERVED_THEME VYLE
 LOCK_FILE="$XDG_RUNTIME_DIR/${BASH_SRC}.lock"
 trap 'rm -f $LOCK_FILE' EXIT
 
-eval "$(perl - "$@" <<'EOF'
+eval "$(
+  perl - "$@" <<'EOF'
 use Fcntl qw(:flock);
 
 my ($XDG_RUNTIME_DIR, $LOCK_FILE, $VYLE_INSIDER_CACHE, $DUNST_DIR, $BASH_SRC);
@@ -48,17 +49,16 @@ print("export DUNST_DIR=$DUNST_DIR VYLE_INSIDER_CACHE=$VYLE_INSIDER_CACHE\n");
 EOF
 )"
 
-
-HASH_WALLPAPER() 
-{
-  export wallBackend wallTransitionStep wallTransDuration wallFramerate wallTransitionBezier wallSet VYLE_IMAGE_SOURCE
-  eval "$(perl - "$@" << 'HASH'
+HASH_WALLPAPER() {
+  export wallBackend wallTransitionStep wallTransDuration wallFramerate wallTransitionBezier VYLE_CURRENT_IMAGE VYLE_IMAGE_SOURCE
+  eval "$(
+    perl - "$@" <<'HASH'
 
 my ($VYLE_IMAGE_SOURCE, $WALLPAPER_SET_FLAGS, $WALLPAPER_HAD_SET, $BASH_SRC, $LIB_DIR);
 
 $VYLE_IMAGE_SOURCE = $ENV{VYLE_IMAGE_SOURCE};
 $WALLPAPER_SET_FLAGS = $ENV{WALLPAPER_SET_FLAGS};
-$WALLPAPER_HAD_SET = $ENV{wallSet};
+$WALLPAPER_HAD_SET = $ENV{VYLE_CURRENT_IMAGE};
 $BASH_SRC = $ENV{BASH_SRC};
 $LIB_DIR = $ENV{scrDir};
 
@@ -101,15 +101,18 @@ elsif
 
 print("export WALLPAPER_SET_FLAGS=$WALLPAPER_SET_FLAGS VYLE_IMAGE_SOURCE=$VYLE_IMAGE_SOURCE \n");
 HASH
-)"
-  [[ -f "$VYLE_IMAGE_SOURCE" ]] || { echo "Invalid path: $VYLE_IMAGE_SOURCE"; exit 1; }
+  )"
+  [[ -f "$VYLE_IMAGE_SOURCE" ]] || {
+    echo "Invalid path: $VYLE_IMAGE_SOURCE"
+    exit 1
+  }
   export VYLE_IMAGE_SOURCE_HASH="$(md5sum "${VYLE_IMAGE_SOURCE}" | awk '{print $1}')"
 }
 
-SYNCHRONIZE_CONFIGURATION()
-{
+SYNCHRONIZE_CONFIGURATION() {
   export rofiThemeStyle rasiDir VYLE_IMAGE_SOURCE
-  eval "$(perl - "$@" << 'SYNCHRONIZE_CONFIGURATION'
+  eval "$(
+    perl - "$@" <<'SYNCHRONIZE_CONFIGURATION'
 use File::Basename qw(basename dirname);
 
 my ($VYLE_IMAGE_SOURCE, $BASENAME_VYLE_IMAGE_SOURCE, $STRIP_VYLE_IMAGE_SOURCE);
@@ -136,10 +139,10 @@ $THEME_FILE_EXTENSION = ( $ROFI_THEME_STYLE == 2 ) ? "quad"
 
 print("export STRIP_VYLE_IMAGE_SOURCE=$STRIP_VYLE_IMAGE_SOURCE ROFI_SHARED_DIRECTORY=$ROFI_SHARED_DIRECTORY THEME_FILE_EXTENSION=$THEME_FILE_EXTENSION BASENAME_VYLE_IMAGE_SOURCE=$BASENAME_VYLE_IMAGE_SOURCE \n");
 SYNCHRONIZE_CONFIGURATION
-)"
+  )"
 
-  setConf "wallSet" "\${VYLE_CONFIG_HOME}/theme/\${VYLE_RESERVED_THEME}/wallpapers/${BASENAME_VYLE_IMAGE_SOURCE}" "${VYLE_STATE_HOME}/staterc"
-  perl - "$@" << 'SYNCHRONIZE_CONFIGURATION'
+  setConf "VYLE_CURRENT_IMAGE" "\${VYLE_CONFIG_HOME}/theme/\${VYLE_RESERVED_THEME}/wallpapers/${BASENAME_VYLE_IMAGE_SOURCE}" "${VYLE_STATE_HOME}/staterc"
+  perl - "$@" <<'SYNCHRONIZE_CONFIGURATION'
 my ($VYLE_INSIDER_CACHE, $BASENAME_VYLE_IMAGE_SOURCE, $STRIP_VYLE_IMAGE_SOURCE, $ROFI_SHARED_DIRECTORY, $THEME_FILE_EXTENSION);
 
 $VYLE_CONFIG_HOME = $ENV{VYLE_CONFIG_HOME};
@@ -169,16 +172,16 @@ symlink("$VYLE_INSIDER_CACHE/$THEME_FILE_EXTENSION/${STRIP_VYLE_IMAGE_SOURCE}.${
 SYNCHRONIZE_CONFIGURATION
 }
 
-EXECUTE_WALLBASH_UPDATE() 
-{
-  export wallSet enableWallIde VYLE_IMAGE_SOURCE_HASH WALLBASH_COLOR_ARGUMENT VYLE_CACHE_HOME dcolMode scrDir 
+EXECUTE_WALLBASH_UPDATE() {
+  export VYLE_CURRENT_IMAGE enableWallIde VYLE_IMAGE_SOURCE_HASH WALLBASH_COLOR_ARGUMENT VYLE_CACHE_HOME dcolMode scrDir
   export -f generate_theme
-  eval "$(perl - "$@" <<'EOF'
+  eval "$(
+    perl - "$@" <<'EOF'
 
 my ($VYLE_IMAGE_SOURCE_HASH, $WALLPAPER_HAD_SET, $VYLE_WALLBASH_COLOR_MODE, $WALLBASH_COLOR_ARGUMENT, $DCOL_PATH, $ENABLE_WALLBASH_COLOR_MODE, $LIB_DIR, $VYLE_DCOL_PATH);
 $LIB_DIR = $ENV{scrDir};
-$WALLPAPER_HAD_SET = $ENV{wallSet};
-$VYLE_IMAGE_SOURCE = $ENV{VYLE_IMAGE_SOURCE} //= $ENV{wallSet};
+$WALLPAPER_HAD_SET = $ENV{VYLE_CURRENT_IMAGE};
+$VYLE_IMAGE_SOURCE = $ENV{VYLE_IMAGE_SOURCE} //= $ENV{VYLE_CURRENT_IMAGE};
 
 $VYLE_IMAGE_SOURCE_HASH = $ENV{VYLE_IMAGE_SOURCE_HASH};
 $VYLE_WALLBASH_COLOR_MODE = $ENV{enableWallIde};
@@ -261,12 +264,12 @@ elsif
 
 print "export VYLE_DCOL_PATH=$VYLE_DCOL_PATH VYLE_THEME=$ENV{VYLE_THEME} VYLE_CONFIG_HOME=$ENV{VYLE_CONFIG_HOME} \n";
 EOF
-)"
+  )"
 
-generate_theme "" "$VYLE_CONFIG_HOME/theme.ivy" ""
-generate_theme "_rgba" "$VYLE_CONFIG_HOME/theme-rgba.ivy" "_rgba"
-source "$scrDir/tmq.write.sh"
-source "$scrDir/wallpaper.hybrid.sh"
+  generate_theme "" "$VYLE_CONFIG_HOME/theme.ivy" ""
+  generate_theme "_rgba" "$VYLE_CONFIG_HOME/theme-rgba.ivy" "_rgba"
+  source "$scrDir/tmq.write.sh"
+  source "$scrDir/wallpaper.hybrid.sh"
 }
 
 NOTIFICATION_TOGGLE() {

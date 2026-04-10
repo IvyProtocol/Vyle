@@ -6,7 +6,7 @@ Wall_Change() {
   mapfile -t wallpapers < <(LC_ALL=C find "${wallDir}" -maxdepth 1 -mindepth 1 -type f ! -name '.*' -printf '%f\n' | sort -V)
 
   for indx in "${!wallpapers[@]}"; do
-    if [[ "${wallpapers[$indx]}" == "${wallSet##*/}" ]]; then
+    if [[ "${wallpapers[$indx]}" == "${VYLE_CURRENT_IMAGE##*/}" ]]; then
       if [ "$1" == "-n" ]; then
         setIdx=$(((indx + 1) % ${#wallpapers[@]}))
         swwwTrans="-n"
@@ -39,7 +39,7 @@ Wall_Initialize() {
   fi
 
   echo "${VYLE_IMAGE_SOURCE}" >"${VYLE_CONFIG_HOME}/theme/${VYLE_RESERVED_THEME}/wallpapers/.wallbash-main"
-  setConf "wallSet" "\${VYLE_CONFIG_HOME}/theme/\${VYLE_RESERVED_THEME}/wallpapers/${VYLE_IMAGE_SOURCE##*/}" "${VYLE_STATE_HOME}/staterc"
+  setConf "VYLE_CURRENT_IMAGE" "\${VYLE_CONFIG_HOME}/theme/\${VYLE_RESERVED_THEME}/wallpapers/${VYLE_IMAGE_SOURCE##*/}" "${VYLE_STATE_HOME}/staterc"
   ln -sf "${colsDir}/${VYLE_SOURCE_NO_EXTN}.cols" "${rasiDir}/wall.cols"
   ln -sf "${blurDir}/${VYLE_SOURCE_NO_EXTN}.bpex" "${rasiDir}/wall.bpex"
   ln -sf "${thumbDir}/${VYLE_SOURCE_NO_EXTN}.thmb" "${rasiDir}/wall.thmb"

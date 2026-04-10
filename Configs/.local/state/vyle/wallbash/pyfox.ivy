@@ -1,24 +1,23 @@
 $(cacheDir)/wal/colors.json|$RUN:pywalfox update & 
 {
-    "wallpaper": "/home/Kroni4/.cache/rofi-wallpapers/rain_girl_door.jpg",
-    "alpha": "100",
-    "colors": {
-      "color0": "#<wallbash_pry1>",
-      "color1": "",
-      "color2": "",
-      "color3": "",
-      "color4": "",
-      "color5": "",
-      "color6": "",
-      "color7": "",
-      "color8": "",
-      "color9": "",
-      "color10": "#<wallbash_2xa8>",
-      "color11": "",
-      "color12": "",
-      "color13": "#<wallbash_2xa7>",
-      "color14": "",
-      "color15": "#<wallbash_4xa8>"
+  "wallpaper": "<VYLE_CURRENT_IMAGE>",
+  "alpha": "100",
+  "colors": {
+    "color0": "#<wallbash_pry1>",
+    "color1": "#<wallbash_pry2>",
+    "color2": "#<wallbash_pry3>",
+    "color3": "#<wallbash_pry4>",
+    "color4": "#<wallbash_1xa5>",
+    "color5": "#<wallbash_2xa5>",
+    "color6": "#<wallbash_3xa5>",
+    "color7": "#<wallbash_4xa5>",
+    "color8": "#<wallbash_1xa1>",
+    "color9": "#<wallbash_2xa1>",
+    "color10": "#<wallbash_2xa8>",
+    "color11": "#<wallbash_4xa1>",
+    "color12": "#<wallbash_1xa6>",
+    "color13": "#<wallbash_2xa7>",
+    "color14": "#<wallbash_3xa7>",
+    "color15": "#<wallbash_4xa8>"
     }
   }
-

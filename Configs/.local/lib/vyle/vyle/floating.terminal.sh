@@ -17,7 +17,7 @@ ADDR_FILE="/tmp/dropdown_terminal_addr"
 # Dropdown size and position configuration (percentages)
 WIDTH_PERCENT=45  # Width as percentage of screen width
 HEIGHT_PERCENT=47 # Height as percentage of screen height
-Y_PERCENT=4      # Y position as percentage from top (X is auto-centered)
+Y_PERCENT=4       # Y position as percentage from top (X is auto-centered)
 
 # Animation settings
 ANIMATION_DURATION=100 # milliseconds
@@ -49,7 +49,6 @@ is_dropdown_terminal() {
     )
   ' >/dev/null 2>&1
 }
-
 
 # Validate input
 if [ -z "$TERMINAL_CMD" ]; then
@@ -249,7 +248,6 @@ terminal_in_special() {
   fi
 }
 
-
 # Function to spawn terminal and capture its address
 spawn_terminal() {
   debug_echo "Creating new dropdown terminal with command: $TERMINAL_CMD"
@@ -352,5 +350,3 @@ else
   debug_echo "No terminal found, creating new one"
   spawn_terminal
 fi
-
-

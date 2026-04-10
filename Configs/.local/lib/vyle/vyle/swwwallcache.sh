@@ -24,7 +24,7 @@ fl_wallpaper() {
     case "${prefix}" in
     f) fill="${OPTARG}" ;;
     t) w_int="${OPTARG}" ;;
-    r) w_int="${wallSet}" || return 1 ;;
+    r) w_int="${VYLE_CURRENT_IMAGE}" || return 1 ;;
     esac
   done
   shift $((OPTIND - 1))
@@ -51,9 +51,9 @@ fn_wallcache() {
   [[ ! -f "${blurDir}/${sr_call}.bpex" ]] && magick "${w_sum}"[0] -strip -scale 10% -blur 0x3 -resize 100% "${blurDir}/${sr_call}.bpex"
   [[ ! -f "${thmbDir}/${sr_call}.thmb" ]] && magick "${w_sum}"[0] -strip -thumbnail 500x500^ -gravity center -extent 500x500 "${thmbDir}/${sr_call}.thmb"
   [[ ! -f "${quadDir}/${sr_call}.quad" ]] && magick "${thmbDir}/${sr_call}.thmb" \( -size 500x500 xc:white -fill "rgba(0,0,0,7)" -draw "polygon 400,500 500,500 500,0 450,0" -fill black -draw "polygon 500,500 500,0 450,500" \) -alpha Off -compose CopyOpacity -composite png:"${quadDir}/${sr_call}.quad"
-  [[ ! -e "${dcolDir}/auto/ivy-${h_sum}.dcol" ]] && "${scrRun}" "${w_sum}" -a
-  [[ ! -e "${dcolDir}/dark/ivy-${h_sum}.dcol" ]] && "${scrRun}" "${w_sum}" -d
-  [[ ! -e "${dcolDir}/light/ivy-${h_sum}.dcol" ]] && "${scrRun}" "${w_sum}" -l
+  [[ ! -e "${dcolDir}/auto/${h_sum}.dcol" ]] && "${scrRun}" "${w_sum}" -a
+  [[ ! -e "${dcolDir}/dark/${h_sum}.dcol" ]] && "${scrRun}" "${w_sum}" -d
+  [[ ! -e "${dcolDir}/light/${h_sum}.dcol" ]] && "${scrRun}" "${w_sum}" -l
 } >/dev/null 2>&1
 
 fn_wallcache_thumb() {

@@ -6,13 +6,13 @@ source "$scrDir/globalcontrol.sh"
 export rasiDir
 export scrDir
 export rofiLauncherStyle
-export rofiStyleScale 
+export rofiStyleScale
 export rofiColCount
 export rofiAssetDir
-export mon_scale 
+export mon_scale
 export mon_res
 
-export -f tomlq 
+export -f tomlq
 export -f setConf
 export -f notify
 
@@ -82,4 +82,3 @@ if ( defined $RofiSel && $RofiSel ne "" ) {
   system($bash_cmd) == 0 or die "Failed to apply config";
 }
 '
-

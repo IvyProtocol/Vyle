@@ -24,7 +24,7 @@ Wall_Select() {
       name="${indx##*/}"
       thumb="${thumbDir}/${name%.*}.thmb"
       printf "%s\x00icon\x1f%s\n" "$name" "$thumb"
-    done | rofi -dmenu -i -p "Wallpaper" -theme-str "${r_scale}" -theme-str "${r_override}" -config "${rofiConf}" -select "${wallSet##*/}"
+    done | rofi -dmenu -i -p "Wallpaper" -theme-str "${r_scale}" -theme-str "${r_override}" -config "${rofiConf}" -select "${VYLE_CURRENT_IMAGE##*/}"
   )
   [[ -z "$choice" ]] && exit 0
   Wall_Switch -i "${wallSel}/$choice" "${WALLPAPER_SWWW_ARGS[@]}"
