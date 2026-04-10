@@ -1,0 +1,522 @@
+./
+├── Configs
+│   ├── .config
+│   │   ├── baloofileinformationrc
+│   │   ├── btop
+│   │   │   └── btop.conf
+│   │   ├── dolphinrc
+│   │   ├── dunst
+│   │   │   ├── dunst.conf
+│   │   │   ├── dunstrc
+│   │   │   ├── icons
+│   │   │   │   ├── arch.svg
+│   │   │   │   ├── critical.svg
+│   │   │   │   ├── hyprdots.svg
+│   │   │   │   ├── keyboard.svg
+│   │   │   │   └── vol
+│   │   │   │       ├── muted-mic.svg
+│   │   │   │       ├── muted-speaker.svg
+│   │   │   │       ├── unmuted-mic.svg
+│   │   │   │       ├── unmuted-speaker.svg
+│   │   │   │       ├── vol-0.svg
+│   │   │   │       ├── vol-100.svg
+│   │   │   │       ├── vol-10.svg
+│   │   │   │       ├── vol-15.svg
+│   │   │   │       ├── vol-20.svg
+│   │   │   │       ├── vol-25.svg
+│   │   │   │       ├── vol-30.svg
+│   │   │   │       ├── vol-35.svg
+│   │   │   │       ├── vol-40.svg
+│   │   │   │       ├── vol-45.svg
+│   │   │   │       ├── vol-50.svg
+│   │   │   │       ├── vol-55.svg
+│   │   │   │       ├── vol-5.svg
+│   │   │   │       ├── vol-60.svg
+│   │   │   │       ├── vol-65.svg
+│   │   │   │       ├── vol-70.svg
+│   │   │   │       ├── vol-75.svg
+│   │   │   │       ├── vol-80.svg
+│   │   │   │       ├── vol-85.svg
+│   │   │   │       ├── vol-90.svg
+│   │   │   │       └── vol-95.svg
+│   │   │   └── wallbash.conf
+│   │   ├── electron-flags.conf
+│   │   ├── fastfetch
+│   │   │   ├── config.jsonc
+│   │   │   └── icons
+│   │   │       ├── agk_clan.icon
+│   │   │       ├── aisaka.icon
+│   │   │       ├── geass.icon
+│   │   │       ├── hyprland.icon
+│   │   │       ├── loli.icon
+│   │   │       ├── pochita.icon
+│   │   │       └── ryuzaki.icon
+│   │   ├── fish
+│   │   │   ├── config.fish
+│   │   │   └── functions
+│   │   │       └── fish_greeting.fish
+│   │   ├── gtk-3.0
+│   │   │   └── settings.ini
+│   │   ├── gtk-4.0
+│   │   │   ├── gtk.css
+│   │   │   ├── gtk-dark.css
+│   │   │   └── settings.ini
+│   │   ├── hypr
+│   │   │   ├── animations
+│   │   │   │   ├── End-4.conf
+│   │   │   │   ├── HyDE-Theme.conf
+│   │   │   │   └── HyDE-vertical.conf
+│   │   │   ├── animations.conf
+│   │   │   ├── hypridle.conf
+│   │   │   ├── hyprland.conf
+│   │   │   ├── hyprlock
+│   │   │   │   ├── check-capslock.sh
+│   │   │   │   ├── colors.conf
+│   │   │   │   └── status.sh
+│   │   │   ├── hyprlock.conf
+│   │   │   ├── keybindings.conf
+│   │   │   ├── monitors.conf
+│   │   │   ├── themes
+│   │   │   │   ├── theme.conf
+│   │   │   │   └── wallbash.conf
+│   │   │   ├── userprefs.conf
+│   │   │   └── windowrules.conf
+│   │   ├── kdeglobals
+│   │   ├── kitty
+│   │   │   ├── kitty.conf
+│   │   │   ├── theme.conf
+│   │   │   └── vyle.conf
+│   │   ├── Kvantum
+│   │   │   ├── kvantum.kvconfig
+│   │   │   └── wallbash
+│   │   │       ├── wallbash.kvconfig
+│   │   │       └── wallbash.svg
+│   │   ├── mpd
+│   │   │   ├── database
+│   │   │   ├── log
+│   │   │   ├── mpd.conf
+│   │   │   ├── state
+│   │   │   └── sticker.sql
+│   │   ├── nvim
+│   │   │   ├── .gitignore
+│   │   │   ├── init.lua
+│   │   │   ├── lazy-lock.json
+│   │   │   ├── lazyvim.json
+│   │   │   ├── LICENSE
+│   │   │   ├── lua
+│   │   │   │   ├── config
+│   │   │   │   │   ├── autocmds.lua
+│   │   │   │   │   ├── keymaps.lua
+│   │   │   │   │   ├── lazy.lua
+│   │   │   │   │   └── options.lua
+│   │   │   │   └── plugins
+│   │   │   │       ├── autopairs.lua
+│   │   │   │       ├── example.lua
+│   │   │   │       └── hyde.lua
+│   │   │   ├── .neoconf.json
+│   │   │   ├── README.md
+│   │   │   └── stylua.toml
+│   │   ├── qt6ct
+│   │   │   ├── qt6ct.conf
+│   │   │   └── style-colors.conf
+│   │   ├── rofi
+│   │   │   ├── config.rasi
+│   │   │   ├── notification.rasi
+│   │   │   ├── selector.rasi
+│   │   │   ├── shared
+│   │   │   │   ├── assets
+│   │   │   │   │   ├── style-10.png
+│   │   │   │   │   ├── style-11.png
+│   │   │   │   │   ├── style-1.png
+│   │   │   │   │   ├── style-2.png
+│   │   │   │   │   ├── style-3.png
+│   │   │   │   │   ├── style-4.png
+│   │   │   │   │   ├── style-5.png
+│   │   │   │   │   ├── style-6.png
+│   │   │   │   │   ├── style-7.png
+│   │   │   │   │   ├── style-8.png
+│   │   │   │   │   └── style-9.png
+│   │   │   │   ├── config-clipboard.rasi
+│   │   │   │   ├── config-waybar.rasi
+│   │   │   │   ├── selector.rasi
+│   │   │   │   ├── wallbash_mode.png
+│   │   │   │   └── wallbash.rasi
+│   │   │   ├── styles
+│   │   │   │   ├── style-10.rasi
+│   │   │   │   ├── style-11.rasi
+│   │   │   │   ├── style-1.rasi
+│   │   │   │   ├── style-2.rasi
+│   │   │   │   ├── style-3.rasi
+│   │   │   │   ├── style-4.rasi
+│   │   │   │   ├── style-5.rasi
+│   │   │   │   ├── style-6.rasi
+│   │   │   │   ├── style-7.rasi
+│   │   │   │   ├── style-8.rasi
+│   │   │   │   └── style-9.rasi
+│   │   │   └── theme.rasi
+│   │   ├── spotify-flags.conf
+│   │   ├── starship.toml
+│   │   ├── systemd
+│   │   │   └── user
+│   │   │       ├── default.target.wants
+│   │   │       │   ├── mpd.service -> /usr/lib/systemd/user/mpd.service
+│   │   │       │   ├── pipewire.service -> /usr/lib/systemd/user/pipewire.service
+│   │   │       │   └── vyle-config.service -> /home/iris/.config/systemd/user/vyle-config.service
+│   │   │       ├── graphical-session.target.wants
+│   │   │       │   └── hypridle.service -> /usr/lib/systemd/user/hypridle.service
+│   │   │       └── sockets.target.wants
+│   │   │           ├── mpd.socket -> /usr/lib/systemd/user/mpd.socket
+│   │   │           ├── pipewire.socket -> /usr/lib/systemd/user/pipewire.socket
+│   │   │           └── pulseaudio.socket -> /usr/lib/systemd/user/pulseaudio.socket
+│   │   ├── vyle
+│   │   │   ├── theme
+│   │   │   │   ├── Catppuccin-Latte
+│   │   │   │   │   ├── hypr.theme
+│   │   │   │   │   ├── kitty.theme
+│   │   │   │   │   ├── kvantum
+│   │   │   │   │   │   ├── kvantum.theme
+│   │   │   │   │   │   └── kvconfig.theme
+│   │   │   │   │   ├── rofi.theme
+│   │   │   │   │   ├── wallpapers
+│   │   │   │   │   │   ├── abstract_blured.jpg
+│   │   │   │   │   │   ├── cat_minimal.jpg
+│   │   │   │   │   │   ├── chainsaw_angel_lake.jpg
+│   │   │   │   │   │   ├── delorean_pastel.png
+│   │   │   │   │   │   ├── flying_out.png
+│   │   │   │   │   │   ├── reindeer_forest.jpg
+│   │   │   │   │   │   ├── rocket_launch.png
+│   │   │   │   │   │   ├── scissors.jpg
+│   │   │   │   │   │   ├── Sigrika.jpg
+│   │   │   │   │   │   └── waifu_angel.jpg
+│   │   │   │   │   └── waybar.theme
+│   │   │   │   ├── Catppuccin-Mocha
+│   │   │   │   │   ├── hypr.theme
+│   │   │   │   │   ├── kitty.theme
+│   │   │   │   │   ├── kvantum
+│   │   │   │   │   │   ├── kvantum.theme
+│   │   │   │   │   │   └── kvconfig.theme
+│   │   │   │   │   ├── rofi.theme
+│   │   │   │   │   ├── wallpapers
+│   │   │   │   │   │   ├── 1_rain_world.png
+│   │   │   │   │   │   ├── 2_rain_world.png
+│   │   │   │   │   │   ├── 3_rain_world.png
+│   │   │   │   │   │   ├── aesthetic_deer.png
+│   │   │   │   │   │   ├── apex_octane.jpg
+│   │   │   │   │   │   ├── black_hole_by_kurzgesagt.png
+│   │   │   │   │   │   ├── boat_abondoned.jpg
+│   │   │   │   │   │   ├── cat_leaves.png
+│   │   │   │   │   │   ├── catppuccinLogo.png
+│   │   │   │   │   │   ├── endfield_garden.jpg
+│   │   │   │   │   │   ├── escape_velocity.jpg
+│   │   │   │   │   │   ├── evening_sky.png
+│   │   │   │   │   │   ├── firewatch.jpg
+│   │   │   │   │   │   ├── forest_dark_winter.jpg
+│   │   │   │   │   │   ├── hanged_man_tree.jpg
+│   │   │   │   │   │   ├── rebellious_tower.png
+│   │   │   │   │   │   └── switch_swirl.jpg
+│   │   │   │   │   └── waybar.theme
+│   │   │   │   ├── Decay-Green
+│   │   │   │   │   ├── hypr.theme
+│   │   │   │   │   ├── kitty.theme
+│   │   │   │   │   ├── kvantum
+│   │   │   │   │   │   ├── kvantum.theme
+│   │   │   │   │   │   └── kvconfig.theme
+│   │   │   │   │   ├── rofi.theme
+│   │   │   │   │   ├── wallpapers
+│   │   │   │   │   │   ├── arcade_decay_red.png
+│   │   │   │   │   │   ├── aurora_borealis.png
+│   │   │   │   │   │   ├── blue_swirl.png
+│   │   │   │   │   │   ├── moments_before_desk.png
+│   │   │   │   │   │   ├── night_city.png
+│   │   │   │   │   │   └── relaxed_mario.png
+│   │   │   │   │   └── waybar.theme
+│   │   │   │   ├── Edge-Runner
+│   │   │   │   │   ├── hypr.theme
+│   │   │   │   │   ├── kitty.theme
+│   │   │   │   │   ├── kvantum
+│   │   │   │   │   │   ├── kvantum.theme
+│   │   │   │   │   │   └── kvconfig.theme
+│   │   │   │   │   ├── rofi.theme
+│   │   │   │   │   ├── wallpapers
+│   │   │   │   │   │   ├── cyberpunk_dave.png
+│   │   │   │   │   │   ├── david.jpg
+│   │   │   │   │   │   ├── lucy_1.jpg
+│   │   │   │   │   │   ├── lucy_2.png
+│   │   │   │   │   │   └── lucy_rebecca.jpg
+│   │   │   │   │   └── waybar.theme
+│   │   │   │   ├── Graphite-Mono
+│   │   │   │   │   ├── hypr.theme
+│   │   │   │   │   ├── kitty.theme
+│   │   │   │   │   ├── kvantum
+│   │   │   │   │   │   ├── kvantum.theme
+│   │   │   │   │   │   └── kvconfig.theme
+│   │   │   │   │   ├── rofi.theme
+│   │   │   │   │   ├── wallpapers
+│   │   │   │   │   │   ├── chainsawman_sketch.png
+│   │   │   │   │   │   ├── gojo.png
+│   │   │   │   │   │   ├── japan_lake.jpg
+│   │   │   │   │   │   ├── limbo.jpg
+│   │   │   │   │   │   ├── min_mountain.jpg
+│   │   │   │   │   │   ├── mountain_snow.jpg
+│   │   │   │   │   │   ├── nier_2b.jpg
+│   │   │   │   │   │   ├── nier_mech.jpg
+│   │   │   │   │   │   ├── rocket.jpg
+│   │   │   │   │   │   ├── spring_bloom.jpg
+│   │   │   │   │   │   └── wall_paint.jpg
+│   │   │   │   │   └── waybar.theme
+│   │   │   │   ├── Gruvbox-Retro
+│   │   │   │   │   ├── hypr.theme
+│   │   │   │   │   ├── kitty.theme
+│   │   │   │   │   ├── kvantum
+│   │   │   │   │   │   ├── kvantum.theme
+│   │   │   │   │   │   └── kvconfig.theme
+│   │   │   │   │   ├── rofi.theme
+│   │   │   │   │   ├── wallpapers
+│   │   │   │   │   │   ├── finalizer.png
+│   │   │   │   │   │   ├── future_town.jpg
+│   │   │   │   │   │   ├── lady.png
+│   │   │   │   │   │   ├── minimal_squares.png
+│   │   │   │   │   │   ├── misty_forest.jpg
+│   │   │   │   │   │   ├── night_moon.png
+│   │   │   │   │   │   ├── patterns.jpg
+│   │   │   │   │   │   └── wall.jpg
+│   │   │   │   │   └── waybar.theme
+│   │   │   │   ├── Material-Sakura
+│   │   │   │   │   ├── hypr.theme
+│   │   │   │   │   ├── kitty.theme
+│   │   │   │   │   ├── kvantum
+│   │   │   │   │   │   ├── kvantum.theme
+│   │   │   │   │   │   └── kvconfig.theme
+│   │   │   │   │   ├── rofi.theme
+│   │   │   │   │   ├── wallpapers
+│   │   │   │   │   │   ├── material_pastel_1.jpg
+│   │   │   │   │   │   ├── material_pastel_2.jpg
+│   │   │   │   │   │   ├── material_pastel_3.jpg
+│   │   │   │   │   │   ├── material_pastel_4.jpg
+│   │   │   │   │   │   ├── material_pastel_5.jpg
+│   │   │   │   │   │   ├── material_pastel_6.jpg
+│   │   │   │   │   │   ├── material_pastel_7.jpg
+│   │   │   │   │   │   └── material_pastel_8.jpg
+│   │   │   │   │   └── waybar.theme
+│   │   │   │   ├── Rose-Pine
+│   │   │   │   │   ├── hypr.theme
+│   │   │   │   │   ├── kitty.theme
+│   │   │   │   │   ├── kvantum
+│   │   │   │   │   │   ├── kvantum.theme
+│   │   │   │   │   │   └── kvconfig.theme
+│   │   │   │   │   ├── rofi.theme
+│   │   │   │   │   ├── wallpapers
+│   │   │   │   │   │   ├── burning_cherry.jpeg
+│   │   │   │   │   │   ├── chainsaw_makima.png
+│   │   │   │   │   │   ├── dark_purple_kimono.png
+│   │   │   │   │   │   ├── ferris_wheel.jpg
+│   │   │   │   │   │   ├── japan_mountain_pink.jpg
+│   │   │   │   │   │   ├── japan_tower_pink.jpg
+│   │   │   │   │   │   ├── lakeside_sunset.png
+│   │   │   │   │   │   ├── mountain_dragon_pink.jpg
+│   │   │   │   │   │   ├── mountain_sunset.jpg
+│   │   │   │   │   │   ├── mushrooms_1.png
+│   │   │   │   │   │   ├── mushrooms_2.png
+│   │   │   │   │   │   ├── mushrooms_3.png
+│   │   │   │   │   │   ├── mushrooms_4.png
+│   │   │   │   │   │   ├── nimbus.gif
+│   │   │   │   │   │   ├── red_purple.jpg
+│   │   │   │   │   │   ├── waifu_pink.png
+│   │   │   │   │   │   └── warm_afternoon.jpeg
+│   │   │   │   │   └── waybar.theme
+│   │   │   │   └── Tokyo-Night
+│   │   │   │       ├── hypr.theme
+│   │   │   │       ├── kitty.theme
+│   │   │   │       ├── kvantum
+│   │   │   │       │   ├── kvantum.theme
+│   │   │   │       │   └── kvconfig.theme
+│   │   │   │       ├── rofi.theme
+│   │   │   │       ├── wallpapers
+│   │   │   │       │   ├── cat_lofi_cafe.jpg
+│   │   │   │       │   ├── edger_lucy_neon.jpg
+│   │   │   │       │   ├── gas_station.gif
+│   │   │   │       │   ├── lowpoly_street.png
+│   │   │   │       │   ├── street.gif
+│   │   │   │       │   └── tokyo_pink.png
+│   │   │   │       └── waybar.theme
+│   │   │   ├── theme.ivy
+│   │   │   ├── theme-rgba.ivy
+│   │   │   ├── vyle.toml
+│   │   │   ├── Wall-Dcol
+│   │   │   │   ├── hypr.ivy
+│   │   │   │   ├── kitty.ivy
+│   │   │   │   ├── Kvantum
+│   │   │   │   │   ├── kvantum.ivy
+│   │   │   │   │   └── kvconfig.ivy
+│   │   │   │   ├── rofi.ivy
+│   │   │   │   └── waybar.ivy
+│   │   │   └── Wall-Ways
+│   │   │       ├── cava.ivy
+│   │   │       ├── colors.ivy
+│   │   │       ├── gtk
+│   │   │       │   ├── gtk2.dcol
+│   │   │       │   ├── gtk3.dcol
+│   │   │       │   └── gtk4.dcol
+│   │   │       └── notification
+│   │   │           ├── dunst.dcol
+│   │   │           ├── hyprdots.dcol
+│   │   │           ├── muted-mic.dcol
+│   │   │           ├── muted-speaker.dcol
+│   │   │           ├── unmuted-mic.dcol
+│   │   │           ├── unmuted-speaker.dcol
+│   │   │           ├── vol-0.dcol
+│   │   │           ├── vol-100.dcol
+│   │   │           ├── vol-10.dcol
+│   │   │           ├── vol-15.dcol
+│   │   │           ├── vol-20.dcol
+│   │   │           ├── vol-25.dcol
+│   │   │           ├── vol-30.dcol
+│   │   │           ├── vol-35.dcol
+│   │   │           ├── vol-40.dcol
+│   │   │           ├── vol-45.dcol
+│   │   │           ├── vol-50.dcol
+│   │   │           ├── vol-55.dcol
+│   │   │           ├── vol-5.dcol
+│   │   │           ├── vol-60.dcol
+│   │   │           ├── vol-65.dcol
+│   │   │           ├── vol-70.dcol
+│   │   │           ├── vol-75.dcol
+│   │   │           ├── vol-80.dcol
+│   │   │           ├── vol-85.dcol
+│   │   │           ├── vol-90.dcol
+│   │   │           └── vol-95.dcol
+│   │   ├── waybar
+│   │   │   ├── Styles
+│   │   │   │   ├── [BOT] HyDE.css
+│   │   │   │   └── Configs
+│   │   │   │       ├── [BOT] HyDE-01.jsonc
+│   │   │   │       ├── [BOT] HyDE-02.jsonc
+│   │   │   │       ├── [BOT] HyDE-03.jsonc
+│   │   │   │       ├── [BOT] HyDE-04.jsonc
+│   │   │   │       ├── [BOT] HyDE-05.jsonc
+│   │   │   │       ├── [TOP] HyDE-01.jsonc
+│   │   │   │       ├── [TOP] HyDE-02.jsonc
+│   │   │   │       ├── [TOP] HyDE-03.jsonc
+│   │   │   │       ├── [TOP] HyDE-04.jsonc
+│   │   │   │       └── [TOP] HyDE-05.jsonc
+│   │   │   └── theme.css
+│   │   ├── wlogout
+│   │   │   ├── icons
+│   │   │   │   ├── hibernate_black.png
+│   │   │   │   ├── hibernate_white.png
+│   │   │   │   ├── lock_black.png
+│   │   │   │   ├── lock_white.png
+│   │   │   │   ├── logout_black.png
+│   │   │   │   ├── logout_white.png
+│   │   │   │   ├── reboot_black.png
+│   │   │   │   ├── reboot_white.png
+│   │   │   │   ├── shutdown_black.png
+│   │   │   │   ├── shutdown_white.png
+│   │   │   │   ├── suspend_black.png
+│   │   │   │   └── suspend_white.png
+│   │   │   ├── layout_1
+│   │   │   ├── layout_2
+│   │   │   ├── style_1.css
+│   │   │   └── style_2.css
+│   │   └── xsettingsd
+│   │       └── xsettingsd.conf
+│   ├── .gtkrc-2.0
+│   └── .local
+│       ├── lib
+│       │   └── vyle
+│       │       ├── battery.sh
+│       │       ├── brightnesscontrol.sh
+│       │       ├── exec-start.sh
+│       │       ├── fastfetch.sh
+│       │       ├── floating.terminal.sh
+│       │       ├── globalcontrol.sh
+│       │       ├── gtk.sh
+│       │       ├── logoutlaunch.sh
+│       │       ├── qtvantum.sh
+│       │       ├── reload_waybar.sh
+│       │       ├── rofilauncher.sh
+│       │       ├── sddm-style.sh
+│       │       ├── style-launcher.sh
+│       │       ├── swwwallcache.sh
+│       │       ├── swwwallswitch.sh
+│       │       ├── themeswitch.sh
+│       │       ├── tmq.write.sh
+│       │       ├── volumecontrol.sh
+│       │       ├── vyle-config
+│       │       ├── wallbashdunst.sh
+│       │       ├── wallbash.sh
+│       │       ├── wallbashtoggle.sh
+│       │       ├── wallpaper
+│       │       │   ├── core.sh
+│       │       │   ├── help.sh
+│       │       │   └── select.sh
+│       │       ├── wallpaper.awww.sh
+│       │       ├── wallpaper.swww.sh
+│       │       ├── WaybarLayout.sh
+│       │       ├── wbarstylegen.sh
+│       │       ├── wbsecgen.sh
+│       │       ├── wl-clipmanager.sh
+│       │       ├── wl-screenshot.sh
+│       │       └── wl-togglesink.sh
+│       ├── share
+│       │   ├── kxmlgui5
+│       │   │   └── dolphin
+│       │   │       └── dolphinui.rc
+│       │   └── vyle
+│       │       ├── hypr
+│       │       │   ├── defaults.conf
+│       │       │   ├── dynamic.conf
+│       │       │   ├── env.conf
+│       │       │   ├── hyprland.conf
+│       │       │   ├── migration.conf
+│       │       │   ├── startup.conf
+│       │       │   ├── variables.conf
+│       │       │   └── windowrules.conf
+│       │       ├── migration
+│       │       │   └── hypr
+│       │       │       └── 0_52_windowrules.conf
+│       │       ├── schema
+│       │       │   ├── ide.conf
+│       │       │   └── vyle.toml
+│       │       ├── staterc.conf
+│       │       ├── state.toml
+│       │       └── tomlmd
+│       │           ├── staterc
+│       │           ├── tomlmainmd.sh
+│       │           └── tomlrc.conf
+│       └── state
+│           ├── dolphinstaterc
+│           ├── kiostaterc
+│           ├── vyle
+│           │   ├── staterc
+│           │   └── wallbash
+│           │       ├── cava.ivy
+│           │       ├── code.ivy
+│           │       ├── discord.ivy
+│           │       ├── pyfox.ivy
+│           │       ├── scripts
+│           │       │   └── ZenBash.sh
+│           │       ├── sddm
+│           │       │   └── sddm.conf
+│           │       ├── waybar.ivy
+│           │       ├── zen#Chrome.dcol
+│           │       └── zen#Content.dcol
+│           └── xdg-desktop-portal-kdestaterc
+├── LICENSE
+├── README.md
+├── Scripts
+│   ├── dircaller.sh
+│   ├── globalfunction.sh
+│   ├── install.sh
+│   └── pkgs-core.sh
+└── Source
+    ├── assets
+    │   ├── irgen.gif
+    │   └── showcase.mp4
+    ├── Code_Wallbash.vsix
+    ├── Icon_Vivid-Glassy-Dark.tar.gz
+    ├── SDDM-Silent.tar.gz
+    ├── Sweet-cursors.tar.xz
+    └── vyle-1.0.1-1-any.pkg.tar.zst
+
+96 directories, 425 files

@@ -41,10 +41,20 @@ staterc="${VYLE_DATA_HOME}/tomlmd/staterc"
 tomlSh="${VYLE_DATA_HOME}/tomlmd/tomlmainmd.sh"
 
 dummy_function() {
+  STORE_TERMINAL="${CONSOLE}"
+  STORE_EDITOR="${EDITOR}"
+  STORE_EXPLORER="${EXPLORER}"
+  STORE_BROWSER="${BROWSER}"
+  STORE_LOCKSCREEN="${LOCK_SCREEN}"
+  STORE_TASKMANAGER="${TASK_MANAGER}"
+
   STORE_CURSOR_SIZE="${CURSOR_SIZE}"
   STORE_CURSOR_THEME="${CURSOR_THEME}"
   STORE_GTK_FONT_NAME="${GTK_FONT_NAME}"
   STORE_GTK_FONT_SIZE="${GTK_FONT_SIZE}"
+  STORE_GTK_FONT_ANTIALIASING="${GTK_FONT_ANTIALIASING}"
+  STORE_GTK_FONT_HINTING="${GTK_FONT_HINTING}"
+
   STORE_GTK_DOCUMENT_FONT="${GTK_DOCUMENT_FONT}"
   STORE_GTK_DOCUMENT_FONT_SIZE="${GTK_DOCUMENT_FONT_SIZE}"
   STORE_GTK_MONOSPACE_FONT="${GTK_MONOSPACE_FONT}"
@@ -128,18 +138,27 @@ while true; do
       # Compute STORE_CURSOR_SIZE and STORE_CURSOR_THEME.
       if
         [[ 
+          "${STORE_TERMINAL}" != "${CONSOLE}" ||
+          "${STORE_EDITOR}" != "${EDITOR}" ||
+          "${STORE_EXPLORER}" != "${EXPLORER}" ||
+          "${STORE_BROWSER}" != "${BROWSER}" ||
+          "${STORE_LOCKSCREEN}" != "${LOCK_SCREEN}" ||
+          "${STORE_TASKMANAGER}" != "${TASK_MANAGER}" ||
+
           "${STORE_CURSOR_SIZE}" != "${CURSOR_SIZE}" ||
           "${STORE_CURSOR_THEME}" != "${CURSOR_THEME}" ||
           "${STORE_GTK_FONT_NAME}" != "${GTK_FONT_NAME}" ||
           "${STORE_GTK_FONT_SIZE}" != "${GTK_FONT_SIZE}" ||
+          "${STORE_GTK_FONT_ANTIALIASING}" != "${GTK_FONT_ANTIALIASING}" ||
+          "${STORE_GTK_FONT_HINTING}" != "${GTK_FONT_HINTING}" ||
+
           "${STORE_GTK_DOCUMENT_FONT}" != "${GTK_DOCUMENT_FONT}" ||
           "${STORE_GTK_DOCUMENT_FONT_SIZE}" != "${GTK_DOCUMENT_FONT_SIZE}" ||
           "${STORE_GTK_MONOSPACE_FONT}" != "${GTK_MONOSPACE_FONT}" ||
           "${STORE_GTK_MONOSPACE_FONT_SIZE}" != "${GTK_MONOSPACE_FONT_SIZE}" ]] \
           ;
       then
-
-        hyprctl reload
+        "${scrDir}/tmq.write.sh" "${VYLE_DATA_HOME}/wallbash/variables.dcol"
       fi
     fi
   fi

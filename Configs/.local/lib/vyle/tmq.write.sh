@@ -4,7 +4,9 @@ if [[ -z $VYLE_SHELL_INIT ]]; then
   scrDir="$(dirname "$(realpath "$0")")"
   source "${scrDir}/globalcontrol.sh"
 fi
-export VYLE_CONFIG_HOME VYLE_THEME XDG_CACHE_HOME XDG_CONFIG_HOME skipTemplate scrDir nProcCount
+
+export LIB_DIR=$scrDir
+export VYLE_CONFIG_HOME VYLE_THEME XDG_CACHE_HOME XDG_CONFIG_HOME skipTemplate nProcCount
 export SCRIPT_NAME=$0
 
 perl - "$@" <<'EOF'
@@ -12,7 +14,7 @@ use File::Find     qw(find);
 
 my ($VYLE_CONFIG_HOME, $VYLE_THEME, $XDG_CONFIG_HOME, $XDG_CACHE_HOME,
     $LIB_DIR, $NPROC, $SCRIPT_NAME, $INPUT_PATH,
-    $DCOL_PATH, $THEME_DCOL_DIR, $HOME_DIR, $THEMES_DIR, $PLACEHOLDER_RE, $DIR_VAR_RE, $PRECHECK_RE);
+    $DCOL_PATH, $THEME_DCOL_DIR, $HOME_DIR, $THEMES_DIR, $PLACEHOLDER_RE, $DIR_VAR_RE, $PRECHECK_RE, $XDG_DATA_HOME);
 my (%dir_map, %REPLACE, %RGBA_BASE, %SKIP_SET, %made_dirs, @template_source, @files, %pids);
 my ($raw, $nl, $header, $body, $target, $script, $target_dir, $existing, $found, $n, $workers, $chunk, $res);
 
@@ -20,7 +22,9 @@ $VYLE_CONFIG_HOME = $ENV{VYLE_CONFIG_HOME};
 $VYLE_THEME       = $ENV{VYLE_THEME};
 $XDG_CONFIG_HOME  = $ENV{XDG_CONFIG_HOME};
 $XDG_CACHE_HOME   = $ENV{XDG_CACHE_HOME};
-$LIB_DIR          = $ENV{scrDir};
+$XDG_DATA_HOME = $ENV{XDG_DATA_HOME};
+
+$LIB_DIR          = $ENV{LIB_DIR};
 $NPROC            = $ENV{nProcCount} || 1;
 $SCRIPT_NAME      = $ENV{SCRIPT_NAME};
 $SCRIPT_NAME =~ s{/[^/]+$}{};
@@ -101,6 +105,7 @@ build_env_cache();
   cacheDir  => $XDG_CACHE_HOME, 
   homeDir   => $HOME_DIR,
   themesDir => $THEMES_DIR,
+  dataDir => $XDG_DATA_HOME,
 );
 
 %SKIP_SET = map { $_ => 1 }
