@@ -8,7 +8,7 @@ TerminalApplication="kitty"
 Theme=Tela-circle-dracula
 
 [KDE]
-widgetStyle="kvantum"
+widgetStyle=qt6ct-style
 
 [KFileDialog Settings]
 Allow Expansion=false
@@ -28,4 +28,4 @@ Speedbar Width=136
 View Style=DetailTree
 
 [UiSettings]
-ColorScheme="colors"
+ColorScheme=Kvantum
