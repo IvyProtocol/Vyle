@@ -28,11 +28,11 @@ EOF
 # Export necessary variables defined from globalcontrol.sh in our environment.
 # In preparation of Perl's interface deployment.
 export XDG_CONFIG_HOME
-export rofiLauncherStyle
+export ROFI_LAUNCH_STYLE
 export hypr_border
 export hypr_width
-export rofiLauncherFont
-export rofiLauncherScale
+export ROFI_LAUNCH_FONT
+export ROFI_LAUNCH_SCALE
 export STORE_HELP_FUNCTION
 
 perl - "$@" <<'EOF'
@@ -75,13 +75,13 @@ use File::Basename qw(basename);
 # NOTE: Bash and Perl are seperate scripting language that are related to each other.
 
 my ($XDG_CONFIG_HOME);
-my ($rofiLauncherFont, $rofiLauncherStyle, $rofiLauncherScale, $hypr_border, $hypr_width, $rofiStyleDir,
+my ($ROFI_LAUNCH_FONT, $ROFI_LAUNCH_STYLE, $ROFI_LAUNCH_SCALE, $hypr_border, $hypr_width, $rofiStyleDir,
     $rofiStyleLaunch, $wind_border, $elem_border, $r_override, $r_scale, $is_override, $i_override,
     $base_rofiStyleLaunch);
 $XDG_CONFIG_HOME = $ENV{XDG_CONFIG_HOME};
-$rofiLauncherStyle = $ENV{rofiLauncherStyle};
-$rofiLauncherFont = $ENV{rofiLauncherFont};
-$rofiLauncherScale = $ENV{rofiLauncherScale};
+$ROFI_LAUNCH_STYLE = $ENV{ROFI_LAUNCH_STYLE};
+$ROFI_LAUNCH_FONT = $ENV{ROFI_LAUNCH_FONT};
+$ROFI_LAUNCH_SCALE = $ENV{ROFI_LAUNCH_SCALE};
 $hypr_border = $ENV{hypr_border};
 $hypr_width = $ENV{hypr_width};
 
@@ -89,7 +89,7 @@ $hypr_width = $ENV{hypr_width};
 # Assign related path to rofi to access the styles.
 
 $rofiStyleDir = "${XDG_CONFIG_HOME}/rofi/styles";
-$rofiStyleLaunch = "${rofiStyleDir}/style-${rofiLauncherStyle}.rasi";
+$rofiStyleLaunch = "${rofiStyleDir}/style-${ROFI_LAUNCH_STYLE}.rasi";
 
 # If value for rofiStyleLaunch does not exist in the filepath of rofiStyleDir.
 # Enlist the first order from rofiStyleDir and append to rofiStyleLaunch.
@@ -123,7 +123,7 @@ print(" :: Rofi-Launch - Preparing to read ${rofiStyleLaunch} - Deploying... \n"
 $wind_border = int( $hypr_border * 3 );
 $elem_border = ($hypr_border == 0) ? 10 : int($hypr_border * 2);
 $r_override = "window {border: ${hypr_width}px; border-radius: ${wind_border}px;} element {border-radius: ${elem_border}px;}";
-$r_scale = "configuration {font: \"${rofiLauncherFont} ${rofiLauncherScale}\";}";
+$r_scale = "configuration {font: \"${ROFI_LAUNCH_FONT} ${ROFI_LAUNCH_SCALE}\";}";
 
 # Consume $is_override to retrieve icon-theme
 chomp($is_override = qx(gsettings get org.gnome.desktop.interface icon-theme));

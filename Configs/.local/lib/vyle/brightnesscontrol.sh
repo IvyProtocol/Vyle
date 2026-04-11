@@ -3,10 +3,10 @@ scrDir="$(dirname "$(realpath "$0")")"
 source "${scrDir}/globalcontrol.sh"
 
 brightness_control() {
-  export brightnessIconDir
+  export BRIGHTNESS_FETCHICON
   export steps="$1"
   perl -e '
-my $brightnessIconDir = $ENV{brightnessIconDir};
+my $BRIGHTNESS_FETCHICON = $ENV{BRIGHTNESS_FETCHICON};
 my $steps = $ENV{steps};
 
 sub get_brightness {
@@ -17,7 +17,7 @@ sub get_brightness {
 sub send_notify {
   my ($brightness) = @_;
   my $angle = int(($brightness + 2.5) / 5 ) * 5;
-  my $ico = "${brightnessIconDir}/vol-${angle}.svg";
+  my $ico = "${BRIGHTNESS_FETCHICON}/vol-${angle}.svg";
   my $step = int($brightness / 15);
   chomp(my $bar = qx(seq -s "." $step | sed "s/[0-9]//g"));
 
@@ -54,10 +54,10 @@ sub change_brightness {
 
 case "$1" in
 "--inc")
-  brightness_control "${2:-$brightnessStep}"
+  brightness_control "${2:-$BRIGHTNESS_STEPS}"
   ;;
 "--dec")
-  brightness_control "-${2:-$brightnessStep}"
+  brightness_control "-${2:-$BRIGHTNESS_STEPS}"
   ;;
 "--get" | *)
   brightness_control "--get"

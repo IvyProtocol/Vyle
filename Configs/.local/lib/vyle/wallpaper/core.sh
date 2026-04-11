@@ -32,9 +32,9 @@ SWWW_TRANSITION() {
 }
 
 Wall_Initialize() {
-  if [ "${rofiThemeStyle}" -eq 2 ]; then
+  if [ "${ROFI_THEME_STYLE}" -eq 2 ]; then
     thmExtn="quad"
-  elif [[ "${rofiThemeStyle}" -eq 1 || -z "${rofiThemeStyle}" ]]; then
+  elif [[ "${ROFI_THEME_STYLE}" -eq 1 || -z "${ROFI_THEME_STYLE}" ]]; then
     thmExtn="thmb"
   fi
 

@@ -40,36 +40,36 @@ source "$scrDir/globalcontrol.sh"
 
 case "${WALLPAPER_SET_FLAGS}" in
 -p | --prev)
-  xtrans="${wallAnimationPrevious}"
+  xtrans="${WALLPAPER_SWWW_ANIMATION_PREVIOUS}"
   xtrans="${xtrans:-outer}"
   ;;
 
 -t | --theme)
-  xtrans="${wallAnimationTheme}"
+  xtrans="${WALLPAPER_SWWW_ANIMATION_THEME}"
   xtrans="${xtrans:-grow}"
   ;;
 -n | * | --next)
-  xtrans="${wallAnimationNext}"
+  xtrans="${WALLPAPER_SWWW_ANIMATION_NEXT}"
   xtrans="${xtrans:-grow}"
   ;;
 esac
 
-if ! ${wallBackend} query &>/dev/null; then
+if ! swww query &>/dev/null; then
   swww-daemon --format xrgb &
   disown
-  swww query && ${wallBackend} restore
+  swww query && swww restore
 fi
 
-xbezier="${wallTransitionBezier:-.43,1.19,.1,.4}"
-xduration="${wallTransDuration:-0.5}"
-xframerate="${wallFramerate:-60}"
+xbezier="${WALLPAPER_SWWW_TRANSITION_BEZIER:-.43,1.19,.1,.4}"
+xduration="${WALLPAPER_SWWW_TRANSITION_DURATION:-0.5}"
+xframerate="${WALLPAPER_SWWW_FRAMERATE:-60}"
 xpos="$(hyprctl cursorpos | grep -E '^[0-9]' || echo "0,0")"
 
 swww img "${SELECTED_WALL}" \
   -t "${xtrans}" \
   --transition-bezier "${xbezier}" \
   --transition-duration "${xduration}" \
-  --transition-step "${wallTransitionStep}" \
+  --transition-step "${WALLPAPER_SWWW_TRANSITION_STEPS}" \
   --transition-fps "${xframerate}" \
   --invert-y \
   --transition-pos "${xpos}"

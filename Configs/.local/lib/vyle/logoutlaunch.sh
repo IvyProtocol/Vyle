@@ -18,27 +18,27 @@ fi
 
 # We will export the necessary vars needed in our environment.
 # In prepare for the preparation of Perl interface.
-export wlogoutStyle="${1:-${wlogoutStyle}}"
+export WLOGOUT_STYLE="${1:-${WLOGOUT_STYLE}}"
 export mon_scale
 export dcolMode
 export mon_res
 export WALLBASH_MODE
 export hypr_border
 
-perl -- "$@" <<'EOF'
+perl - "$@" <<'EOF'
 use File::Temp qw(tempfile);
 
 # We will reassign our environment variable into Perl.
 # If you are dummy, we are only doing this because perl and bash are seperate scripting language.
 # With $ENV, we can pick up our exported variable from above.
 
-my ($XDG_CONFIG_HOME, $VYLE_CONFIG_HOME, $VYLE_RESERVED_THEME, $INIT, $WALLBASH_MODE);
-my ($wlogoutStyle, $mon_scale, $dcolMode, $mon_res, $hypr_border, $wLayout, $wlTmplt, $wlColms, $y_mon, $colorScheme, $wlTmplt);
+my ($XDG_CONFIG_HOME, $VYLE_CONFIG_HOME, $VYLE_RESERVED_THEME, $INIT, $WALLBASH_MODE, $WLOGOUT_STYLE);
+my ($mon_scale, $dcolMode, $mon_res, $hypr_border, $wLayout, $wlTmplt, $wlColms, $y_mon, $colorScheme, $wlTmplt);
 
 $XDG_CONFIG_HOME = $ENV{XDG_CONFIG_HOME};
 $VYLE_CONFIG_HOME = $ENV{VYLE_CONFIG_HOME};
 $VYLE_RESERVED_THEME = $ENV{VYLE_RESERVED_THEME};
-$wlogoutStyle = $ENV{wlogoutStyle};
+$WLOGOUT_STYLE = $ENV{WLOGOUT_STYLE};
 $mon_scale = $ENV{mon_scale};
 $dcolMode = $ENV{dcolMode};
 $mon_res = $ENV{mon_res};
@@ -48,8 +48,8 @@ $WALBASH_MODE = $ENV{WALLBASH_MODE};
 # Noteworthy is that you can assign variables with my, our, $ENV or empty. 
 # It feels like bash so much. Just some semi-colon, that is all.
 #
-$wLayout = "${XDG_CONFIG_HOME}/wlogout/layout_${wlogoutStyle}";
-$wlTmplt = "${XDG_CONFIG_HOME}/wlogout/style_${wlogoutStyle}.css";
+$wLayout = "${XDG_CONFIG_HOME}/wlogout/layout_${WLOGOUT_STYLE}";
+$wlTmplt = "${XDG_CONFIG_HOME}/wlogout/style_${WLOGOUT_STYLE}.css";
 
 # Checks to ensure our wLayout or wlTmplt actually exists. 
 # Although, mind you. :) It is fragile.
@@ -57,9 +57,9 @@ $wlTmplt = "${XDG_CONFIG_HOME}/wlogout/style_${wlogoutStyle}.css";
 if 
   (( !-f $wLayout || !-f $wlTmplt )) 
 {
-  $wlogoutStyle = 1;
-  $wLayout = "${XDG_CONFIG_HOME}/wlogout/layout_${wlogoutStyle}";
-  $wlTmplt = "${XDG_CONFIG_HOME}/wlogout/style_${wlogoutStyle}.css";
+  $WLOGOUT_STYLE = 1;
+  $wLayout = "${XDG_CONFIG_HOME}/wlogout/layout_${WLOGOUT_STYLE}";
+  $wlTmplt = "${XDG_CONFIG_HOME}/wlogout/style_${WLOGOUT_STYLE}.css";
 }
 
 # Consume $y_mon to retrieve hyprctl value.
@@ -67,7 +67,7 @@ chomp($y_mon = qx(hyprctl -j monitors | jq ".[] | .height"));
 
 # Normal thing: If you have been following the hash quotes. then you know what is happening here.
 if 
-  (( $wlogoutStyle == 1 ))
+  (( $WLOGOUT_STYLE == 1 ))
 {
   $wlColms = 6;
   $ENV{mgn} = int(( $y_mon * 28 ) / $mon_scale);
@@ -75,7 +75,7 @@ if
 }
 
 elsif 
-  (($wlogoutStyle == 2 ))
+  (( $WLOGOUT_STYLE == 2 ))
 {
   $wlColms = 2;
   $ENV{x_mgn} = int(( $mon_res * 35 ) / $mon_scale);
@@ -135,7 +135,7 @@ $ENV{active_rad} = int($hypr_border * 5);
 $ENV{button_rad} = int($hypr_border * 8);
 $ENV{fntSize} = int(( $y_mon * 2 ) / 100);
 
-print(" :: Deploying :: Profile - ${wlogoutStyle} :: DcolMode - ${dcolMode} :: Theme - ${VYLE_RESERVED_THEME} :: Font-Size - $ENV{fntSize}\n");
+print(" :: Deploying :: Profile - ${WLOGOUT_STYLE} :: DcolMode - ${dcolMode} :: Theme - ${VYLE_RESERVED_THEME} :: Font-Size - $ENV{fntSize}\n");
 
 # Environment substitute our exported global variables to wlTmplt locally.
 chomp($wlStyle = qx(envsubst < $wlTmplt));

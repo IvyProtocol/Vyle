@@ -5,8 +5,8 @@ source "$scrDir/globalcontrol.sh"
 
 export rasiDir
 export scrDir
-export rofiLauncherStyle
-export rofiStyleScale
+export ROFI_LAUNCH_STYLE
+export ROFI_SWITCH_SCALE
 export rofiColCount
 export rofiAssetDir
 export mon_scale
@@ -24,8 +24,8 @@ my $VYLE_CONFIG_HOME = $ENV{VYLE_CONFIG_HOME};
 my $BIN_DIR = $ENV{scrDir};
 my $rasiPath = $ENV{rasiDir};
 my $rasiDir = "$rasiPath/selector.rasi";
-my $rofiLauncherStyle = $ENV{rofiLauncherStyle};
-my $rofiStyleScale = $ENV{rofiStyleScale};
+my $ROFI_LAUNCH_STYLE = $ENV{ROFI_LAUNCH_STYLE};
+my $ROFI_SWITCH_SCALE = $ENV{ROFI_SWITCH_SCALE};
 my $rofiColCount = $ENV{rofiColCount};
 my $rofiAssetDir = $ENV{rofiAssetDir};
 my $mon_scale = $ENV{mon_scale};
@@ -34,8 +34,8 @@ my $mon_res = $ENV{mon_res};
 my $elem_border = int(2 * 5);
 my $icon_border = int($elem_border - 5);
 my $mon_x_res = int(( $mon_res * 100) / $mon_scale);
-my $elm_width = int(( 20 + 12 + 16) * $rofiStyleScale);
-my $max_avail = int( $mon_x_res - (4 * $rofiStyleScale));
+my $elm_width = int(( 20 + 12 + 16) * $ROFI_SWITCH_SCALE);
+my $max_avail = int( $mon_x_res - (4 * $ROFI_SWITCH_SCALE));
 
 if ( ! $rofiColCount ) {
   $rofiColCount = int( $max_avail / $elm_width );
@@ -71,7 +71,7 @@ for my $style_name (@style_names) {
 }
 
 print("$rofi_list");
-my $RofiSel = qx(printf "%b" "$rofi_list" | rofi -dmenu -markup-rows -theme-str "$r_override" -theme "$rasiDir" -select "style-${rofiLauncherStyle}.png");
+my $RofiSel = qx(printf "%b" "$rofi_list" | rofi -dmenu -markup-rows -theme-str "$r_override" -theme "$rasiDir" -select "style-${ROFI_LAUNCH_STYLE}.png");
 chomp($RofiSel);
 
 if ( defined $RofiSel && $RofiSel ne "" ) {

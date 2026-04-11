@@ -83,7 +83,7 @@ Wall_Switch() {
   generate_theme "" "${VYLE_CONFIG_HOME}/theme.ivy" ""
   generate_theme "_rgba" "${VYLE_CONFIG_HOME}/theme-rgba.ivy" "_rgba"
   VYLE_THEME=$VYLE_THEME VYLE_CONFIG_HOME=$VYLE_CONFIG_HOME source "${scrDir}/tmq.write.sh"
-  "${scrDir}/wallpaper.${wallBackend}.sh" "$VYLE_IMAGE_SOURCE" "$WALLPAPER_SET_FLAGS" &
+  "${scrDir}/wallpaper.${WALLPAPER_CONFIGURATION_BACKEND}.sh" "$VYLE_IMAGE_SOURCE" "$WALLPAPER_SET_FLAGS" &
 
 }
 

@@ -6,7 +6,7 @@ if [[ -z $VYLE_SHELL_INIT ]]; then
 fi
 
 export LIB_DIR=$scrDir
-export VYLE_CONFIG_HOME VYLE_THEME XDG_CACHE_HOME XDG_CONFIG_HOME skipTemplate nProcCount
+export VYLE_CONFIG_HOME VYLE_THEME XDG_CACHE_HOME XDG_CONFIG_HOME VYLE_CONFIGURATION_SKIP_TEMPLATE VYLE_CONFIGURATION_CORE
 export SCRIPT_NAME=$0
 
 perl - "$@" <<'EOF'
@@ -25,7 +25,7 @@ $XDG_CACHE_HOME   = $ENV{XDG_CACHE_HOME};
 $XDG_DATA_HOME = $ENV{XDG_DATA_HOME};
 
 $LIB_DIR          = $ENV{LIB_DIR};
-$NPROC            = $ENV{nProcCount} || 1;
+$NPROC            = $ENV{VYLE_CONFIGURATION_CORE} || 1;
 $SCRIPT_NAME      = $ENV{SCRIPT_NAME};
 $SCRIPT_NAME =~ s{/[^/]+$}{};
 
@@ -109,7 +109,7 @@ build_env_cache();
 );
 
 %SKIP_SET = map { $_ => 1 }
-  ($ENV{skipTemplate} ? split /\s+/, $ENV{skipTemplate} : ());
+  ($ENV{VYLE_CONFIGURATION_SKIP_TEMPLATE} ? split /\s+/, $ENV{VYLE_CONFIGURATION_SKIP_TEMPLATE} : ());
 
 sub process_template {
   my ($template_file) = @_;

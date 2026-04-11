@@ -455,8 +455,7 @@ load_ivy_file() {
     fi
   done <"$file"
 }
-
-source "${VYLE_DATA_HOME}/tomlmd/tomlmainmd.sh"
+source "${VYLE_DATA_HOME}/staterc.conf"
 source "${VYLE_STATE_HOME}/staterc"
 
 case "${WALLBASH_MODE}" in
@@ -475,71 +474,71 @@ case "${WALLBASH_MODE}" in
   ;;
 esac
 
-[[ "${wallFramerate}" =~ ^[0-9]+$ ]] || wallFramerate=144
-[[ "${brightnessStep}" =~ ^[0-9]+$ ]] || brightnessStep=5
-[[ "${brightnessNotify}" =~ ^[0-9]+$ ]] || brightnessNotify=0
-[[ "${volumeStep}" =~ ^[0-9]+$ ]] || volumeStep=5
-[[ "${volumeNotifyUpdateLevel}" =~ ^[0-9]+$ ]] || volumeNotifyUpdateLevel=0
-[[ "${volumeNotifyMute}" =~ ^[0-9]+$ ]] || volumeNotifyMute=0
-[[ "${rofiLauncherScale}" =~ ^[0-9]+$ ]] || rofiLauncherScale=10
-[[ "${rofiLauncherStyle}" =~ ^[0-9]+$ ]] || rofiLauncherStyle=1
-[[ "${rofiStyleScale}" =~ ^[0-9]+$ ]] || rofiStyleScale=10
-[[ "${notificationFontSize}" =~ ^[0-9]+$ ]] || notificationFontSize=10
-[[ "${CURSOR_SIZE}" =~ ^[0-9]+$ ]] || CURSOR_SIZE=20
+[[ "${WALLPAPER_SWWW_FRAMERATE}" =~ ^[0-9]+$ ]] || WALLPAPER_SWWW_FRAMERATE=144
+[[ "${BRIGHTNESS_STEPS}" =~ ^[0-9]+$ ]] || BRIGHTNESS_STEPS=5
+[[ "${BRIGHTNESS_NOTIFY_MUTE}" =~ ^[0-9]+$ ]] || BRIGHTNESS_NOTIFY_MUTE=0
+[[ "${VOLUME_STEPS}" =~ ^[0-9]+$ ]] || VOLUME_STEPS=5
+[[ "${VOLUME_STEPS_MUTE}" =~ ^[0-9]+$ ]] || VOLUME_STEPS_MUTE=0
+[[ "${VOLUME_NOTIFY_MUTE}" =~ ^[0-9]+$ ]] || VOLUME_NOTIFY_MUTE=0
+[[ "${ROFI_LAUNCH_SCALE}" =~ ^[0-9]+$ ]] || ROFI_LAUNCH_SCALE=10
+[[ "${ROFI_LAUNCH_STYLE}" =~ ^[0-9]+$ ]] || ROFI_LAUNCH_STYLE=1
+[[ "${ROFI_SWITCH_SCALE}" =~ ^[0-9]+$ ]] || ROFI_SWITCH_SCALE=10
+[[ "${NOTIFICATION_FONT_SIZE}" =~ ^[0-9]+$ ]] || NOTIFICATION_FONT_SIZE=10
+[[ "${HYPRLAND_CURSOR_SIZE}" =~ ^[0-9]+$ ]] || HYPRLAND_CURSOR_SIZE=20
 
-if [[ "${nProcCount}" == "$(nproc)" ]] || ([[ "${nProcCount}" =~ ^[0-9]+$ ]] && ((nProcCount >= 1 && nProcCount <= $(nproc)))); then
+if [[ "${VYLE_CONFIGURATION_CORE}" == "$(nproc)" ]] || ([[ "${VYLE_CONFIGURATION_CORE}" =~ ^[0-9]+$ ]] && ((VYLE_CONFIGURATION_CORE >= 1 && VYLE_CONFIGURATION_CORE <= $(nproc)))); then
   true
 else
   notify -m 2 -i "ERR" -s "${dunstDir}/icons/hyprdots.svg" -t 900 -u critical \
-    -p "[$0] ERR: Invalid integer ${nProcCount} that is greater than NPROC: $(nproc)" &
-  nProcCount="$(nproc)"
+    -p "[$0] ERR: Invalid integer ${VYLE_CONFIGURATION_CORE} that is greater than NPROC: $(nproc)" &
+  VYLE_CONFIGURATION_CORE="$(nproc)"
 fi
 
 FontRegex='^[[:alnum:] ./+_$&*()!-]+$'
 [[ "${GTK_FONT_SIZE}" =~ ${FontRegex} ]] || GTK_FONT_SIZE=12
-[[ "${GTK_DOCUMENT_FONT_SIZE}" =~ ${FontRegex} ]] || GTK_DOCUMENT_FONT=10
-[[ "${GTK_MONOSPACE_FONT_SIZE}" =~ ${FontRegex} ]] || GTK_MONOSPACE_FONT_SIZE=10
+[[ "${GTK_DOCUMENT_FONT_SIZE}" =~ ${FontRegex} ]] || GTK_DOCUMENT_FONT_SIZE=10
+[[ "${GTK_MONOSPACE_FONT_SIZE}" =~ ${FontRegex} || -z "$GTK_MONOSPACE_FONT_SIZE" ]] || GTK_MONOSPACE_FONT_SIZE=10
 
-[[ "${wallTransDuration}" =~ ${FontRegex} ]] || wallTransDuration=0.5
-[[ "${wallTransitionBezier}" =~ ${FontRegex} ]] || wallTranitionBezier=".43,1.19,1,.4"
+[[ "${WALLPAPER_SWWW_TRANSITION_DURATION}" =~ ${FontRegex} ]] || WALLPAPER_SWWW_TRANSITION_DURATION=0.5
+[[ "${WALLPAPER_SWWW_TRANSITION_BEZIER}" =~ ${FontRegex} ]] || WALLPAPER_SWWW_TRANSITION_BEZIER=".43,1.19,1,.4"
 unset FontRegex
 
-wallTransitionStep=$(awk -v d="$wallTransDuration" -v f="$wallFramerate" 'BEGIN {printf "%d", d*f + 31}')
+WALLPAPER_SWWW_TRANSITION_STEPS=$(awk -v d="$WALLPAPER_SWWW_TRANSITION_DURATION" -v f="$WALLPAPER_SWWW_FRAMERATE" 'BEGIN {printf "%d", d*f + 31}')
 
 FontRegex='^[[:alpha:] ,./+_$&*()!-]+$'
-[[ "${CONSOLE}" =~ ${FontRegex} ]] || CONSOLE="kitty"
-[[ "${EDITOR}" =~ ${FontRegex} ]] || EDITOR="vscodium"
-[[ "${EXPLORER}" =~ ${FontRegex} ]] || EXPLORER="dolphin"
-[[ "${BROWSER}" =~ ${FontRegex} ]] || BROWSER="firefox"
-[[ "${LOCK_SCREEN}" =~ ${FontRegex} ]] || LOCK_SCREEN="hyprlock"
-[[ "${TASK_MANAGER}" =~ ${FontRegex} ]] || TASK_MANAGER="gnome-system-monitor"
-[[ "${CURSOR_THEME}" =~ ${FontRegex} ]] || CURSOR_THEME="Bibata-Modern-Ice"
+[[ "${HYPRLAND_TERMINAL}" =~ ${FontRegex} ]] || HYPRLAND_TERMINAL="kitty"
+[[ "${HYPRLAND_EDITOR}" =~ ${FontRegex} ]] || HYPRLAND_EDITOR="vscodium"
+[[ "${HYPRLAND_EXPLORER}" =~ ${FontRegex} ]] || HYPRLAND_EXPLORER="dolphin"
+[[ "${HYPRLAND_BROWSER}" =~ ${FontRegex} ]] || HYPRLAND_BROWSER="firefox"
+[[ "${HYPRLAND_LOCK_SCREEN}" =~ ${FontRegex} ]] || HYPRLAND_LOCK_SCREEN="hyprlock"
+[[ "${HYPRLAND_TASK_MANAGER}" =~ ${FontRegex} ]] || HYPRLAND_TASK_MANAGER="gnome-system-monitor"
+[[ "${HYPRLAND_CURSOR_THEME}" =~ ${FontRegex} ]] || HYPRLAND_CURSOR_THEME="Bibata-Modern-Ice"
 
-[[ "${wallAnimationPrevious}" =~ ${FontRegex} ]] || wallAnimationPrevious="outer"
-[[ "${wallAnimationNext}" =~ ${FontRegex} ]] || wallAnimationNext="grow"
-[[ "${wallAnimationTheme}" =~ ${FontRegex} ]] || wallAnimationTheme="grow"
-[[ "${wallBackend}" =~ ${FontRegex} ]] || wallBackend="swww"
+[[ "${WALLPAPER_SWWW_ANIMATION_PREVIOUS}" =~ ${FontRegex} ]] || WALLPAPER_SWWW_ANIMATION_PREVIOUS="outer"
+[[ "${WALLPAPER_SWWW_ANIMATION_NEXT}" =~ ${FontRegex} ]] || WALLPAPER_SWWW_ANIMATION_NEXT="grow"
+[[ "${WALLPAPER_SWWW_ANIMATION_THEME}" =~ ${FontRegex} ]] || WALLPAPER_SWWW_ANIMATION_THEME="grow"
+[[ "${WALLPAPER_CONFIGURATION_BACKEND}" =~ ${FontRegex} ]] || WALLPAPER_CONFIGURATION_BACKEND="swww"
 
-if [[ "${brightnessIconDir}" =~ ${FontRegex} ]]; then
-  if [[ ! -d "${brightnessIconDir}" ]]; then
-    notify -m 2 -i "ERROR" -t 1200 -s "${dunstDir}/icons/hyprdots.svg" -u critical -p "ERROR! Invalid string-type \"${brightnessIconDir}\" -!" &
-    brightnessIconDir="${dunstDir}/icons/vol"
+if [[ "${BRIGHTNESS_FETCHICON}" =~ ${FontRegex} ]]; then
+  if [[ ! -d "${BRIGHTNESS_FETCHICON}" ]]; then
+    notify -m 2 -i "ERROR" -t 1200 -s "${dunstDir}/icons/hyprdots.svg" -u critical -p "ERROR! Invalid string-type \"${BRIGHTNESS_FETCHICON}\" -!" &
+    BRIGHTNESS_FETCHICON="${dunstDir}/icons/vol"
   fi
 else
-  brightnessIconDir="${dunstDir}/icons/vol"
-  if [[ ! -d "${brightnessIconDir}" ]]; then
+  BRIGHTNESS_FETCHICON="${dunstDir}/icons/vol"
+  if [[ ! -d "${BRIGHTNESS_FETCHICON}" ]]; then
     notify -m 2 -i "ERROR" -t 1200 -s "${dunstDir}/icons/hyprdots.svg" -u critical -p "ERROR! Missing \"${dunstDir}/icons/vol\"" &
   fi
 fi
 
-if [[ "${volumeIconDir}" =~ ${FontRegex} ]]; then
-  if [[ ! -d "${volumeIconDir}" ]]; then
-    notify -m 2 -i "ERROR" -t 1200 -s "${dunstDir}/icons/hyprdots.svg" -u critical -p "ERROR! Invalid string-type \"${volumeIconDir}\" -!" &
-    brightnessIconDir="${dunstDir}/icons/vol"
+if [[ "${VOLUME_FETCHICON}" =~ ${FontRegex} ]]; then
+  if [[ ! -d "${VOLUME_FETCHICON}" ]]; then
+    notify -m 2 -i "ERROR" -t 1200 -s "${dunstDir}/icons/hyprdots.svg" -u critical -p "ERROR! Invalid string-type \"${VOLUME_FETCHICON}\" -!" &
+    VOLUME_FETCHICON="${dunstDir}/icons/vol"
   fi
 else
-  volumeIconDir="${dunstDir}/icons/vol"
-  if [[ ! -d "${volumeIconDir}" ]]; then
+  VOLUME_FETCHICON="${dunstDir}/icons/vol"
+  if [[ ! -d "${VOLUME_FETCHICON}" ]]; then
     notify -m 2 -i "ERROR" -t 1200 -s "${dunstDir}/icons/hyprdots.svg" -u critical -p "ERROR! Missing \"${dunstDir}/icons/vol\" -!" &
   fi
 fi
@@ -550,44 +549,59 @@ fi
 [[ "${GTK_FONT_ANTIALIASING}" =~ ${FontRegex} ]] || GTK_FONT_ANTIALIASING="rgba"
 [[ "${GTK_FONT_HINTING}" =~ ${FontRegex} ]] || GTK_FONT_HINTING="slight"
 
-[[ "${rofiLauncherFont}" =~ ${FontRegex} ]] || rofiLauncherFont="JetBrainsMono Nerd Font"
-[[ "${rofiWallpaperFont}" =~ ${FontRegex} ]] || rofiWallpaperFont="JetBrainsMono Nerd Font"
-[[ "${rofiThemeFont}" =~ ${FontRegex} ]] || rofiThemeFont="JetBrainsMono Nerd Font"
-[[ "${rofiWallbashFont}" =~ ${FontRegex} ]] || rofiWallbashFont="JetBrainsMono Nerd Font"
-[[ "${notificationFont}" =~ ${FontRegex} ]] || notificationFont="JetBrainsMono Nerd Font"
+[[ "${ROFI_LAUNCH_FONT}" =~ ${FontRegex} ]] || ROFI_LAUNCH_FONT="JetBrainsMono Nerd Font"
+[[ "${ROFI_WALLPAPER_FONT}" =~ ${FontRegex} ]] || ROFI_WALLPAPER_FONT="JetBrainsMono Nerd Font"
+[[ "${ROFI_THEME_FONT}" =~ ${FontRegex} ]] || ROFI_THEME_FONT="JetBrainsMono Nerd Font"
+[[ "${ROFI_WALLBASH_FONT}" =~ ${FontRegex} ]] || ROFI_WALLBASH_FONT="JetBrainsMono Nerd Font"
+[[ "${NOTIFICATION_FONT_NAME}" =~ ${FontRegex} ]] || NOTIFICATION_FONT_NAME="JetBrainsMono Nerd Font"
 unset FontRegex
 
 export \
-  VYLE_CURRENT_IMAGE \
-  VYLE_RESERVED_THEME \
+  VYLE_THEME \
+  GTK_FONT_NAME \
+  WALLBASH_MODE \
+  GTK_FONT_SIZE \
+  HYPRLAND_EXPLORER \
   GTK_FONT_ANTIALIASING \
   GTK_DOCUMENT_FONT_SIZE \
   GTK_MONOSPACE_FONT_SIZE \
+  VYLE_CURRENT_IMAGE \
+  VYLE_RESERVED_THEME \
+  VYLE_CONFIGURATION_CORE \
+  HYPRLAND_CURSOR_SIZE \
+  HYPRLAND_TASK_MANAGER \
   VYLE_SHELL_INIT \
   GTK_FONT_HINTING \
   GTK_DOCUMENT_FONT \
   GTK_MONOSPACE_FONT \
-  VYLE_THEME \
-  CURSOR_SIZE \
-  CURSOR_THEME \
-  GTK_FONT_SIZE \
-  LOCK_SCREEN \
-  TASK_MANAGER \
-  GTK_FONT_NAME \
-  CONSOLE \
-  EXPLORER \
-  EDITOR \
-  BROWSER \
-  WALLBASH_MODE
-
-#export -f \
-#    setConf \
-#    load_ivy_file \
-#    ext_thumb \
-#    srcf_rcall \
-#    hashmap \
-#    prompt_timer \
-#    timestamp \
-#    notify \
-#    tomlq \
-#    env_pkg
+  HYPRLAND_EDITOR \
+  HYPRLAND_BROWSER \
+  HYPRLAND_TERMINAL \
+  VOLUME_FETCHICON \
+  VOLUME_STEPS \
+  VOLUME_STEPS_MUTE \
+  VOLUME_NOTIFY_MUTE \
+  BRIGHTNESS_STEPS \
+  BRIGHTNESS_NOTIFY_MUTE \
+  BRIGHTNESS_FETCHICON \
+  NOTIFICATION_FONT_NAME \
+  NOTIFICATION_FONT_SIZE \
+  HYPRLAND_LOCK_SCREEN \
+  WALLPAPER_SWWW_FRAMERATE \
+  WALLPAPER_CONFIGURATION_BACKEND \
+  WALLPAPER_SWWW_TRANSITION_DURATION \
+  WALLPAPER_SWWW_TRANSITION_BEZIER \
+  WALLPAPER_SWWW_TRANSITION_STEPS \
+  WALLPAPER_SWWW_ANIMATION_PREVIOUS \
+  WALLPAPER_SWWW_ANIMATION_NEXT \
+  WALLPAPER_SWWW_ANIMATION_THEME \
+  ROFI_LAUNCH_FONT \
+  ROFI_LAUNCH_SCALE \
+  ROFI_LAUNCH_STYLE \
+  ROFI_THEME_FONT \
+  ROFI_THEME_SCALE \
+  ROFI_THEME_COLUMN \
+  ROFI_THEME_STYLE \
+  ROFI_SWITCH_SCALE \
+  ROFI_WALLBASH_FONT \
+  HYPRLAND_CURSOR_THEME

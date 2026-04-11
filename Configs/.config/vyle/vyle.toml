@@ -15,12 +15,13 @@ CustomPath = [] # List of paths to search for wallpapers.
 # wbselecgen.sh configuration.
 [Wallpaper.Swww]
 Framerate = 60 # Transition Framerate.
-Transition_Duration = 0.4 # Transition Duration.
+Transition_Duration = 1 # Transition Duration.
 Transition_Bezier = ".43,1.19,.1,.4" # Transition Bezier.
 Animation_Previous = "outer" # Transition AnimationPrevious.
 Animation_Next = "grow" # Transition AnimationNext.
 Animation_Theme = "grow" # Transition AnimationTheme.
 Args = []
+
 # █▀█ █▀█ █▀▀ █
 # █▀▄ █▄█ █▀░ █
 # rofilauncher.sh configuration.
@@ -66,7 +67,7 @@ FetchIcon = "${XDG_CONFIG_HOME}/fastfetch/icons" # Fetches Directory for fastfet
 # █▄▄ █▀█ █ █▀  █░█ ▀█▀ █▄░█ █▀▀ █▀ █▀ █▀ ▀█▀ █░░ 
 # █▄█ █▀▄ █ █▄█ █▀█ ░█░ █░▀█ ██▄ ▄█ ▄█ █▄ ░█░ █▄▄
 # brightnesscontrol.sh configuration
-[Brightness.Configuration]
+[Brightness]
 FetchIcon = "${XDG_CONFIG_HOME}/dunst/icons/vol" # Fetches Directory for brightnesscontrol.sh
 Steps = 5 # Steps Taken for brightnesscontrol.sh
 Notify_Mute = 0 # Mute: 0 = False; 1 = True
@@ -74,7 +75,7 @@ Notify_Mute = 0 # Mute: 0 = False; 1 = True
 # █░█ █▀█ █░░ █░█ █▀▄▀█ █▀▀ █▀ ▀█▀ █░░ 
 # ▀▄▀ █▄█ █▄▄ █▄█ █░▀░█ ██▄ █▄ ░█░ █▄▄
 # volumecontrol.sh configuration.
-[Volume.Configuration]
+[Volume]
 FetchIcon = "${XDG_CONFIG_HOME:-$HOME/.config}/dunst/icons/vol" # Fetches Directory for voluemcontrol.sh
 Steps = 5 # Steps Taken for volumecontrol.sh
 Steps_Mute = 0 # Silent Popups from step-taken. Mute: 0 = False; 1 = True
@@ -83,33 +84,33 @@ Notify_Mute = 0 # Silent Popups of Mic/Speaker. Mute: 0 = False; 1 = True
 # █▄░█ █▀█ ▀█▀ █ █▀▀ █ █▀▀ ▄▀█ ▀█▀ █ █▀█ █▄░█
 # █░▀█ █▄█ ░█░ █ █▀░ █ █▄▄ █▀█ ░█░ █ █▄█ █░▀█
 # dunstctl configuration
-[Notification.Configuration]
-Font = "Mononoki Nerd Font Bold" # Font Configuration for Dunst. 
+[Notification]
+Font_Name = "Mononoki Nerd Font Bold" # Font Configuration for Dunst. 
 Font_Size = 10 # Font_Size for Dunst
 
 # █░█ █▄█ █▀█ █▀█ █░░ ▄▀█ █▄░█ █▀▄
 # █▀█ ░█░ █▀▀ █▀▄ █▄▄ █▀█ █░▀█ █▄▀
 # Hyprland Configuration.
-[Hyprland.Configuration]
+[Hyprland]
 Terminal = "kitty" # Terminal
 Editor = "vscodium" # Editor
 Explorer = "dolphin" # Explorer
 Browser = "firefox" # Browser
 Lock_Screen = "hyprlock" # LockScreen
 Task_Manager = "gnome-system-monitor" # TaskManager
-Cursor = "Bibata-Modern-Ice" # Cursor Theme
+Cursor_Theme = "Bibata-Modern-Ice" # Cursor Theme
 Cursor_Size = 18 # Cursor Size
 
 # █▀▀ ▀█▀ █▄▀
 # █▄█ ░█░ █░█
 # GTK Configuration
-[GTK.Configuration]
-Font = "CaskaydiaCove Nerd Font Mono" # Font Name
+[GTK]
+Font_Name = "CaskaydiaCove Nerd Font Mono" # Font Name
 Font_Antialiasing = "rgba" # Font Antialiasing
 Font_Hinting = "slight" # Font Hinting
 Font_Size = 10.5 # Font Size
 Document_Font = "JetBrainsMono Nerd Font" # Document Font
 Document_Font_Size = 10 # Document Font Size
 Monospace_Font = "CaskaydiaCove Nerd Font Mono" # Monospace Font
-Monospace_Font_Size = 10 # Monospace Font Size
+Monospace_Font_Size = 20 # Monospace Font Size
 

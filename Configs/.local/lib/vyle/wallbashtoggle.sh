@@ -47,11 +47,11 @@ apply_config() {
 }
 
 rofi_wallbash() {
-  if [[ -z "${rofiWallbashScale}" || "${rofiWallbashScale}" -eq 0 ]]; then
-    rofiWallbashScale=10
+  if [[ -z "${ROFI_WALLBASH_SCALE}" || "${ROFI_WALLBASH_SCALE}" -eq 0 ]]; then
+    ROFI_WALLBASH_SCALE=10
   fi
 
-  r_scale="configuration {font: \"JetBrainsMono Nerd Font ${rofiWallbashScale}\";}"
+  r_scale="configuration {font: \"${ROFI_WALLBASH_FONT} ${ROFI_WALLBASH_SCALE}\";}"
   elem_border=$((hypr_border * 4))
   r_override="window{border-radius:${elem_border}px;} element{border-radius:${elem_border}px;}"
 

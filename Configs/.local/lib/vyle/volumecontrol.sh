@@ -43,7 +43,7 @@ EOF
 
 notify_vol() {
     angle=$(( (($vol + 2) / 5) * 5 ))
-    ico="${volumeIconDir}/vol-${angle}.svg"
+    ico="${VOLUME_FETCHICON}/vol-${angle}.svg"
     bar=$(seq -s "." $(($vol / 15)) | sed 's/[0-9]//g')
     notify-send -a "t2" -r 91190 -t 800 -i "${ico}" "${vol}${bar}" "${nsink}"
 }
@@ -52,9 +52,9 @@ notify_mute() {
     mute=$(pamixer "${srce}" --get-mute | cat)
     [ "${srce}" == "--default-source" ] && dvce="mic" || dvce="speaker"
     if [ "${mute}" == "true" ]; then
-        notify-send -a "t2" -r 91190 -t 800 -i "${volumeIconDir}/muted-${dvce}.svg" "Muted" "${nsink}"
+        notify-send -a "t2" -r 91190 -t 800 -i "${VOLUME_FETCHICON}/muted-${dvce}.svg" "Muted" "${nsink}"
     else
-        notify-send -a "t2" -r 91190 -t 800 -i "${volumeIconDir}/unmuted-${dvce}.svg" "Unmuted" "${nsink}"
+        notify-send -a "t2" -r 91190 -t 800 -i "${VOLUME_FETCHICON}/unmuted-${dvce}.svg" "Unmuted" "${nsink}"
     fi
 }
 
@@ -79,7 +79,7 @@ change_volume() {
             ;;
     esac
 
-    [[ "${volumeNotifyUpdateLevel}" -ge 1 ]] || notify_vol
+    [[ "${VOLUME_STEPS_MUTE}" -ge 1 ]] || notify_vol
 }
 
 toggle_mute() {
@@ -90,7 +90,7 @@ toggle_mute() {
         "pamixer") 
             $use_swayosd && swayosd-client "${mode}" mute-toggle && exit 0
             pamixer $srce -t
-            [[ "${volumeNotifyMute}" -lt 1 ]] && notify_mute
+            [[ "${VOLUME_NOTIFY_MUTE}" -lt 1 ]] && notify_mute
             ;;
         "playerctl")
             local volume_file="/tmp/$(basename "$0")_last_volume_${srce:-all}"
@@ -105,7 +105,7 @@ toggle_mute() {
                     playerctl --player="$srce" volume 0.5  # Default to 50% if no saved volume
                 fi
             fi
-            [[ "${volumeNotifyMute}" -lt 1 ]] && notify_mute
+            [[ "${VOLUME_NOTIFY_MUTE}" -lt 1 ]] && notify_mute
             ;;
     esac
 }
@@ -152,7 +152,7 @@ shift $((OPTIND-1))
 
 # Execute action
 case $1 in
-    i|d) change_volume "$1" "${2:-${volumeStep}}" "$device" >/dev/null 2>&1 ;;
+    i|d) change_volume "$1" "${2:-${VOLUME_STEPS}}" "$device" >/dev/null 2>&1 ;;
     m) toggle_mute "$device" >/dev/null 2>&1 ;;
     *) print_usage ;;
 esac

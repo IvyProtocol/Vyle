@@ -21,9 +21,9 @@ trap 'rm -f ${lockFile}' EXIT
 show_theme_status() {
   cat <<EOF
  :: Current theme: $VYLE_RESERVED_THEME
- :: Cursor theme: $CURSOR_THEME
- :: Cursor size: $CURSOR_SIZE
- :: Terminal: $CONSOLE
+ :: Cursor theme: $HYPRLAND_CURSOR_THEME
+ :: Cursor size: $HYPRLAND_CURSOR_SIZE
+ :: Terminal: $HYPRLAND_TERMINAL
  :: Font: $GTK_FONT_NAME
  :: Font size: $GTK_FONT_SIZE
  :: Document font: $GTK_DOCUMENT_FONT
@@ -33,14 +33,14 @@ show_theme_status() {
  ::
  :: Selected theme: $thmChsh
  :: Wallpaper: ${thmImg##*/}
- :: Wallpaper Backend: $wallBackend
- :: Framerate: ${wallFramerate}
- :: Duration: ${wallTransDuration}
- :: Bezier: ${wallTransitionBezier}
+ :: Wallpaper Backend: $WALLPAPER_CONFIGURATION_BACKEND
+ :: Framerate: ${WALLPAPER_SWWW_FRAMERATE}
+ :: Duration: ${WALLPAPER_SWWW_TRANSITION_DURATION}
+ :: Bezier: ${WALLPAPER_SWWW_TRANSITION_BEZIER}
  :: Animation: {
- ::    Transition Previous: ${wallAnimationPrevious}
- ::    Transition Next: ${wallAnimationNext}
- ::    Transition Theme: ${wallAnimationTheme}
+ ::    Transition Previous: ${WALLPAPER_SWWW_ANIMATION_PREVIOUS}
+ ::    Transition Next: ${WALLPAPER_SWWW_ANIMATION_NEXT}
+ ::    Transition Theme: ${WALLPAPER_SWWW_ANIMATION_THEME}
  :: }
  :: Custom Paths: [${wallAddCustomPath}]
  ::
@@ -103,35 +103,35 @@ themeSelTui() {
 }
 
 thmSelEnv() {
-  if [[ -z "${rofiThemeScale}" || "${rofiThemeScale}" -eq 0 ]]; then
-    rofiThemeScale=10
+  if [[ -z "${ROFI_THEME_SCALE}" || "${ROFI_THEME_SCALE}" -eq 0 ]]; then
+    ROFI_THEME_SCALE=10
   fi
-  r_scale="configuration {font : \"${rofiThemeFont} ${rofiThemeScale}\";}"
+  r_scale="configuration {font : \"${ROFI_THEME_FONT} ${ROFI_THEME_SCALE}\";}"
   mon_x_res=$((mon_res * 100 / mon_scale))
   elem_border=$((hypr_border * 3))
   icon_border=$((elem_border - 5))
 
-  case "${rofiThemeStyle:-1}" in
+  case "${ROFI_THEME_STYLE:-1}" in
   2)
-    elm_width=$(((20 + 12) * rofiThemeScale * 2))
-    max_avail=$((mon_x_res - (4 * rofiThemeScale)))
-    if [[ -z "$rofiThemeColumn" || ! "$rofiThemeColumn" =~ ^[0-9]+$ || "$rofiThemeColumn" -eq 0 ]]; then
-      rofiThemeColumn=$((max_avail / elm_width))
+    elm_width=$(((20 + 12) * ROFI_THEME_SCALE * 2))
+    max_avail=$((mon_x_res - (4 * ROFI_THEME_SCALE)))
+    if [[ -z "$ROFI_THEME_COLUMN" || ! "$ROFI_THEME_COLUMN" =~ ^[0-9]+$ || "$ROFI_THEME_COLUMN" -eq 0 ]]; then
+      ROFI_THEME_COLUMN=$((max_avail / elm_width))
     fi
     r_override="window{width:100%;background-color:#00000003;} 
-                listview{columns:${rofiThemeColumn};} 
+                listview{columns:${ROFI_THEME_COLUMN};} 
                 element{border-radius:${elem_border}px;background-color:@main-bg;}
                 element-icon{size:20em;border-radius:${icon_border}px 0px 0px ${icon_border}px;}"
     thmExtn="quad"
     ;;
   1)
-    elm_width=$(((23 + 12 + 1) * rofiThemeScale * 2))
-    max_avail=$((mon_x_res - (4 * rofiThemeScale)))
-    if [[ -z "$rofiThemeColumn" || ! "$rofiThemeColumn" =~ ^[0-9]+$ || "$rofiThemeColumn" -eq 0 ]]; then
-      rofiThemeColumn=$((max_avail / elm_width))
+    elm_width=$(((23 + 12 + 1) * ROFI_THEME_SCALE * 2))
+    max_avail=$((mon_x_res - (4 * ROFI_THEME_SCALE)))
+    if [[ -z "$ROFI_THEME_COLUMN" || ! "$ROFI_THEME_COLUMN" =~ ^[0-9]+$ || "$ROFI_THEME_COLUMN" -eq 0 ]]; then
+      ROFI_THEME_COLUMN=$((max_avail / elm_width))
     fi
     r_override="window{width:100%;}
-                listview{columns:${rofiThemeColumn};}
+                listview{columns:${ROFI_THEME_COLUMN};}
                 element{border-radius:${elem_border}px;padding:0.5em;}
                 element-icon{size:23em;border-radius:${icon_border}px;}"
     thmExtn="thmb"
