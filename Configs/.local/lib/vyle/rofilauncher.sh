@@ -145,5 +145,5 @@ system(
     "-theme-str", "${r_override}",
     "-theme-str", "${i_override}",
     "-config", "${rofiStyleLaunch}"
-    );
+);
 EOF

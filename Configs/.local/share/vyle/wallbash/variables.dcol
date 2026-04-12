@@ -1,7 +1,7 @@
 $(dataDir)/vyle/hypr/variables.conf
 ## DO NOT TOUCH THIS VARS! They essentially loads your configuration.
 ## This file has been parsed by tmq.write.sh: wallbash
-## If you are looking to edit this file -> <VYLE_DATA_HOME>/wallbash/variables.dcol 
+## If you are looking to edit this file -> <INPUT_PATH>
 
 $TERMINAL = <HYPRLAND_TERMINAL>
 $EDITOR = <HYPRLAND_EDITOR>

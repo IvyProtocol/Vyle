@@ -2,8 +2,8 @@
 #  ▀▄▀ ░█░ █▄▄ ██▄  
 # Vyle configuration.
 [Vyle.Configuration]
-Skip_Template = [] # Templates to Skip when using wallbash.
 Core = $(nproc) # Limit usage of wallbash cores. NOTE: Use "$(nproc)" if you want to maximize full usage.
+Skip_Template = [] # Templates to Skip when using wallbash.
 
 # █░█░█ ▄▀█ █░░ █░░ █▀█ ▄▀█ █▀█ █▀▀ █▀█
 # ▀▄▀▄▀ █▀█ █▄▄ █▄▄ █▀▀ █▀█ █▀▀ ██▄ █▀▄
@@ -15,7 +15,7 @@ CustomPath = [] # List of paths to search for wallpapers.
 # wbselecgen.sh configuration.
 [Wallpaper.Swww]
 Framerate = 60 # Transition Framerate.
-Transition_Duration = 1 # Transition Duration.
+Transition_Duration = 0.5 # Transition Duration.
 Transition_Bezier = ".43,1.19,.1,.4" # Transition Bezier.
 Animation_Previous = "outer" # Transition AnimationPrevious.
 Animation_Next = "grow" # Transition AnimationNext.
@@ -27,30 +27,31 @@ Args = []
 # rofilauncher.sh configuration.
 [Rofi.Launch]
 Font = "JetBrainsMono Nerd Font" # Font for rofilauncher.sh
-Scale = 9 # Scale for rofilauncher.sh
+# Scale = 9 # Scale for rofilauncher.sh
 Style = 1
 
 # wbselecgen.sh configuration.
 [Rofi.Wallpaper]
 Font = "JetBrainsMono Nerd Font" # Font for wbselecgen.sh
-Scale = 10 # Scale for wbselecgen.sh
-Column = 3 # Column for wbselecgen.sh
+# Scale = 6 # Scale for wbselecgen.sh
+# Column = 3 # Column for wbselecgen.sh
 
 # themeswitch.sh configuration.
 [Rofi.Theme]
 Font = "JetBrainsMono Nerd Font" # Font for themeswitch.sh
-Scale = 6 # Scale for themeswitch.sh
-Column = 3 # Column for themeswitch.sh
-Style = 1 # Style for themeswitch.sh
+# Scale = 6 # Scale for themeswitch.sh
+# Column = 3 # Column for themeswitch.sh
+# Style = 1 # Style for themeswitch.sh
 
 # wallbashtoggle.sh configuraiton
 [Rofi.Wallbash]
-Font = "JetBrainsMono Nerd Font" # Font for wallbashtoggle.sh
-Scale = 9 # Scale for wallbashtoggle.sh
+# Font = "JetBrainsMono Nerd Font" # Font for wallbashtoggle.sh
+# Scale = 9 # Scale for wallbashtoggle.sh
 
 # style-launcher.sh configuration.
 [Rofi.Switch]
-Scale = 12 # Scale for style-launcher.sh
+# Scale = 12 # Scale for style-launcher.sh
+# Column = 3 # Column for style-launcher.sh
 
 # █░░ █▀█ █▀▀ █▀█ █░█ ▀█▀
 # █▄▄ █▄█ █▄█ █▄█ █▄█ ░█░
@@ -76,7 +77,7 @@ Notify_Mute = 0 # Mute: 0 = False; 1 = True
 # ▀▄▀ █▄█ █▄▄ █▄█ █░▀░█ ██▄ █▄ ░█░ █▄▄
 # volumecontrol.sh configuration.
 [Volume]
-FetchIcon = "${XDG_CONFIG_HOME:-$HOME/.config}/dunst/icons/vol" # Fetches Directory for voluemcontrol.sh
+FetchIcon = "$BRIGHTNESS_FETCHICON" # Fetches Directory for voluemcontrol.sh
 Steps = 5 # Steps Taken for volumecontrol.sh
 Steps_Mute = 0 # Silent Popups from step-taken. Mute: 0 = False; 1 = True
 Notify_Mute = 0 # Silent Popups of Mic/Speaker. Mute: 0 = False; 1 = True
@@ -99,7 +100,7 @@ Browser = "firefox" # Browser
 Lock_Screen = "hyprlock" # LockScreen
 Task_Manager = "gnome-system-monitor" # TaskManager
 Cursor_Theme = "Bibata-Modern-Ice" # Cursor Theme
-Cursor_Size = 18 # Cursor Size
+Cursor_Size = 24 # Cursor Size
 
 # █▀▀ ▀█▀ █▄▀
 # █▄█ ░█░ █░█

@@ -97,7 +97,7 @@ themeSelTui() {
       notify -m 1 -p "Does swwwallswitch.sh exist?" -s "${dunstDir}/icons/hyprdots.svg" -u critical
       return 1
     }
-    "${scrDir}/swwwallswitch.sh" -t -i "${thmImg}" -w --swww-t -n 1 -r 1
+    "${scrDir}/swwwallswitch.sh" -t -i "${thmImg}" -w --swww-t -n
     echo -e " :: Theme Control - Populated successfully ${thmChsh} -> ${XDG_CONFIG_HOME}" &
   fi
 }
@@ -124,7 +124,7 @@ thmSelEnv() {
                 element-icon{size:20em;border-radius:${icon_border}px 0px 0px ${icon_border}px;}"
     thmExtn="quad"
     ;;
-  1)
+  1 | *)
     elm_width=$(((23 + 12 + 1) * ROFI_THEME_SCALE * 2))
     max_avail=$((mon_x_res - (4 * ROFI_THEME_SCALE)))
     if [[ -z "$ROFI_THEME_COLUMN" || ! "$ROFI_THEME_COLUMN" =~ ^[0-9]+$ || "$ROFI_THEME_COLUMN" -eq 0 ]]; then

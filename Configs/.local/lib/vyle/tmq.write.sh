@@ -11,6 +11,7 @@ export SCRIPT_NAME=$0
 
 perl - "$@" <<'EOF'
 use File::Find     qw(find);
+use File::Path     qw(make_path);
 
 my ($VYLE_CONFIG_HOME, $VYLE_THEME, $XDG_CONFIG_HOME, $XDG_CACHE_HOME,
     $LIB_DIR, $NPROC, $SCRIPT_NAME, $INPUT_PATH,
@@ -30,6 +31,7 @@ $SCRIPT_NAME      = $ENV{SCRIPT_NAME};
 $SCRIPT_NAME =~ s{/[^/]+$}{};
 
 $INPUT_PATH       = $ARGV[0] // '';
+$ENV{INPUT_PATH} = $INPUT_PATH;
 
 $DCOL_PATH = ($VYLE_THEME eq 'Wallbash-Ivy')
   ? "$VYLE_CONFIG_HOME/Wall-Dcol"
@@ -162,7 +164,7 @@ sub process_template {
   unless 
     ($made_dirs{$target_dir}++)
   {
-    mkdir $target_dir unless -d $target_dir;
+    make_path($target_dir) unless -d $target_dir;
   }
 
   $existing = "";

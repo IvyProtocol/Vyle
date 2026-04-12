@@ -36,7 +36,7 @@ rofiConf="${rasiDir}/selector.rasi"
 Wall_Switch() {
   OPTIND=1
   local VYLE_IMAGE_SOURCE="" WALLPAPER_SET_FLAGS ntSend="" thmExtn
-  while getopts ":i:s:w:n" arg; do
+  while getopts ":i:w:n" arg; do
     case "${arg}" in
     i)
       VYLE_IMAGE_SOURCE="${OPTARG}"
@@ -52,7 +52,7 @@ Wall_Switch() {
   shift $((OPTIND - 1))
   if [[ -z "${VYLE_IMAGE_SOURCE}" || ! -f "${VYLE_IMAGE_SOURCE}" ]]; then
     VYLE_IMAGE_SOURCE="${VYLE_CURRENT_IMAGE}"
-    if [[ ! -f "${img}" ]]; then
+    if [[ ! -f "${VYLE_IMAGE_SOURCE}" ]]; then
       notify -m 1 -p "Invalid wallpaper?" -u critical -t 900 -a "t1"
       exit 1
     fi
@@ -82,22 +82,27 @@ Wall_Switch() {
   }
   generate_theme "" "${VYLE_CONFIG_HOME}/theme.ivy" ""
   generate_theme "_rgba" "${VYLE_CONFIG_HOME}/theme-rgba.ivy" "_rgba"
-  VYLE_THEME=$VYLE_THEME VYLE_CONFIG_HOME=$VYLE_CONFIG_HOME source "${scrDir}/tmq.write.sh"
+  VYLE_THEME=$VYLE_THEME VYLE_CONFIG_HOME=$VYLE_CONFIG_HOME VYLE_CURRENT_IMAGE=$VYLE_IMAGE_SOURCE source "${scrDir}/tmq.write.sh"
   "${scrDir}/wallpaper.${WALLPAPER_CONFIGURATION_BACKEND}.sh" "$VYLE_IMAGE_SOURCE" "$WALLPAPER_SET_FLAGS" &
-
 }
 
-case "${1}" in
+case "$1" in
 -n | -p)
   Wall_Change "$1"
   ;;
 -t)
-  Wall_Switch ${@}
+  Wall_Switch "$@"
   ;;
 -r)
   mapfile -t random < <(printf '%s\n' "${wallDir}"/*)
   setIdx="${random[RANDOM % ${#random[@]}]}"
   Wall_Switch -i "${random}" -n 1
+  ;;
+--populate)
+  if [[ ! -e "$VYLE_CACHE_HOME/done" ]]; then
+    Wall_Switch -i "${VYLE_CONFIG_HOME}/theme/${VYLE_RESERVED_THEME}/wallpapers/${VYLE_CURRENT_IMAGE##*/}" -w --swww-n -n
+    touch "${VYLE_CACHE_HOME}/done"
+  fi >/dev/null
   ;;
 *)
   Wall_Select
