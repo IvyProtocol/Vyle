@@ -1,4 +1,4 @@
-$(cacheDir)/wal/colors.json|$RUN:pywalfox update & 
+<XDG_CACHE_HOME>/wal/colors.json|$RUN:pywalfox update & 
 {
   "wallpaper": "<VYLE_CURRENT_IMAGE>",
   "alpha": "100",

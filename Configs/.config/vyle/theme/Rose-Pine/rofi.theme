@@ -1,4 +1,4 @@
-$(confDir)/rofi/theme.rasi|$RUN:pkill -SIGUSR1 rofi 2>/dev/null &
+<XDG_CONFIG_HOME>/rofi/theme.rasi|$RUN:pkill -SIGUSR1 rofi 2>/dev/null &
 * {
     main-bg:            #26233ae6;
     main-fg:            #e0def4ff;

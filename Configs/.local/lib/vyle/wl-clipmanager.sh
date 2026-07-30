@@ -11,7 +11,7 @@ fi
 kbcus1="Control-Delete"
 kbcus2="Alt-Delete"
 
-if ! env_pkg -- -Q "rofi"; then
+if ! pacman -Q "rofi"; then
   notify -m 1 -p " Is rofi installed? exit-code 1."
   exit 1
 fi

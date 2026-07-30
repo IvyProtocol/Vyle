@@ -448,15 +448,15 @@
     icon = "/home/iris/.config/dunst/icons/critical.svg"
     timeout = 0
 [urgency_low]
-    background = "#A3656C80"
-    foreground = "#FFCCD2E6"
-    frame_color = "#A3656C03"
+    background = "#6591A380"
+    foreground = "#CCF0FFE6"
+    frame_color = "#6591A303"
     icon = "/home/iris/.config/dunst/icons/hyprdots.svg"
     timeout = 5
 
 [urgency_normal]
-    background = "#3A3E6B80"
-    foreground = "#CCD1FFE6"
-    frame_color = "#3A3E6B03"
+    background = "#3A4A6B80"
+    foreground = "#CCDDFFE6"
+    frame_color = "#3A4A6B03"
     icon = "/home/iris/.config/dunst/icons/hyprdots.svg"
     timeout = 5

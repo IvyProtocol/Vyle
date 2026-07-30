@@ -3,73 +3,73 @@
 # shellcheck disable=SC1091
 
 if [[ 
-  -z "${DBUS_SESSION_BUS_ADDRESS}" ]] \
-  ; then
+    -z "${DBUS_SESSION_BUS_ADDRESS}" ]] \
+    ; then
 
-  DBUS_SESSION_BUS_ADDRESS=$(
-    grep -z DBUS_SESSION_BUS_ADDRESS \
-      /proc/$(pgrep -u $USER gnome-session\startplasma\|whatever)/environ |
-      sed -e 's/DBUS_SESSION_BUS_ADDRESS=//'
-  )
+    DBUS_SESSION_BUS_ADDRESS=$(
+        grep -z DBUS_SESSION_BUS_ADDRESS \
+            /proc/$(pgrep -u $USER gnome-session\startplasma\|whatever)/environ |
+            sed -e 's/DBUS_SESSION_BUS_ADDRESS=//'
+    )
 fi
 
 if [[ 
-  -z "${HYPRLAND_INSTANCE_SIGNATURE}" ]] \
-  ; then
+    -z "${HYPRLAND_INSTANCE_SIGNATURE}" ]] \
+    ; then
 
-  HYPRLAND_INSTANCE_SIGNATURE=$(echo $HYPRLAND_INSTANCE_SIGNATURE)
+    HYPRLAND_INSTANCE_SIGNATURE=$(echo $HYPRLAND_INSTANCE_SIGNATURE)
 fi
 
 export DBUS_SESSION_BUS_ADDRESS
 export HYPRLAND_INSTANCE_SIGNATURE
 
 if command -v vyle >/dev/null 2>&1; then
-  eval "$(vyle --init)"
+    eval "$(vyle --init)"
 else
-  if [[ 
-    -e "$HOME/.local/lib/vyle/globalcontrol.sh" ]] \
-    ; then
-    source "$HOME/.local/lib/vyle/globalcontrol.sh"
-    scrDir="$HOME/.local/lib/vyle"
-  else
-    notify-send -r 91190 -u critical -t 1200 "ERROR" "Could not source globalcontrol.sh!"
-    exit 1
-  fi
+    if [[ 
+        -e "$HOME/.local/lib/vyle/globalcontrol.sh" ]] \
+        ; then
+        source "$HOME/.local/lib/vyle/globalcontrol.sh"
+        scrDir="$HOME/.local/lib/vyle"
+    else
+        notify-send -r 91190 -u critical -t 1200 "ERROR" "Could not source globalcontrol.sh!"
+        exit 1
+    fi
 fi
 
 while true; do
-  inotifywait \
-    -q \
-    -e close_write \
-    "${VYLE_CONFIG_HOME}/vyle.toml"
-  # Safe guard against unknown configuration request triggered from shell script.
-  # Acts as a security layer to not trigger the afterward if statement comparison.
-  # Might seem unnecessary but trust me.. It is always better to do this.
-  if [[ 
-    -e "${VYLE_CONFIG_HOME}/vyle.toml" ]] \
-    ; then
-
-    if
-      ! cmp -s "${VYLE_DATA_HOME}/state.toml" \
+    inotifywait \
+        -q \
+        -e close_write \
         "${VYLE_CONFIG_HOME}/vyle.toml"
-    then
-      tomlq -e
+    # Safe guard against unknown configuration request triggered from shell script.
+    # Acts as a security layer to not trigger the afterward if statement comparison.
+    # Might seem unnecessary but trust me.. It is always better to do this.
+    if [[ 
+        -e "${VYLE_CONFIG_HOME}/vyle.toml" ]] \
+        ; then
 
-      source "${scrDir}/globalcontrol.sh"
-      # Copy vyle.toml to state.toml to ensure consistent comparison for above if statement.
-      # If not done, then it will always reload changes even if the file has not been edited.
-      cp "${VYLE_CONFIG_HOME}/vyle.toml" "${VYLE_DATA_HOME}/state.toml"
+        if
+            ! cmp -s "${VYLE_DATA_HOME}/state.toml" \
+                "${VYLE_CONFIG_HOME}/vyle.toml"
+        then
+            tomlq -e
 
-      (notify-send \
-        -r 91190 \
-        -t 2200 \
-        -u normal \
-        -i "${XDG_CONFIG_HOME}/dunst/icons/hyprdots.svg" \
-        "Vyle-Project" \
-        "Configuration has been reloaded." >&2)
+            source "${scrDir}/globalcontrol.sh"
+            # Copy vyle.toml to state.toml to ensure consistent comparison for above if statement.
+            # If not done, then it will always reload changes even if the file has not been edited.
+            cp "${VYLE_CONFIG_HOME}/vyle.toml" "${VYLE_DATA_HOME}/state.toml"
 
-      "${scrDir}/wallbashdunst.sh"
-      "${scrDir}/tmq.write.sh" "${VYLE_DATA_HOME}/wallbash/variables.dcol"
+            (notify-send \
+                -r 91190 \
+                -t 2200 \
+                -u normal \
+                -i "${XDG_CONFIG_HOME}/dunst/icons/hyprdots.svg" \
+                "Vyle-Project" \
+                "Configuration has been reloaded." >&2)
+
+            "${scrDir}/wallbashdunst.sh"
+            "${scrDir}/tmq.write.sh" --file "${VYLE_DATA_HOME}/wallbash/variables.dcol"
+        fi
     fi
-  fi
 done

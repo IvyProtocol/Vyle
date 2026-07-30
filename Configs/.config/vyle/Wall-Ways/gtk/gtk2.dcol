@@ -1,4 +1,4 @@
-$(themesDir)/Wallbash-Gtk/gtk-2.0/gtkrc
+<HOME>/.themes/Wallbash-Gtk/gtk-2.0/gtkrc|$RUN:gsettings set org.gnome.desktop.interface gtk-theme '$GTK_THEME'
 # Oomox GTK Theme (Numix Fork)
 # Modified as template for wallbash
 gtk-color-scheme =

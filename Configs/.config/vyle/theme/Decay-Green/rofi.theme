@@ -1,4 +1,4 @@
-$(confDir)/rofi/theme.rasi|$RUN:killall -SIGUSR1 rofi >/dev/null &
+<XDG_CONFIG_HOME>/rofi/theme.rasi|$RUN:killall -SIGUSR1 rofi >/dev/null &
 * {
     main-bg:            #151720e6;
     main-fg:            #cbced3ff;

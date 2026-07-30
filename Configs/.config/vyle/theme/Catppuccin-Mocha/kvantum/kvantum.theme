@@ -1,4 +1,4 @@
-$(confDir)/Kvantum/wallbash/wallbash.svg|$(scrDir)/resetxdgportal.sh
+<XDG_CONFIG_HOME>/Kvantum/wallbash/wallbash.svg|<LIB_DIR>/resetxdgportal.sh
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="845" height="695" version="1">
  <defs>
   <defs>

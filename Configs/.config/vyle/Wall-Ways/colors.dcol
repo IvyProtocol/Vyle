@@ -1,4 +1,4 @@
-$(confDir)/hypr/hyprlock/colors.conf
+<XDG_CONFIG_HOME>/hypr/hyprlock/colors.conf
 
 $text_color = rgba(<wallbash_txt1>FF)
 $entry_background_color = rgba(<wallbash_pry1>11)

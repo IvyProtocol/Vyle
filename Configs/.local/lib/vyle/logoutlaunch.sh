@@ -9,7 +9,7 @@ scrDir="$(dirname "$(realpath "$0")")"
 source "${scrDir}/globalcontrol.sh"
 
 # Our package validator with notify-send as notify function, ensure if it exist. Or else return error code.
-if ! env_pkg -- -Q "wlogout" >/dev/null 2>&1; then
+if ! pacman -Q "wlogout" >/dev/null 2>&1; then
   notify -m 1 -p "Is wlogout installed? Exit-Code 1" -u critical -t 900 -a "t2" -s "${dunstDir}/icons/hyprdots.svg"
   exit 1
 else
@@ -144,6 +144,7 @@ my ($fh, $filename) = tempfile();
 print $fh $wlStyle;
 close $fh;
 
+print $filename;
 # Execute wlogout after environment substitution.
 system("wlogout -b $wlColms -c 0 -r 0 -m 0 --layout $wLayout --css $filename --protocol layer-shell");
 EOF

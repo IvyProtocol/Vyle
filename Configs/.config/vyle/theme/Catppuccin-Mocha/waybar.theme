@@ -1,4 +1,4 @@
-$(confDir)/waybar/theme.css
+<XDG_CONFIG_HOME>/waybar/theme.css
 
 /* To enable blur please make sure alpha is greater than 0 */
 @define-color bar-bg rgba(0, 0, 0, 0.1); 

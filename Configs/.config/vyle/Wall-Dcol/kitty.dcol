@@ -1,4 +1,4 @@
-$(confDir)/kitty/theme.conf|$RUN:pkill -SIGUSR1 kitty &
+<XDG_CONFIG_HOME>/kitty/theme.conf|$RUN:pkill -SIGUSR1 kitty &
 foreground                #<wallbash_txt1>
 background                #<wallbash_pry1>
 background_opacity        1.0

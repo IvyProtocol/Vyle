@@ -1,4 +1,4 @@
-$(confDir)/kitty/theme.conf|$RUN:killall -SIGUSR1 kitty &
+<XDG_CONFIG_HOME>/kitty/theme.conf|$RUN:killall -SIGUSR1 kitty &
 
 ## name:     Catppuccin Mocha 🌿
 ## author:   Pocco81 (https://github.com/Pocco81)

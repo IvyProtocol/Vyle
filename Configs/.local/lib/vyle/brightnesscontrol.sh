@@ -3,9 +3,9 @@ scrDir="$(dirname "$(realpath "$0")")"
 source "${scrDir}/globalcontrol.sh"
 
 brightness_control() {
-  export BRIGHTNESS_FETCHICON
-  export steps="$1"
-  perl -e '
+    export BRIGHTNESS_FETCHICON
+    export steps="$1"
+    perl -e '
 my $BRIGHTNESS_FETCHICON = $ENV{BRIGHTNESS_FETCHICON};
 my $steps = $ENV{steps};
 
@@ -54,12 +54,12 @@ sub change_brightness {
 
 case "$1" in
 "--inc")
-  brightness_control "${2:-$BRIGHTNESS_STEPS}"
-  ;;
+    brightness_control "${2:-$BRIGHTNESS_STEPS}"
+    ;;
 "--dec")
-  brightness_control "-${2:-$BRIGHTNESS_STEPS}"
-  ;;
+    brightness_control "-${2:-$BRIGHTNESS_STEPS}"
+    ;;
 "--get" | *)
-  brightness_control "--get"
-  ;;
+    brightness_control "--get"
+    ;;
 esac

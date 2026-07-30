@@ -1,4 +1,4 @@
-$(confDir)/kitty/theme.conf|$RUN:killall -SIGUSR1 kitty &
+<XDG_CONFIG_HOME>/kitty/theme.conf|$RUN:killall -SIGUSR1 kitty &
 
 # The basic colors
 foreground              #D9D9D9

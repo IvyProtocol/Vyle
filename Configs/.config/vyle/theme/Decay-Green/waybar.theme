@@ -1,4 +1,4 @@
-$(confDir)/waybar/theme.css
+<XDG_CONFIG_HOME>/waybar/theme.css
 @define-color bar-bg rgba(31, 35, 40, 0.95);
 
 @define-color main-bg #101419;

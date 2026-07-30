@@ -65,18 +65,18 @@ idsJson="$(printf '%s\n' "${all_pids[@]}" | jq -s 'map(tonumber)')"
 mapfile -t sink_ids < <(
   jq -r --argjson pids "${idsJson}" --arg class "${__class}" --arg title "${__title}" '
 .[] |
- def lc(x): (x // "" | ascii_downcase);
-  def normalize(x): x | gsub("[-_~.]+";" ") ;
+  def norm(x): (x // "" | ascii_downcase | gsub("[-_~.]+";" ") | gsub("[^a-z0-9 ]+";" ") | gsub("[[:space:]]+";" ") | gsub("^ +| +$";""));
+  def to_num(x): (try (x | tostring | tonumber) catch null);
   select(
-  ((.properties["application.process.id"] | tostring | (tonumber? // null)) as $p | $p != null and ($pids | index($p) != null))
+  (to_num(.properties["application.process.id"]) as $p | $p != null and ($pids | index($p)))
   or
-  ($class != "" and (lc(.properties["application.name"]) | contains(lc($class))))
+  (norm(.properties["application.name"]) | contains(norm($class)))
   or
-  ($class != "" and (lc(.properties["application.id"]) | contains(lc($class))))
+  (norm(.properties["application.id"]) | contains(norm($class)))
   or
-  ($class != "" and (lc(.properties["application.process.binary"]) | contains(lc($class))))
+  (norm(.properties["application.process.binary"]) | contains(norm($class)))
   or
-  ($title != "" and (normalize(lc(.properties["media.name"])) | contains(normalize(lc($title)))))
+  (norm(.properties["media.name"]) | contains(norm($title)))
   ) | .index' <<<"${sink_json}"
 )
 

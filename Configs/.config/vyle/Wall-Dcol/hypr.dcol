@@ -1,4 +1,4 @@
-$(confDir)/hypr/themes/wallbash.conf
+<XDG_CONFIG_HOME>/hypr/themes/wallbash.conf
 
 $COLOR_SCHEME = prefer-<wallbash_mode>
 

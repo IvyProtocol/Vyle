@@ -1,4 +1,4 @@
-$(confDir)/dunst/wallbash.conf|$RUN:$(scrDir)/wallbashdunst.sh
+<XDG_CONFIG_HOME>/dunst/wallbash.conf|$RUN:<LIB_DIR>/wallbashdunst.sh
 [urgency_low]
     background = "#<wallbash_3xa5>80"
     foreground = "#<wallbash_3xa9>E6"

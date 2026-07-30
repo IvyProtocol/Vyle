@@ -63,13 +63,13 @@ Style = 1 # Style for logoutlauncher.sh | Picks up style for wlogout!
 # █▀░ █▀█ ▄█ ░█░ █▀░ ██▄ ░█░ █▄▄ █▀█
 # fastfetch.sh configuration.
 [Fastfetch]
-FetchIcon = "${XDG_CONFIG_HOME}/fastfetch/icons" # Fetches Directory for fastfetch.sh
+FetchIcon = "$XDG_CONFIG_HOME/fastfetch/icons" # Fetches Directory for fastfetch.sh
 
 # █▄▄ █▀█ █ █▀  █░█ ▀█▀ █▄░█ █▀▀ █▀ █▀ █▀ ▀█▀ █░░ 
 # █▄█ █▀▄ █ █▄█ █▀█ ░█░ █░▀█ ██▄ ▄█ ▄█ █▄ ░█░ █▄▄
 # brightnesscontrol.sh configuration
 [Brightness]
-FetchIcon = "${XDG_CONFIG_HOME}/dunst/icons/vol" # Fetches Directory for brightnesscontrol.sh
+FetchIcon = "$XDG_CONFIG_HOME/dunst/icons/vol" # Fetches Directory for brightnesscontrol.sh
 Steps = 5 # Steps Taken for brightnesscontrol.sh
 Notify_Mute = 0 # Mute: 0 = False; 1 = True
 
@@ -106,6 +106,7 @@ Cursor_Size = 24 # Cursor Size
 # █▄█ ░█░ █░█
 # GTK Configuration
 [GTK]
+Theme = "Wallbash-Gtk" # Theme Name
 Font_Name = "CaskaydiaCove Nerd Font Mono" # Font Name
 Font_Antialiasing = "rgba" # Font Antialiasing
 Font_Hinting = "slight" # Font Hinting
@@ -114,4 +115,3 @@ Document_Font = "JetBrainsMono Nerd Font" # Document Font
 Document_Font_Size = 10 # Document Font Size
 Monospace_Font = "CaskaydiaCove Nerd Font Mono" # Monospace Font
 Monospace_Font_Size = 20 # Monospace Font Size
-

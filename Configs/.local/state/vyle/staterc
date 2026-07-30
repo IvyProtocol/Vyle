@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-enableWallIde=1
-VYLE_RESERVED_THEME="Catppuccin-Latte"
+VYLE_RESERVED_THEME="Catppuccin-Mocha"
 VYLE_THEME="Wallbash-Ivy"
-wallDir="${VYLE_CONFIG_HOME}/theme/${VYLE_RESERVED_THEME}/wallpapers"
-VYLE_CURRENT_IMAGE="${wallDir}/abstract_blured.jpg"
+VYLE_WALLPAPER_DIRECTORY="/home/iris/.config/vyle/theme/Catppuccin-Mocha/wallpapers"
+VYLE_CURRENT_IMAGE="${VYLE_CONFIG_HOME}/theme/${VYLE_RESERVED_THEME}/wallpapers/1_rain_world.png"
+WALLBASH_MODE=0

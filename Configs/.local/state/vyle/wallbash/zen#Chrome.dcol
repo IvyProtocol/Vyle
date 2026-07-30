@@ -1,4 +1,4 @@
-$(confDir)/zen/tkuribbw.Default (release)/chrome/ZenBash/zenbashChrome.css|$RUN:$(scrDir)/../ZenBash.sh -r >/dev/null 2>&1 &
+<XDG_CONFIG_HOME>/zen/tkuribbw.Default (release)/chrome/ZenBash/zenbashChrome.css|$RUN:<LIB_DIR>/ZenBash.sh -r >/dev/null 2>&1 &
 
 @media {
   :root {

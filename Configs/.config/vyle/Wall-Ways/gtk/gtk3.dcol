@@ -1,4 +1,4 @@
-$(themesDir)/Wallbash-Gtk/gtk-3.0/gtk.css|$RUN:$(scrDir)/gtk.sh &>/dev/null &
+<HOME>/.themes/Wallbash-Gtk/gtk-3.0/gtk.css|$RUN:<LIB_DIR>/gtk.sh &>/dev/null &
 /* GTK NAMED COLORS -- USE RESPONSIBLY! */
 
 /* widget text/foreground color */

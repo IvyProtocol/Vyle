@@ -34,22 +34,26 @@ main() {
         fi
     done
 
-    choice=$(printf '%s\n' "${options[@]}" \
-        | rofi -i -dmenu \
-               -config "$rasiDir" \
-               -selected-row "$default_row"
+    choice=$(
+        printf '%s\n' "${options[@]}" |
+            rofi -i -dmenu \
+                -config "$rasiDir" \
+                -selected-row "$default_row"
     )
 
     echo "${choice}"
 
-    [[ -z "$choice" ]] && { echo "No option selected. Exiting."; exit 0; }
+    [[ -z "$choice" ]] && {
+        echo "No option selected. Exiting."
+        exit 0
+    }
 
     choice=${choice# $MARKER}
 
     case "$choice" in
-        *)
-            apply_config "$choice"
-            ;;
+    *)
+        apply_config "$choice"
+        ;;
     esac
 }
 

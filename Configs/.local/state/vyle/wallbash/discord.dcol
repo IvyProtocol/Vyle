@@ -1,4 +1,4 @@
-$(confDir)/vesktop/themes/system24.css
+<XDG_CONFIG_HOME>/Vencord/themes/system24.css
 @import url('https://refact0r.github.io/system24/build/system24.css');
 @import url("https://raw.githubusercontent.com/Augenbl1ck/Discord-Styles/refs/heads/main/userAreaSpotifyControl.css");
 

@@ -1,4 +1,4 @@
-$(dataDir)/vyle/hypr/variables.conf
+<XDG_DATA_HOME>/vyle/hypr/variables.conf
 ## DO NOT TOUCH THIS VARS! They essentially loads your configuration.
 ## This file has been parsed by tmq.write.sh: wallbash
 ## If you are looking to edit this file -> <INPUT_PATH>
