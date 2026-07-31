@@ -152,13 +152,16 @@ Wall_Switch() {
 
     export VYLE_CONFIG_HOME=$VYLE_CONFIG_HOME
     export VYLE_CURRENT_IMAGE=$VYLE_IMAGE_SOURCE
-    export HYDE_TMQ_PROC="$VYLE_CONFIGURATION_CORE"
-    export HYDE_TMQ_NO_ATOMIC=1
-    export HYDE_TMQ_IGNORE_UNBOUND=1
     export HYDE_TMQ_IGNORE_TEMPLATES="${VYLE_CONFIGURATION_SKIP_TEMPLATE}"
 
     source "${scrDir}/tmq.write.sh" \
-        --file "${POPULATE[@]}"
+        --file "${POPULATE[@]}" \
+        --proc "${VYLE_CONFIGURATION_CORE}" \
+        --no-atomic \
+        --defer-run \
+        --run-concurrency 0 \
+        --disable-fallback \
+        --ignore-unbound
 
     "${scrDir}/wallpaper.${WALLPAPER_CONFIGURATION_BACKEND}.sh" "$VYLE_IMAGE_SOURCE" "$WALLPAPER_SET_FLAGS" &
 }
