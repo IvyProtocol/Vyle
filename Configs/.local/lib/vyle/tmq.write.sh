@@ -5,33 +5,51 @@ help_function() {
 $(basename "$0") [Flags] [Directory/Files]
 
 Available Flags:
-    --allow-pre         | PRE hooks only run if \$HYDE_TMQ_ALLOW_PRE is set to 1/true/yes
-    --allow-warn        | Strict-Warnings: Exit if variables are malformed or don't exist in the ENV.
-    --allow-debug       | Debug spit: set \$HYDE_TMQ_DEBUG=1 to enable verbose prints
-    --allow-dry-run     | Dry-run: do not write files or execute RUN; just print actions
+    --allow-pre             | PRE hooks only run if \$HYDE_TMQ_ALLOW_PRE is set to 1/true/yes
+    --allow-warn            | Strict-Warnings: Exit if variables are malformed or don't exist in the ENV.
+    --allow-debug           | Debug spit: set \$HYDE_TMQ_DEBUG=1 to enable verbose prints
+    --allow-dry-run         | Dry-run: do not write files or execute RUN; just print actions
 
-    --env          P    | Enables sourcing of path file that contains exported variables.
-                          Requires additional delimiter '--' or else it will fallback.
+    --env               P   | Enables sourcing of path file that contains exported variables.
+                              Requires additional delimiter '--' or else it will fallback.
 
-    --proc         N    | Amount of CPU cores to be utilized for template generation. Default: 1
-    --lock-timeout N    | Seconds to wait for/make stale locks (sets \$HYDE_TMQ_LOCK_TIMEOUT). Default: 10
+    --proc              N   | Amount of CPU cores to be utilized for template generation. Default: 1
+    --lock-timeout      N   | Seconds to wait for/make stale locks (sets \$HYDE_TMQ_LOCK_TIMEOUT). Default: 10
+    
+    --run-concurrency   N   | Cap parallel post-scripts under --defer-run (sets
+                              \$HYDE_TMQ_RUN_CONCURRENCY). Default 1 = serial. 0 = fire-and-forget
+                              (nohup, detached, not waited on -- logs kept, not auto-cleaned)
 
-    --help              | Show this help
-    --file              | Target path: path/to/template | path/to/dir..
-    --dont-run          | Disable RUN execution (sets \$HYDE_TMQ_ALLOW_RUN=0)
+    --header [T:P:R:B = V]  | Override template header parameters on the fly. Accepts colon-separated key:value pair
+                              Example: --header T:"/tmp/out" R:"echo Done"
 
-    --pre-scan          | Pre-scan template file to avoid per-worker duplicate PRE invocation.
-                          Runs unique PRE hooks once in parent and exports results to children
+                              'B' or implicit --buffer passes template data directly as a string or use '-' to read
+                              from standard input (stdin). 
+                                    Example: --header B:"path | <VAR>"
+                                    Example: --header B:- --args
+                              If T: is uninitialized, then it will fallback to /dev/null.
 
-    --no-atomic         | Disable atomic writing (fsync/temp files) for faster direct writes while keeping locks.
 
-    --ignore-unbound    | Treat all <...> as literal markup, not placeholders: unbound plain
-                          <VAR> is left as-is with no warning. Useful for large hand-authored
-                          SVGs whose own tags (<g>, <defs>, ...) collide with the placeholder syntax.
-                          Overridden by --allow-warn.
+    --help                  | Show this help
+    --file                  | Target path: path/to/template | path/to/dir..
+    --dont-run              | Disable RUN execution (sets \$HYDE_TMQ_ALLOW_RUN=0)
 
-    --ignore-templates  | Space-separated list of filenames to skip when scanning directories.
-    --disable-fallback  | Disable :- bash-style fallback-syntax in templates.
+    --defer-run             | Defer RUN/post-scripts: workers queue them instead of running them;
+                              parent executes the queue after all workers finish (sets
+                              \$HYDE_TMQ_DEFER_RUN=1)
+
+    --pre-scan              | Pre-scan template file to avoid per-worker duplicate PRE invocation.
+                              Runs unique PRE hooks once in parent and exports results to children
+
+    --no-atomic             | Disable atomic writing (fsync/temp files) for faster direct writes while keeping locks.
+
+    --ignore-unbound        | Treat all <...> as literal markup, not placeholders: unbound plain
+                              <VAR> is left as-is with no warning. Useful for large hand-authored
+                              SVGs whose own tags (<g>, <defs>, ...) collide with the placeholder syntax.
+                              Overridden by --allow-warn.
+
+    --ignore-templates      | Space-separated list of filenames to skip when scanning directories.
+    --disable-fallback      | Disable :- bash-style fallback-syntax in templates.
 
 EOF
 }
@@ -41,11 +59,10 @@ while [[ $# -gt 0 ]]; do
     --allow-warn) export HYDE_TMQ_STRICT=1 ;;
     --allow-debug) export HYDE_TMQ_DEBUG=1 ;;
     --allow-dry-run) export HYDE_TMQ_DRY_RUN=1 ;;
-
     --env)
         shift
         set -a
-        while [[ "$#" -gt 0 && "$1" != "--" ]]; do
+        while [[ "$#" -gt 0 && "$1" != "--" && "$1" != -* ]]; do
             if [[ -z "${1:-}" || ! -e "${1}" ]]; then
                 printf '@[diagnostic:error(true)]: --env requires a valid path! \n' >&2
                 exit 2
@@ -60,7 +77,7 @@ while [[ $# -gt 0 ]]; do
     --proc)
         shift
         if [[ -z "${1:-}" || ! "${1}" =~ ^[0-9]+$ ]]; then
-            printf '@[diagnostic:error(true)]: --nproc requires a positive integer argument \n' >&2
+            printf '@[diagnostic:error(true)]: --proc requires a positive integer argument \n' >&2
             exit 2
         fi
         export HYDE_TMQ_PROC=$1
@@ -73,7 +90,45 @@ while [[ $# -gt 0 ]]; do
         fi
         export HYDE_TMQ_LOCK_TIMEOUT="$1"
         ;;
+    --run-concurrency)
+        shift
+        if [[ -z "${1:-}" || ! "${1}" =~ ^[0-9]+$ ]]; then
+            printf '@[diagnostic:error(true)]: --run-concurrency requires a non-negative integer argument\n' >&2
+            exit 2
+        fi
+        export HYDE_TMQ_RUN_CONCURRENCY="$1"
+        ;;
 
+    --header)
+        shift
+        HYDE_TMQ_HEADER_INIT=1
+        while [[ $# -gt 0 && "$1" != "--" && "$1" != -* ]]; do
+            case "$1" in
+            T:*)
+                export HYDE_TMQ_HEADER_TARGET="${1#T:}"
+                ;;
+            R:*)
+                export HYDE_TMQ_HEADER_RUN="${1#R:}"
+                ;;
+            P:*)
+                export HYDE_TMQ_HEADER_PRE="${1#P:}"
+                ;;
+            B:*)
+                if [[ "${1#B:}" == "-" ]]; then
+                    HYDE_TMQ_HEADER_BUFFER="$(cat)"
+                else
+                    HYDE_TMQ_HEADER_BUFFER="${1#B:}"
+                fi
+                export HYDE_TMQ_HEADER_BUFFER
+                ;;
+            *)
+                printf '@[diagnostic:error(true)]: Invalid --header argument: %s\n' "$1" >&2
+                ;;
+            esac
+            shift
+        done
+        continue
+        ;;
     --help)
         help_function
         exit 0
@@ -87,9 +142,12 @@ while [[ $# -gt 0 ]]; do
         export HYDE_TMQ_TEMPLATE_FILE
         continue
         ;;
-    --pre-scan) export HYDE_TMQ_PRE_SCAN=1 ;;
+    --defer-run) export HYDE_TMQ_DEFER_RUN=1 ;;
     --dont-run) export HYDE_TMQ_ALLOW_RUN=0 ;;
+    --pre-scan) export HYDE_TMQ_PRE_SCAN=1 ;;
     --no-atomic) export HYDE_TMQ_NO_ATOMIC=1 ;;
+    --ignore-unbound) export HYDE_TMQ_IGNORE_UNBOUND=1 ;;
+    --disable-fallback) export HYDE_TMQ_DISABLE_FALLBACK=1 ;;
     --ignore-templates)
         shift
         if [[ -z "${1:-}" ]]; then
@@ -98,24 +156,65 @@ while [[ $# -gt 0 ]]; do
         fi
         export HYDE_TMQ_IGNORE_TEMPLATES="$1"
         ;;
-    --ignore-unbound) export HYDE_TMQ_IGNORE_UNBOUND=1 ;;
-    --disable-fallback) export HYDE_TMQ_DISABLE_FALLBACK=1 ;;
+
     *) break ;;
     esac
     shift
 done
 
+if [[ -n "$HYDE_TMQ_HEADER_INIT" && "$HYDE_TMQ_HEADER_INIT" == 1 ]]; then
+    if [[ -z "$HYDE_TMQ_HEADER_BUFFER" ]]; then
+        printf '@[diagnostic:error(true)]: --header B:"" is required to be initialized. \n'
+        exit 2
+    fi
+
+    if [[ "${HYDE_TMQ_PROC:-1}" -gt 1 ]]; then
+        printf '@[diagnostic:warn(true)]: --header does not support multi-threading. Forcing --proc 1. \n'
+    fi
+    export HYDE_TMQ_PROC=1
+
+    if [[ -n "$HYDE_TMQ_TEMPLATE_FILE" ]]; then
+        printf '@[diagnostic:warn(true)]: Script argument --header with --file is not allowed!\n'
+        exit 2
+    fi
+
+    if [[ -z "$HYDE_TMQ_HEADER_TARGET" ]]; then
+        export HYDE_TMQ_HEADER_TARGET="/dev/null"
+    fi
+
+    if [[ -n "${HYDE_TMQ_HEADER_RUN:-}" && "${HYDE_TMQ_ALLOW_RUN:-1}" == 0 ]]; then
+        printf '@[diagnostic:error(true)]: --header R:"" was provided but RUN hooks are not allowed due to --dont-run flag.\n'
+        exit 2
+    fi
+
+    if [[ -n "${HYDE_TMQ_HEADER_PRE:-}" && "${HYDE_TMQ_ALLOW_PRE:-0}" != "1" ]]; then
+        printf '@[diagnostic:error(true)]: --header pre="..." was provided but PRE hooks are not allowed. Please include the --allow-pre flag.\n' >&2
+        exit 2
+    fi
+
+    if [[ -n "${HYDE_TMQ_RUN_CONCURRENCY:-}" ]]; then
+        printf '@[diagnostic:error(true)]: Script argument --run-concurrency is not allowed when using --header.\n' >&2
+        exit 2
+    fi
+
+    if [[ -n "${HYDE_TMQ_LOCK_TIMEOUT:-}" ]]; then
+        printf '@[diagnostic:error(true)]: Script argument --lock-timeout is not allowed when using --header.\n' >&2
+        exit 2
+    fi
+
+    if [[ "${HYDE_TMQ_DEFER_RUN:-0}" == 1 ]]; then
+        printf '@[diagnostic:error(true)]: Script argument --defer-run is not allowed with --header (executes after generating the template anyway).\n' >&2
+        exit 2
+    fi
+
+    if [[ "${HYDE_TMQ_PRE_SCAN:-0}" == 1 ]]; then
+        printf '@[diagnostic:error(true)]: Script argument --pre-scan is not allowed with --header (not needed for a single file).\n' >&2
+        exit 2
+    fi
+fi
+
 set -eo pipefail
 scrDir="$(dirname "$(realpath "$0")")"
-
-# Initialize hyde-shell if available
-# if [[ -z "${HYDE_SHELL_INIT:-}" ]]; then
-#if command -v hyde-shell >/dev/null 2>&1; then
-# eval "$(hyde-shell init)"
-# else
-# printf '@[diagnostic:warn(true)]: hyde-shell not found; continuing without it\n' >&2
-# fi
-# fi
 
 export LIB_DIR="$scrDir"
 # Only export XDG* if already set in the environment (don't override with empty)
@@ -123,7 +222,7 @@ export LIB_DIR="$scrDir"
 [[ -n "${XDG_CONFIG_HOME:-}" ]] && export XDG_CONFIG_HOME
 
 export SCRIPT_NAME="$0"
-export HYDE_TMQ_LOCK_DIR="${HYDE_RUNTIME_DIR:-${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/hyde}/${0##*/}"
+export HYDE_TMQ_LOCK_DIR="${HYDE_RUNTIME_DIR:-${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/hyde}/$(basename -- "$0" ".*")"
 export HYDE_TMQ_LOCK_TIMEOUT="${HYDE_TMQ_LOCK_TIMEOUT:-10}"
 
 perl - "$@" <<'EOF'
@@ -143,7 +242,8 @@ my ( %REPLACE, %RGBA_BASE, %SKIP_SET, %made_dirs, @template_source,
 my ($raw,        $nl,         $header,      $body,
     $target,     $pre_script, $post_script, $post_is_run,
     $target_dir, $existing,   $found,       $n,
-    $workers,    $chunk,      $res
+    $workers,    $chunk,      $res,         $queue_dir,
+    $queue_fh
 );
 
 $LIB_DIR     = $ENV{LIB_DIR} // '';
@@ -194,11 +294,25 @@ my $IGNORE_UNBOUND
     && !$ALLOW_STRICT_WARNINGS ? 1 : 0;
 
 # Disable bash-style fallback
-my $DISABLE_FALLBACK =
-    $ENV{HYDE_TMQ_DISABLE_FALLBACK}
+my $DISABLE_FALLBACK = $ENV{HYDE_TMQ_DISABLE_FALLBACK}
     && $ENV{HYDE_TMQ_DISABLE_FALLBACK} =~ /^(1|true|yes)$/i ? 1 : 0;
 
+# Defer-run: workers queue expanded post-scripts to a per-process file
+# instead of executing them; the parent runs the collected queue once all
+# workers have exited.
+my $DEFER_RUN = $ENV{HYDE_TMQ_DEFER_RUN}
+    && $ENV{HYDE_TMQ_DEFER_RUN} =~ /^(1|true|yes)$/i ? 1 : 0;
 
+# Run-concurrency: how the parent drains the deferred queue.
+#   1 (default/unset) = serial, one post-script at a time (safe, predictable)
+#   >1                = bounded fork pool of that size
+#   0                 = fire-and-forget background mode (nohup, detached;
+#                        the parent does not wait and cannot know success)
+my $RUN_CONCURRENCY
+    = defined $ENV{HYDE_TMQ_RUN_CONCURRENCY}
+    && $ENV{HYDE_TMQ_RUN_CONCURRENCY} =~ /^\d+$/
+    ? int( $ENV{HYDE_TMQ_RUN_CONCURRENCY} )
+    : 1;
 
 for my $path (@INPUT_PATH) {
     if ( -f $path ) {
@@ -210,7 +324,7 @@ for my $path (@INPUT_PATH) {
     }
 }
 
-unless ( @files || @template_source ) {
+unless ( @files || @template_source || $ENV{HYDE_TMQ_HEADER_BUFFER} ) {
     print
         "@[arg:no_arg]: No valid file or directory paths given. $SCRIPT_NAME --help for more information\n";
     exit(1);
@@ -238,6 +352,13 @@ unless ( -d $locks_base ) {
     eval { make_path($locks_base); 1 }
         or die
         "@[diagnostic:error:populate:write(false)]: Cannot create locks dir $locks_base: $!";
+}
+
+if ($DEFER_RUN) {
+    $queue_dir = File::Spec->catdir( $locks_base, "queue-$$" );
+    eval { make_path($queue_dir); 1 }
+        or die
+        "@[diagnostic:error:populate:write(false)]: Cannot create queue dir $queue_dir: $!";
 }
 
 # more permissive placeholder regex; captures color functions or simple names
@@ -500,15 +621,21 @@ sub direct_write_to_target {
 
 sub process_template {
     my ($template_file) = @_;
-    return unless -f $template_file;
 
-    $raw = do {
-        local $/;
-        open my $fh, '<', $template_file
-            or die
-            "@[populate:open(true)]: Cannot open $template_file: $!";
-        <$fh>;
-    };
+    if ($template_file eq '::BUFFER::') {
+        $raw = $ENV{HYDE_TMQ_HEADER_BUFFER};
+    }
+    else {
+        return unless -f $template_file;
+
+        $raw = do {
+            local $/;
+            open my $fh, '<', $template_file
+                or die
+                "@[populate:open(true)]: Cannot open $template_file: $!";
+            <$fh>;
+        };
+    }
 
     if ($DISABLE_FALLBACK) {
         while ( $raw =~ /$PLACEHOLDER_RE/g ) {
@@ -619,7 +746,10 @@ sub process_template {
 
     # If header looks like a placeholder (<...>), or a path/filename,
     # treat it as the target. Otherwise treat the entire file as body.
-        if (   $header =~ $PLACEHOLDER_RE
+        if ( $template_file eq '::BUFFER::') {
+            $body = $raw;
+        }
+        elsif (   $header =~ $PLACEHOLDER_RE
             || $header =~ m{[\\/]}
             || $header !~ /\s/ )
         {
@@ -631,6 +761,14 @@ sub process_template {
     }
     else {
         $body = $raw;        # Entire file is body
+    }
+
+    $target = $ENV{HYDE_TMQ_HEADER_TARGET} if defined $ENV{HYDE_TMQ_HEADER_TARGET};
+    $pre_script = $ENV{HYDE_TMQ_HEADER_PRE} if defined $ENV{HYDE_TMQ_HEADER_PRE};
+
+    if (defined $ENV{HYDE_TMQ_HEADER_RUN}) {
+        $post_script = $ENV{HYDE_TMQ_HEADER_RUN};
+        $post_is_run = 1
     }
 
     # Execute Pre-Hook (only if allowed via HYDE_TMQ_ALLOW_PRE)
@@ -659,8 +797,8 @@ sub process_template {
     $body =~ s{$PLACEHOLDER_RE}{$replacer->($1, $2, $3, $4)}ge
         if $body && $body =~ /[<>()]/;
 
-# Ensure we have a concrete target path before attempting to write.
-# If templates are intended to produce stdout or similar, change this behavior.
+    # Ensure we have a concrete target path before attempting to write.
+    # If templates are intended to produce stdout or similar, change this behavior.
     unless ( defined $target && length $target ) {
         print
             "@[arg:empty_path(true)] No target specified in $template_file; skipping\n"
@@ -692,7 +830,6 @@ sub process_template {
 
     my $contents_changed = ( $existing ne $body );
     my $needs_write      = ( !$file_exists || $contents_changed );
-    my $lockDir;
 
     if ($needs_write) {
         if ($DRY_RUN) {
@@ -701,12 +838,11 @@ sub process_template {
                 if $SPIT_DEBUG;
         }
         else {
-            my $lockDir;
             if ($NO_ATOMIC) {
 
- # Direct write under lock (faster, less durable). Acquire lock first.
+                # Direct write under lock (faster, less durable). Acquire lock first.
                 eval {
-                    $lockDir = acquire_lock($target);
+                    $current_lock = acquire_lock($target);
                     direct_write_to_target( $target, $body );
                     1;
                 } or do {
@@ -714,13 +850,14 @@ sub process_template {
                         = $@ || "Unknown error during direct write";
                     warn
                         "@[populate:error(true)]: Failed writing $target directly: $err";
-                    release_lock($lockDir) if defined $lockDir;
+                    release_lock($current_lock)
+                        if defined $current_lock;
                     die $err;
                 };
-                release_lock($lockDir) if defined $lockDir;
+                release_lock($current_lock) if defined $current_lock;
             }
             else {
-# Atomic path: prepare tmp (with optional fsync), then lock and rename.
+                # Atomic path: prepare tmp (with optional fsync), then lock and rename.
                 my $tmp_path;
                 eval {
                     $tmp_path = write_temp_file( $target_dir, $body );
@@ -735,7 +872,7 @@ sub process_template {
                 };
 
                 eval {
-                    $lockDir = acquire_lock($target);
+                    $current_lock = acquire_lock($target);
                     rename_tmp_to_target( $tmp_path, $target );
                     1;
                 } or do {
@@ -745,11 +882,12 @@ sub process_template {
                         "@[populate:error(true)]: Failed writing $target: $err";
                     unlink $tmp_path
                         if defined $tmp_path && -f $tmp_path;
-                    release_lock($lockDir) if defined $lockDir;
+                    release_lock($current_lock)
+                        if defined $current_lock;
                     die $err;
                 };
 
-                release_lock($lockDir) if defined $lockDir;
+                release_lock($current_lock) if defined $current_lock;
             }
         }
     }
@@ -758,6 +896,15 @@ sub process_template {
         if ($DRY_RUN) {
             print
                 "@[arg:dry_run(true)]: Would run post-script: $post_script\n"
+                if $SPIT_DEBUG;
+        }
+        elsif ($DEFER_RUN) {
+            enqueue_post_script(
+                $queue_fh,      $post_is_run,
+                $template_file, $post_script
+            );
+            print
+                "@[defer_run:queued(true)]: Queued post-script from $template_file\n"
                 if $SPIT_DEBUG;
         }
         else {
@@ -792,6 +939,159 @@ sub process_template {
 
 }
 
+sub enqueue_post_script {
+    my ( $fh, $is_run, $source, $cmd ) = @_;
+    return unless $fh;
+    print $fh join( "\0", ( $is_run ? 1 : 0 ), $source, $cmd ), "\0";
+}
+
+# Called from the parent after all workers have exited: read every
+# *.queue file back into a list of { is_run, source, cmd } hashrefs, in a
+# stable filename-sorted order.
+sub read_queue_dir {
+    my ($dir) = @_;
+    my @items;
+
+    return @items unless opendir( my $dh, $dir );
+    my @qfiles = sort grep {/\.queue$/} readdir $dh;
+    closedir $dh;
+
+    for my $qfile (@qfiles) {
+        my $path = File::Spec->catfile( $dir, $qfile );
+        next unless -f $path;
+
+        open my $fh, '<', $path or do {
+            warn
+                "@[diagnostic:error(true)]: Cannot read queue file $path: $!\n";
+            next;
+        };
+        local $/ = "\0";
+        my @fields;
+        while ( my $chunk = <$fh> ) {
+            chomp $chunk;
+            push @fields, $chunk;
+            if ( @fields == 3 ) {
+                push @items,
+                    {
+                    is_run => $fields[0],
+                    source => $fields[1],
+                    cmd    => $fields[2]
+                    };
+                @fields = ();
+            }
+        }
+        warn
+            "@[diagnostic:warn(true)]: Discarding incomplete queue record in $path\n"
+            if @fields && $SPIT_DEBUG;
+        close $fh;
+    }
+
+    return @items;
+}
+
+sub execute_post_script {
+    my ( $cmd, $is_run, $source ) = @_;
+
+    if ($is_run) {
+        system($cmd) == 0 or do {
+            warn
+                "@[execution:error(true)]: Failed to execute $cmd from $source: $?\n";
+            return 0;
+        };
+    }
+    elsif ( -x $cmd ) {
+        system($cmd) == 0 or do {
+            warn
+                "@[execution:error(true)]: Failed to execute $cmd from $source\n";
+            return 0;
+        };
+    }
+    else {
+        print
+            "@[execution(false)]: Theme Control - Skipped non-executable script from $source\n"
+            if $SPIT_DEBUG;
+    }
+    return 1;
+}
+
+sub run_queue_serial {
+    my ($items) = @_;
+    my $any_failed = 0;
+    for my $item (@$items) {
+        execute_post_script( $item->{cmd}, $item->{is_run},
+            $item->{source} )
+            or $any_failed = 1;
+    }
+    return $any_failed;
+}
+
+# Policy: bounded concurrency. A rolling fork pool of at most $concurrency
+# children; each child runs and is waited on for exactly one post-script.
+sub run_queue_concurrent {
+    my ( $items, $concurrency ) = @_;
+    my @pending = @$items;
+    my %running;
+    my $any_failed = 0;
+
+    while ( @pending || %running ) {
+        while ( @pending && scalar( keys %running ) < $concurrency ) {
+            my $item = shift @pending;
+            my $pid  = fork;
+            if ( !defined $pid ) {
+                warn
+                    "@[diagnostic:error:fork:run(false)]: Fork failed for deferred post-script, running inline: $!\n";
+                execute_post_script( $item->{cmd}, $item->{is_run},
+                    $item->{source} )
+                    or $any_failed = 1;
+                next;
+            }
+            if ( $pid == 0 ) {
+                my $ok = execute_post_script( $item->{cmd},
+                    $item->{is_run}, $item->{source} );
+                exit( $ok ? 0 : 1 );
+            }
+            $running{$pid} = 1;
+        }
+
+        last unless %running;
+
+        my $p = wait();
+        if ( $p > 0 ) {
+            $any_failed = 1 if ( $? >> 8 ) != 0;
+            delete $running{$p};
+        }
+    }
+    return $any_failed;
+}
+
+sub run_queue_background {
+    my ($items) = @_;
+    execute_post_script_background( $_->{cmd}, $_->{is_run},
+        $_->{source} )
+        for @$items;
+    return 0; # outcome unknown by design; never fails the overall run
+}
+
+sub execute_post_script_background {
+    my ( $cmd, $is_run, $source ) = @_;
+
+    unless ( $is_run || -x $cmd ) {
+        print
+            "@[execution(false)]: Theme Control - Skipped non-executable script from $source\n"
+            if $SPIT_DEBUG;
+        return;
+    }
+
+    my $log = "$locks_base/nohup.out"; 
+    ( my $log_q = $log ) =~ s/'/'\\''/g;
+
+    system("nohup $cmd >>'$log_q' 2>&1 &");
+
+    warn
+        "@[defer_run:background(true)]: Backgrounded post-script from $source (log: $log)\n"
+        if $SPIT_DEBUG;
+}
+
 find(
     {   wanted => sub {
             return
@@ -805,7 +1105,7 @@ find(
     @template_source
 );
 
-unless ($found) {
+unless ($found || defined $ENV{HYDE_TMQ_HEADER_BUFFER}) {
     printf(
         "@[stream:file_capture(false)]: %s: no .dcol templates found, nothing to apply.\n",
         $SCRIPT_NAME );
@@ -814,19 +1114,25 @@ unless ($found) {
 
 @files = map { $_->[0] }
     sort {
-    my ( $ap, $bp ) = ( $a->[1], $b->[1] );
-    $res = 0;
-    for ( my $i = 0; $i < @$ap && $i < @$bp; $i++ ) {
-        $res
-            = $ap->[$i] =~ /^\d+$/ && $bp->[$i] =~ /^\d+$/
-            ? ( $ap->[$i] <=> $bp->[$i] )
-            : ( lc( $ap->[$i] ) cmp lc( $bp->[$i] ) );
-        last if $res;
+        my ( $ap, $bp ) = ( $a->[1], $b->[1] );
+        $res = 0;
+        for ( my $i = 0; $i < @$ap && $i < @$bp; $i++ ) {
+            $res
+                = $ap->[$i] =~ /^\d+$/ && $bp->[$i] =~ /^\d+$/
+                ? ( $ap->[$i] <=> $bp->[$i] )
+                : ( lc( $ap->[$i] ) cmp lc( $bp->[$i] ) );
+            last if $res;
+        }
+        $res || scalar(@$ap) <=> scalar(@$bp);
     }
+    map {
+        [ $_, [ map { /^\d+$/ ? $_ : lc($_) } split /(\d+)/, $_ ] ]
+    } @files;
 
-    $res || scalar(@$ap) <=> scalar(@$bp);
-    }
-    map { [ $_, [ split /(\d+)/, $_ ] ] } @files;
+if (defined $ENV{HYDE_TMQ_HEADER_BUFFER}) {
+    push @files, '::BUFFER::';
+    $found = 1;
+}
 
 if ($ALLOW_PRE_SCAN) {
     unless ($ALLOW_PRE) {
@@ -837,12 +1143,21 @@ if ($ALLOW_PRE_SCAN) {
 
     my %seen_pre;
     foreach my $f (@files) {
-        next unless -f $f;
         my $hdr = "";
-        if ( open my $fh, '<', $f ) {
-            $hdr = <$fh> // "";
-            close $fh;
+
+        if ($f eq '::BUFFER::') {
+            my $raw_buf = $ENV{HYDE_TMQ_HEADER_BUFFER};
+            my $nl_idx = index($raw_buf, "\n");
+            $hdr = $nl_idx >= 0 ? substr($raw_buf, 0, $nl_idx) : $raw_buf;
             $hdr =~ s/^\s+|\s+$//g;
+        }
+        else {
+            next unless -f $f;
+            if ( open my $fh, '<', $f ) {
+                $hdr = <$fh> // "";
+                close $fh;
+                $hdr =~ s/^\s+|\s+$//g;
+            }
         }
 
         my $pre = "";
@@ -877,13 +1192,23 @@ for ( my $i = 0; $i < $n; $i += $chunk ) {
     my $pid = fork // die "Fork failed: $!";
     if ( $pid == 0 ) {
         eval {
+            if ($DEFER_RUN) {
+                my $qfile
+                    = File::Spec->catfile( $queue_dir, "$$.queue" );
+                open $queue_fh, '>', $qfile
+                    or die
+                    "@[diagnostic:error:populate:write(false)]: Cannot create queue file $qfile: $!\n";
+                binmode $queue_fh;
+            }
             process_template( $files[$_] ) for $i .. $end;
             1;
         } or do {
             warn
                 "@[diagnostic:error:fork:worker(false)]: Worker encountered an error: \n\t$@";
+            close $queue_fh if $queue_fh;
             exit 1;
         };
+        close $queue_fh if $queue_fh;
         exit 0;
     }
     $pids{$pid} = 1;
@@ -893,11 +1218,38 @@ for ( my $i = 0; $i < $n; $i += $chunk ) {
 my $failed = 0;
 while ( scalar keys %pids ) {
     my $p = wait();
+    last if $p == -1;
+
     if ( $p > 0 ) {
         my $status = $? >> 8;
         $failed = 1 if $status != 0;
         delete $pids{$p};
     }
+}
+
+if ($DEFER_RUN) {
+    my @queued = read_queue_dir($queue_dir);
+
+    if (@queued) {
+        warn sprintf(
+            "@[defer_run:queue(true)]: Running %d deferred post-script(s)\n",
+            scalar @queued )
+            if $SPIT_DEBUG;
+
+        my $run_failed
+            = $RUN_CONCURRENCY == 0 ? run_queue_background( \@queued )
+            : $RUN_CONCURRENCY > 1
+            ? run_queue_concurrent( \@queued, $RUN_CONCURRENCY )
+            : run_queue_serial( \@queued );
+        $failed = 1 if $run_failed;
+    }
+
+    if ( opendir my $dh, $queue_dir ) {
+        unlink File::Spec->catfile( $queue_dir, $_ )
+            for grep {/\.queue$/} readdir $dh;
+        closedir $dh;
+    }
+    rmdir $queue_dir;
 }
 
 if ( $failed == 0 ) {
