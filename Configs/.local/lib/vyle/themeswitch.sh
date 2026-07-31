@@ -92,8 +92,11 @@ themeSelTui() {
         else
             "${scrDir}/tmq.write.sh" \
                 --file "${themeDir}/${thmChsh}/hypr.theme" \
-                --no-atomic \
                 --proc "${VYLE_CONFIGURATION_CORE}" \
+                --no-atomic \
+                --defer-run \
+                --run-concurrency 0 \
+                --disable-fallback \
                 --ignore-unbound
 
             sed -i 's|^#[[:space:]]*source[[:space:]]*=[[:space:]]* \$XDG_CONFIG_HOME/hypr/themes/wallbash.conf|source = \$XDG_CONFIG_HOME/hypr/themes/wallbash.conf|' "${VYLE_DATA_HOME}/hypr/dynamic.conf"
