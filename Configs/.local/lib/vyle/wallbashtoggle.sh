@@ -24,9 +24,6 @@ apply_config() {
     [[ ! -e "${scrDir}/wallbash.sh" ]] && exit 1
 
     export VYLE_CONFIG_HOME=$VYLE_CONFIG_HOME
-    export HYDE_TMQ_PROC="$VYLE_CONFIGURATION_CORE"
-    export HYDE_TMQ_NO_ATOMIC=1
-    export HYDE_TMQ_IGNORE_UNBOUND=1
     export HYDE_TMQ_IGNORE_TEMPLATES="${VYLE_CONFIGURATION_SKIP_TEMPLATE}"
 
     if [[ "${wallIde}" -eq 3 ]]; then
@@ -45,7 +42,14 @@ apply_config() {
         POPULATE=("${VYLE_CONFIG_HOME}/theme/${VYLE_RESERVED_THEME}" "${VYLE_CONFIG_HOME}/Wall-Ways")
 
         source "${scrDir}/tmq.write.sh" \
-            --file "${POPULATE[@]}"
+            --file "${POPULATE[@]}" \
+            --proc "${VYLE_CONFIGURATION_CORE}" \
+            --no-atomic \
+            --defer-run \
+            --run-concurrency 0 \
+            --disable-fallback \
+            --ignore-unbound
+
     else
         [[ "${VYLE_THEME}" != "Wallbash-Ivy" ]] && setConf "VYLE_THEME" "Wallbash-Ivy" "${VYLE_STATE_HOME}/staterc" &
         sed -i 's|^#[[:space:]]*source[[:space:]]*=[[:space:]]* \$XDG_CONFIG_HOME/hypr/themes/wallbash.conf|source = \$XDG_CONFIG_HOME/hypr/themes/wallbash.conf|' "${VYLE_DATA_HOME}/hypr/dynamic.conf"
@@ -63,7 +67,13 @@ apply_config() {
         POPULATE=("${VYLE_CONFIG_HOME}/Wall-Dcol" "${VYLE_CONFIG_HOME}/Wall-Ways")
 
         source "${scrDir}/tmq.write.sh" \
-            --file "${POPULATE[@]}"
+            --file "${POPULATE[@]}" \
+            --proc "${VYLE_CONFIGURATION_CORE}" \
+            --no-atomic \
+            --defer-run \
+            --run-concurrency 0 \
+            --disable-fallback \
+            --ignore-unbound
     fi
 
     if [[ -z "${VYLE_CURRENT_IMAGE}" && -x "${scrDir}/swwwallswitch.sh" ]]; then
