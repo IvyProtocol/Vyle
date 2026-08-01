@@ -11,14 +11,14 @@ A personal Hyprland-based desktop configuration with ivy-shell (Wallbash Fork fr
 # ⚠️ Read First
 
 This repository is maintained mainly for personal and prerequisite use.
-Since it actively evolves, screenshots may become outdated. If you are looking out for wallpapers, then you may head toward [REPO](https://github.com/Namelessmode/Iricalgen-wbshow.git). This repository may be deprecated in the future.
+Since it actively evolves, screenshots may become outdated.
 
 ## Installation
 To install, clone this repository to any directory:
 
 ```
 sudo pacman -S --needed git base-devel
-git clone --depth 1 https://github.com/IvyProtocol/IDE.git ~/IDE
+git clone --depth 1 https://github.com/valkyrieAttr/Vyle.git ~/Vyle
 cd ~/IDE/Scripts/
 ./install.sh
 ```
@@ -31,8 +31,8 @@ Please reboot the system after the step has been taken and takes you to SDDM log
 ## Repository Layout
 
 ```text
-tree VyLE                                                                         23:13 
-VyLE/ <-------- $(rpDir)
+tree Vyle
+Vyle/ <-------- $(rpDir)
 ├── Configs <--- Main Configuration
 ├── LICENSE
 ├── README.md
